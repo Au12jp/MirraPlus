@@ -1,0 +1,384 @@
+{
+  "request": {
+    "url": "/api/user/me",
+    "method": "get",
+    "headers": {
+      "Accept": "application/json, text/plain, */*",
+      "user-agent": "MR_APP/11.16.0/iOS/iPhone15,2/16.1.1",
+      "Accept-Encoding": "gzip, compress, deflate, br"
+    },
+    "params": {}
+  },
+  "response": {
+    "status": 200,
+    "statusText": "OK",
+    "headers": {
+      "server": "infra-xds-server/1.2.9/web",
+      "date": "Tue, 06 May 2025 14:27:23 GMT",
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "no-cache",
+      "set-cookie": "mr_id=3enYQCu_HmA_Mxol2k53OqkfLy2OfQCQfAI0gPzC6jDgOnqkA_tntOCMy5_0FpKg; domain=.mirrativ.com; path=/; expires=Mon, 29-Nov-2123 14:27:23 GMT; secure, lang=en; domain=.mirrativ.com; path=/; expires=Thu, 12-Apr-2125 14:27:23 GMT, f=39D52204-2A86-11F0-8D0D-3C0D21DCF3C7; domain=.mirrativ.com; path=/; expires=Thu, 12-Apr-2125 14:27:23 GMT",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "expires": "Tue, 06 May 2025 14:27:22 GMT",
+      "x-envoy-upstream-service-time": "278",
+      "via": "1.1 google",
+      "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+      "transfer-encoding": "chunked"
+    },
+    "body": {
+      "avatar_body_image_url": "",
+      "current_continuous_record": 0,
+      "custom_thanks_message": "",
+      "profile_image_url": "",
+      "continuous_type": 0,
+      "badges": [],
+      "should_device_check": 0,
+      "purchase_continuous_live_holiday_required_coin": 300,
+      "twitter_screen_name": null,
+      "name": "",
+      "description": "",
+      "is_birthday": 0,
+      "total_viewer_num": 0,
+      "purchase_continuous_live_holiday_enabled": 0,
+      "accepts_avatar": 1,
+      "properties": [],
+      "profile_frame_image_url": "",
+      "is_vip_public_setting_visible": false,
+      "next_continuous_streamer_text": "まいにち配信者",
+      "user_id": "148422278",
+      "onlive": null,
+      "should_register_unique_code": 0,
+      "latest_gacha_started_at": 0,
+      "ribbons": [],
+      "user_avatar_parts_num": 1402,
+      "is_already_set_handover_code": 0,
+      "avatar_background_image_url": "",
+      "is_new": 0,
+      "is_apple_user": 0,
+      "following_num": "0",
+      "is_cheerleader": 0,
+      "accepts_tour": 0,
+      "has_started_first_live": 0,
+      "vip": null,
+      "birthday": "",
+      "max_continuous_record": "0",
+      "should_show_demographic_form": 1,
+      "user_level": {},
+      "profile_frames": [],
+      "generation": "",
+      "live_request_num": "0",
+      "returning_user_type": 0,
+      "registered_at": "1746541643",
+      "season_yell": {
+        "is_display_target": false,
+        "preview_viewers": [],
+        "total_viewer_count": 0
+      },
+      "is_visible_birthday": true,
+      "follower_num": "0",
+      "next_continuous_streamer_badge_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_normal_XS.png",
+      "anniversary": {},
+      "capabilities": {
+        "personalized_appeal": null,
+        "delete_personalized_appeal": true,
+        "standing_view_supported": 0,
+        "emokara_onboarding": 0,
+        "coin_challenge_enabled": 1,
+        "ab_ios_publish_button_enabled": 1,
+        "mail_support_enabled": 0,
+        "private_live_tutorial_url": "https://www.mirrativ.com/notice/private_live_tutorial",
+        "max_group_user_num": 200,
+        "onboarding_button_image_urls": {
+          "on": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/onboard/03_on.png",
+          "off": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/onboard/03_off.png"
+        },
+        "user_level_enabled": 0,
+        "onboarding_twitter_enabled": true,
+        "photo_booth_enabled": 0,
+        "ab_emomo_tab_female_default_names": [
+          ""
+        ],
+        "ios_audio_session_tracking_enabled": 1,
+        "ab_emomo_tab_male_default_names": [
+          "スマイル😀",
+          "グラサン😎",
+          "ピノキオ🤥",
+          "ピエロ🤡",
+          "ロボ🤖",
+          "かぼちゃ男🎃",
+          "ヌコ男😸",
+          "ミザル🙈",
+          "キカザル🙉",
+          "イワザル🙊",
+          "サソリ🦂",
+          "マムシ🐍",
+          "ゴリ🦍",
+          "りゅう🐲",
+          "ブロッコリー🥦",
+          "とんがらし🌶",
+          "ラーメン大好き🍜",
+          "カレー大好き🍛",
+          "おしゅし大好き🍣",
+          "ぎょーざ大好き🥟",
+          "おむすび男🍙",
+          "おでん大明神🍢",
+          "ジョーカー🃏",
+          "ぴょん吉🐸",
+          "コング🦍",
+          "温泉大好き♨️",
+          "スペード♠️",
+          "ぎゃんぶらー🀄️",
+          "やっぱり猫が好き🐱",
+          "ゼロキル🔫"
+        ],
+        "is_avatar_applied": 0,
+        "follow_button_relocation_pattern": 0,
+        "android_play_integrity_enabled_for_debug": false,
+        "gacha_gauge_enabled": 0,
+        "todays_list_enabled": 0,
+        "onboarding_live_matching_enabled": true,
+        "android_play_integrity_enabled": true,
+        "ios_collab_alpha": 1,
+        "google_account_nonce": "Z1pLaXFNdGs=",
+        "android_larger_virtualdisplay": 0,
+        "ab_emomo_tab": 0,
+        "face_tracking_enabled": 0,
+        "time_machine": null,
+        "disabled_alpha": 0,
+        "ios_currency_enabled": 0,
+        "encourage_live_popup_image_url": "",
+        "onboarding_royal_enabled": true,
+        "home_tab_integration": 0,
+        "live_prepare_tutorial_enabled": 1,
+        "gacha_enabled": 0,
+        "collab_alpha": 1,
+        "lower_audio_record_buffer_enabled": 0,
+        "pip_enabled": 1,
+        "recommend_text_to_speech_app_id": "com.google.android.tts",
+        "app_user_url_supported_app_ids": [
+          "jp.co.mixi.monsterstrike"
+        ],
+        "ab_audio_session_set_mix_with_others": 1,
+        "season_rating_info_url": "https://www.mirrativ.com/how_to_mirrativ_class",
+        "offer_wall_url": "",
+        "collabo_emomo_enabled": 0,
+        "save_avatar_photo_enabled": 1,
+        "android_currency_enabled": 0,
+        "game_blackjack": "",
+        "app_add_request_form_url": "https://docs.google.com/forms/d/e/1FAIpQLScgkJT2YTvNIW61SKXQ9IE3QHdff_g6ALAtedCjP50EMvCIeA/viewform",
+        "android_same_aspect_ratio_as_screen": 0,
+        "ab_registration_1": 1,
+        "request_review_v1": 1,
+        "wipe_emomo_enabled": 1,
+        "live_game_listing_icon_enabled": 1,
+        "offer_wall_only": 1,
+        "avatar_introduction_image_url": "",
+        "handover_code_supported": 0,
+        "ab_onboarding_emomo": 1,
+        "ab_20180601_myapp": 0,
+        "ios_tag_beta": 0,
+        "is_summer_event_period": 0,
+        "emomo_audio_service_enabled": 1,
+        "android_avoid_green_edge": 0,
+        "ip_collab_enabled": false,
+        "sticker_beta": 0,
+        "is_avatar_candidate": 0,
+        "home_reward_ad_button_enabled": 1,
+        "is_enabled_nwbandwidth_notice": 0,
+        "report_categories": [
+          {
+            "title": "Comment",
+            "id": 1
+          },
+          {
+            "title": "Profile ＆Icon",
+            "id": 2
+          },
+          {
+            "title": "Stream",
+            "id": 3
+          },
+          {
+            "title": "bot",
+            "id": 4
+          },
+          {
+            "title": "Other",
+            "id": 0
+          }
+        ],
+        "android_safetynet_enabled": false,
+        "mario_kart_url": "",
+        "app_user_detail_enabled": 1,
+        "apple_sign_nonce": "blCfAgdT",
+        "ab_20180601_live_tutorial": 0,
+        "is_llstream_v1_subscribe_logger": 1,
+        "media_codec_async_mode_enabled": 0,
+        "default_names": [],
+        "is_invite_collab_supported": 1,
+        "avatar_tutorial_pages": [
+          "https://www.mirrativ.co.jp/emomo/tutorial/page01",
+          "https://www.mirrativ.co.jp/emomo/tutorial/page02",
+          "https://www.mirrativ.co.jp/emomo/tutorial/page02_1",
+          "https://www.mirrativ.co.jp/emomo/tutorial/page03"
+        ],
+        "ios_audio_rendering_enabled": 1,
+        "login_feature_bubble_enabled": false,
+        "demographic_enabled": 1,
+        "streaming_bgm_enabled": 0,
+        "game_app_icon_enabled": 1,
+        "notification_education_video_url": "",
+        "gift_ranking_enabled": 0,
+        "launch_with_follow_tab": 0,
+        "is_visible_new_year_popup_on_stream_start": 0,
+        "avatar_asset_bundle_url": "https://cdn.mirrativ.com/mirrorman-prod/assets/avatar/AssetBundle-v3.11.0-MainBuilder-2-ec3faca/iOS/",
+        "speedtest_enabled": 1,
+        "moderator": 0,
+        "is_joined_live_thumbnail_supported": 1,
+        "onboarding_survey_enabled": true,
+        "notice_counts_cache_expire": 30,
+        "ab_20180601_registration": 1,
+        "fps_adjustment_enabled": 1,
+        "mix_with_app_audio_enabled": 1,
+        "official_twitter": "mirrativ_jp",
+        "live_preview_v2": 0,
+        "default_headphones_broadcasting_enabled": 1,
+        "avatar_compatible": 1,
+        "karaoke_enabled": 0,
+        "is_llstream_v1_subscribe": 1,
+        "live_preview_sound_enabled": false,
+        "reduce_unity_asset_bundle": 1,
+        "is_notification_blur_supported": 0,
+        "tweet_hash_tags": {
+          "line1": [
+            "#{app_title}",
+            "#ミラティブ",
+            "#参加型",
+            "#初心者",
+            "#ミラティブ配信者と繋がりたい",
+            "#初見さん大歓迎",
+            "#マルチ募集"
+          ],
+          "line2": [
+            "#{app_title}好きと繋がりたい",
+            "#クランメンバー募集",
+            "#ギルドメンバー募集",
+            "#エンジョイ勢",
+            "#友達募集",
+            "#{app_title}女子",
+            "#{app_title}男子"
+          ]
+        },
+        "demographic_last_shown_time": 1587518401,
+        "init_media_profile": 1,
+        "package_usage_stats_interval": 2,
+        "ios_ab_audiosession_at_started_enabled": 0,
+        "fallbacked_app_ids": {
+          "YoStarJP.MajSoul": [
+            "com.YoStarJP.MajSoul"
+          ],
+          "com.xflag.fightleague.amazon": [
+            "com.xflag.fightleague"
+          ],
+          "com.netease.ko": [
+            "com.netease.hyxd"
+          ],
+          "com.nhnpa.cps.amazon": [
+            "com.nhnpa.cps"
+          ],
+          "jp.co.yoozoo.projectred": [
+            "jp.co.yoozoo.projectyellow"
+          ],
+          "com.netease.hyxd": [
+            "com.netease.ko"
+          ],
+          "com.netease.ko.amazon": [
+            "com.netease.hyxd"
+          ],
+          "jp.co.cave.mahouotome": [
+            "jp.co.cave.mahouotome"
+          ],
+          "com.square_enix.android_amazon.hoshidora": [
+            "com.square_enix.hoshinodqjp"
+          ],
+          "jp.co.mixi.monsterstrike.amazon": [
+            "jp.co.mixi.monsterstrike"
+          ],
+          "com.netease.idv.googleplay": [
+            "com.netease.dwrg"
+          ],
+          "app0014-2": [
+            "com.netease.dwrg"
+          ],
+          "app0014": [
+            "com.netease.dwrg"
+          ]
+        },
+        "rotation_player_enabled": false,
+        "user_me_cache_expire": 60,
+        "is_llstream_v1_broadcast": 1,
+        "strings": {
+          "text_emomo_confirm_save": "作成したエモモを保存しますか？ ※ ガチャおよびキャンペーンで獲得したアイテムは、テスト期間終了後も利用可能ですが、それ以外のアイテムはその限りではありません",
+          "text_emomo_confirm_apply_message": "※このβテストの終了時期は未定です。\n※エモモのオフは「アカウント」→「各種設定」で行えます。",
+          "text_gauge_gacha_text1": "ガチャゲージMAX！\nガチャがまわせるよ！",
+          "text_invitation_code_posted": "Message sent! 🙆",
+          "text_q_late": "1問目に間に合わなかったのでまた次回参加してね🙇",
+          "text_chat_tutorial_makeroom_dm": "You can choose who to Chat with from here",
+          "text_gacha_exe_alert_v2": "※ガチャチケットをお持ちの場合、コインより優先して使用されます。\n※ラインナップに記載しているアイテムと注意事項を必ず事前にご確認いただくようお願いいたします。\n",
+          "text_private_tutorial_ttl": "Stream starts when your friends arrive!",
+          "text_emomo_confirm_apply_title": "エモモ（アバター）の無料オープンβテスト開催中！"
+        },
+        "voice_changer_supported": 0
+      },
+      "my_app_num": 0,
+      "is_vip_public": true,
+      "links": [],
+      "grade_id": 0,
+      "birthday_to": 0,
+      "parent_agreement": null,
+      "birthday_editable_date": "",
+      "live_announcement": null,
+      "live_thumbnail_image_url": "",
+      "max_continuous_live_holiday": 3,
+      "paypal_username": "",
+      "nuu": null,
+      "used_continuous_stream_holidays_num": 0,
+      "share_url": "https://mirrativ.page.link/?link=https%3A%2F%2Fwww.mirrativ.com%2Fuser%2F148422278%3Fwhere%3Dprofile&apn=com.dena.mirrativ&ibi=com.dena.mirrativ&isi=1028944599&ius=mirrativ&st=&sd=&si=",
+      "recording_enabled": 0,
+      "status": {
+        "msg": "",
+        "ok": 1,
+        "error": "",
+        "captcha_url": "",
+        "error_code": 0,
+        "message": ""
+      },
+      "live_description": "",
+      "birthday_from": 0,
+      "purchase_continuous_live_holiday_enabled_at": 0,
+      "vip_point": null,
+      "is_birthday_editable": 1,
+      "onboarding_live_game": {
+        "app_id": "livegame.pandolor.nyancoin",
+        "id": "q1I1xq63tlRtfXFe34E-bw"
+      },
+      "kakao_name": "",
+      "continuous_stream_holidays_num": 0,
+      "announcement_urls": {},
+      "season_rating": {
+        "class_name": "",
+        "icon_url": ""
+      },
+      "remaining_days_for_continuous_streamer": 7,
+      "continuous_achieved_text": "",
+      "chat_enabled": 0,
+      "app_unavailable": null,
+      "has_avatar": 0,
+      "is_google_user": false,
+      "is_continuous_streamer": 0,
+      "is_continuous_live_user_after_next_live": 0,
+      "chat_only_followings": "0"
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "request": {
+    "url": "/api/app/my_app",
+    "method": "get",
+    "headers": {
+      "Accept": "application/json, text/plain, */*",
+      "user-agent": "MR_APP/11.16.0/iOS/iPhone15,2/16.1.1",
+      "cookie": "mr_id=a4c715cf298ec2d4cac9e9c28aea7fae",
+      "x-uuid": "CB692136-4FBA-4DB9-BB34-58AFC4FE208A",
+      "x-idfv": "EAC0B143-27FF-42E9-919E-1A56CE29A358",
+      "Accept-Encoding": "gzip, compress, deflate, br"
+    },
+    "params": {}
+  },
+  "response": {
+    "status": 200,
+    "statusText": "OK",
+    "headers": {
+      "server": "infra-xds-server/1.2.9/web",
+      "date": "Thu, 01 May 2025 22:33:16 GMT",
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "no-cache",
+      "set-cookie": "mr_id=a4c715cf298ec2d4cac9e9c28aea7fae; domain=.mirrativ.com; path=/; expires=Wed, 24-Nov-2123 22:33:16 GMT; secure, lang=en; domain=.mirrativ.com; path=/; expires=Sat, 07-Apr-2125 22:33:16 GMT, f=D37F845E-241D-11F0-9F91-AFC517EE6A05; domain=.mirrativ.com; path=/; expires=Sat, 07-Apr-2125 22:33:16 GMT",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "expires": "Thu, 01 May 2025 22:33:15 GMT",
+      "x-envoy-upstream-service-time": "132",
+      "via": "1.1 google",
+      "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+      "transfer-encoding": "chunked"
+    },
+    "body": {
+      "next_page": null,
+      "previous_page": null,
+      "status": {
+        "msg": "",
+        "ok": 1,
+        "error": "",
+        "captcha_url": "",
+        "error_code": 0,
+        "message": ""
+      },
+      "current_page": 1,
+      "apps": []
+    }
+  }
+}

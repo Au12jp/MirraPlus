@@ -1,0 +1,1860 @@
+{
+  "request": {
+    "url": "/api/catalog/follow",
+    "method": "get",
+    "headers": {
+      "Accept": "application/json, text/plain, */*",
+      "user-agent": "MR_APP/11.16.0/iOS/iPhone15,2/16.1.1",
+      "cookie": "mr_id=a4c715cf298ec2d4cac9e9c28aea7fae",
+      "x-uuid": "CB692136-4FBA-4DB9-BB34-58AFC4FE208A",
+      "x-idfv": "EAC0B143-27FF-42E9-919E-1A56CE29A358",
+      "Accept-Encoding": "gzip, compress, deflate, br"
+    },
+    "params": {}
+  },
+  "response": {
+    "status": 200,
+    "statusText": "OK",
+    "headers": {
+      "server": "infra-xds-server/1.2.9/web",
+      "date": "Thu, 01 May 2025 22:35:17 GMT",
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "no-cache",
+      "set-cookie": "mr_id=a4c715cf298ec2d4cac9e9c28aea7fae; Path=/; Expires=Sat, 07 Apr 2125 22:35:17 GMT; Secure",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "expires": "Thu, 01 May 2025 22:35:16 GMT",
+      "x-envoy-upstream-service-time": "223",
+      "via": "1.1 google",
+      "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+      "transfer-encoding": "chunked"
+    },
+    "body": {
+      "current_cursor": "",
+      "list": [
+        {
+          "live": {
+            "app_icon_urls": [
+              "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/app/c4383e75f4d864b81d5525d447c2183c83118dead58ec74345f4e5ea4e115d0b_iOS.png"
+            ],
+            "app_id": "com.dena.mirrativa",
+            "archive_status": 2,
+            "avatar_body_image_url": "",
+            "blur_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/09e49a623f93e21cc3ff3cbad47ffbbb79ec77fe352c5da9bd5e146a1c5df54f_m.jpeg?blur=80&1746138823",
+            "collab_user_profile_image_urls": [],
+            "ended_at": 0,
+            "following_viewer_image_urls": [],
+            "following_viewer_num": 0,
+            "has_recording": false,
+            "image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/09e49a623f93e21cc3ff3cbad47ffbbb79ec77fe352c5da9bd5e146a1c5df54f_m.jpeg?1746138823",
+            "is_collab": false,
+            "is_live": true,
+            "is_nuu_welcome": false,
+            "is_omotenashi": false,
+            "is_private": false,
+            "joined_live_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/09e49a623f93e21cc3ff3cbad47ffbbb79ec77fe352c5da9bd5e146a1c5df54f_m.jpeg?1746138823",
+            "live_id": "Cjp_svcq7Pi_ZhbI_-rSaQ",
+            "orientation_v2": 1,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "🐺",
+              "profile_frame_image_url": "",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/93f43ceb3208824c09cf35d2dc677d7381cc7f8c4ec86b579b51ff025dc90b73_m.jpeg?1746130818",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "146912573",
+              "yell_level": 1,
+              "yell_rank": 0
+            },
+            "preview": {
+              "streaming_url_edge": "rtmp://edge-210-129-64-169.mirrativ.com:1935/liveedge/v1c6x10033a441c6ea8839bee692e8710ba21f9a9a3b43bea839a3240219s027",
+              "streaming_url_hls": "https://hls-cdn27.mirrativ.com/liveedge/v1c6x10033a441c6ea8839bee692e8710ba21f9a9a3b43bea839a3240219s027/playlist.m3u8"
+            },
+            "private_invited_user_image_urls": [],
+            "private_invited_user_num": 0,
+            "private_viewer_image_urls": [],
+            "private_viewer_num": 0,
+            "recommend": null,
+            "started_at": 1746135213,
+            "thumbnail_frame": {
+              "icon_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/4pR7rYbwPQI/icon_image_1743760043.png",
+              "id": 16778160,
+              "left_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/4pR7rYbwPQI/left_image_1743760043.png",
+              "right_thumbnail_animation_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/4pR7rYbwPQI/right_animation_image_1743760043.webp",
+              "right_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/4pR7rYbwPQI/right_image_1743760043.png"
+            },
+            "title": "声ありでいりー",
+            "total_viewer_num": 40,
+            "user_app_status": [],
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/ribbon/226917/image_1743759816.png"
+          },
+          "log_id": "137754290-1746138917245474749-1",
+          "type": "live"
+        },
+        {
+          "live_announcement": {
+            "app_icon_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/app/c4383e75f4d864b81d5525d447c2183c83118dead58ec74345f4e5ea4e115d0b_iOS.png",
+            "body": "雨だー...最悪",
+            "created_at": 1746135289,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "🐺",
+              "profile_frame_image_url": "",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/93f43ceb3208824c09cf35d2dc677d7381cc7f8c4ec86b579b51ff025dc90b73_m.jpeg?1746130818",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "146912573",
+              "yell_level": 1,
+              "yell_rank": 0
+            },
+            "recommend": null,
+            "start_at": 0,
+            "url": "mirr:///user/146912573",
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/ribbon/226917/image_1743759816.png"
+          },
+          "log_id": "137754290-1746138917245474749-2",
+          "type": "live_announcement"
+        },
+        {
+          "archive": {
+            "app_icon_urls": [
+              "https://cdn.mirrativ.com/mirrorman-prod/image/app_icon/c95177aedd1dbdef4b69182c07474b688f2a9603a6b77420bd6fa4df647208ca.png"
+            ],
+            "app_id": "jp.co.ponos.battlecats",
+            "archive_status": 1,
+            "avatar_body_image_url": "",
+            "blur_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/cc8b07d4f867c40ea15cec1a5aa64987993f0af0d945316a3d80c1fdf0b6a75d_m.jpeg?blur=80&1746134221",
+            "collab_user_profile_image_urls": [],
+            "ended_at": 1746134239,
+            "following_viewer_image_urls": [],
+            "following_viewer_num": 0,
+            "has_recording": true,
+            "image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/cc8b07d4f867c40ea15cec1a5aa64987993f0af0d945316a3d80c1fdf0b6a75d_m.jpeg?1746134221",
+            "is_collab": false,
+            "is_live": false,
+            "is_nuu_welcome": false,
+            "is_omotenashi": false,
+            "is_private": false,
+            "joined_live_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/cc8b07d4f867c40ea15cec1a5aa64987993f0af0d945316a3d80c1fdf0b6a75d_m.jpeg?1746134221",
+            "live_id": "oPlY6DoWC9NQMh7LpqalBw",
+            "orientation_v2": 1,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_extreme_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_extreme_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "💟q-TOSHI-p💟トシパパ",
+              "profile_frame_image_url": "",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/95fefefdbe158333f9fc11cbd2531710c08b94c03aa82dc0910f9168d6777d0d_m.jpeg?1746134240",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "2846847",
+              "yell_level": 1,
+              "yell_rank": 0
+            },
+            "preview": null,
+            "private_invited_user_image_urls": [],
+            "private_invited_user_num": 0,
+            "private_viewer_image_urls": [],
+            "private_viewer_num": 0,
+            "recommend": null,
+            "started_at": 1746130610,
+            "thumbnail_frame": null,
+            "title": "15分💟トシパパの【人だかり】ゲーム配信💟アガリオ10周年おめでとう",
+            "total_viewer_num": 81,
+            "user_app_status": [],
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/ribbon/227293/image_1744794767.png"
+          },
+          "log_id": "137754290-1746138917245474749-3",
+          "type": "archive"
+        },
+        {
+          "live_announcement": {
+            "app_icon_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/app/c4383e75f4d864b81d5525d447c2183c83118dead58ec74345f4e5ea4e115d0b_iOS.png",
+            "body": "😀😃😄😁😆😐",
+            "created_at": 1746114084,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "🐺",
+              "profile_frame_image_url": "",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/93f43ceb3208824c09cf35d2dc677d7381cc7f8c4ec86b579b51ff025dc90b73_m.jpeg?1746130818",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "146912573",
+              "yell_level": 1,
+              "yell_rank": 0
+            },
+            "recommend": null,
+            "start_at": 0,
+            "url": "mirr:///user/146912573",
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/ribbon/226917/image_1743759816.png"
+          },
+          "log_id": "137754290-1746138917245474749-4",
+          "type": "live_announcement"
+        },
+        {
+          "live_announcement": {
+            "app_icon_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/app/c4383e75f4d864b81d5525d447c2183c83118dead58ec74345f4e5ea4e115d0b_iOS.png",
+            "body": "0:04分、ご臨終です...",
+            "created_at": 1746111885,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "🐺",
+              "profile_frame_image_url": "",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/93f43ceb3208824c09cf35d2dc677d7381cc7f8c4ec86b579b51ff025dc90b73_m.jpeg?1746130818",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "146912573",
+              "yell_level": 1,
+              "yell_rank": 0
+            },
+            "recommend": null,
+            "start_at": 0,
+            "url": "mirr:///user/146912573",
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/ribbon/226917/image_1743759816.png"
+          },
+          "log_id": "137754290-1746138917245474749-5",
+          "type": "live_announcement"
+        },
+        {
+          "live_announcement": {
+            "app_icon_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/app/c4383e75f4d864b81d5525d447c2183c83118dead58ec74345f4e5ea4e115d0b_iOS.png",
+            "body": "おるめぇぇぇぇぇん😭",
+            "created_at": 1746111870,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "🐺",
+              "profile_frame_image_url": "",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/93f43ceb3208824c09cf35d2dc677d7381cc7f8c4ec86b579b51ff025dc90b73_m.jpeg?1746130818",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "146912573",
+              "yell_level": 1,
+              "yell_rank": 0
+            },
+            "recommend": null,
+            "start_at": 0,
+            "url": "mirr:///user/146912573",
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/ribbon/226917/image_1743759816.png"
+          },
+          "log_id": "137754290-1746138917245474749-6",
+          "type": "live_announcement"
+        },
+        {
+          "archive": {
+            "app_icon_urls": [
+              "https://cdn.mirrativ.com/mirrorman-prod/image/app_icon/08eccea4e8b33b2a820e4ef2541536847c4a007965ab01186d1df1771517c31b.png",
+              "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/app/c08ce6bed34a4cc4b96e2cfc69e96dd3bf5d05b8ebf284c65b8cb38252cf613f_iOS.png"
+            ],
+            "app_id": "com.YoStarJP.MajSoul",
+            "archive_status": 2,
+            "avatar_body_image_url": "",
+            "blur_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/01cb7caded8611c7caa4fd95686fc83dc0db1babb0f59d4b53c328d4642fa45a_m.jpeg?blur=80&1746118563",
+            "collab_user_profile_image_urls": [],
+            "ended_at": 1746118697,
+            "following_viewer_image_urls": [],
+            "following_viewer_num": 0,
+            "has_recording": false,
+            "image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/01cb7caded8611c7caa4fd95686fc83dc0db1babb0f59d4b53c328d4642fa45a_m.jpeg?1746118563",
+            "is_collab": false,
+            "is_live": false,
+            "is_nuu_welcome": false,
+            "is_omotenashi": false,
+            "is_private": false,
+            "joined_live_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/01cb7caded8611c7caa4fd95686fc83dc0db1babb0f59d4b53c328d4642fa45a_m.jpeg?1746118563",
+            "live_id": "k0pocTc3d1AgQz8fwYNFvQ",
+            "orientation_v2": 1,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_super_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_super_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "ﾀｺﾏﾙﾁｬﾝ🐙",
+              "profile_frame_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/profile_frame/1354/image_l_1744944691.png",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/45389ea5ca5a04b335691cd81437a180a7e8ef74f2254dc2cf90a890e63c56be_m.jpeg?1746118697",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "141744082",
+              "yell_level": 1,
+              "yell_rank": 0
+            },
+            "preview": null,
+            "private_invited_user_image_urls": [],
+            "private_invited_user_num": 0,
+            "private_viewer_image_urls": [],
+            "private_viewer_num": 0,
+            "recommend": null,
+            "started_at": 1746109402,
+            "thumbnail_frame": {
+              "icon_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/icon_image_1733114956.png",
+              "id": 16778037,
+              "left_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/left_image_1733191210.png",
+              "right_thumbnail_animation_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/right_animation_image_1733114956.webp",
+              "right_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/right_image_1733114956.png"
+            },
+            "title": "初見さん待ち🔰",
+            "total_viewer_num": 313,
+            "user_app_status": [],
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrorman-prod/assets/gift/ribbon/roulette/2102/roulette_2102_day10.png"
+          },
+          "log_id": "137754290-1746138917245474749-7",
+          "type": "archive"
+        },
+        {
+          "archive": {
+            "app_icon_urls": [
+              "https://cdn.mirrativ.com/mirrorman-prod/image/app_icon/08eccea4e8b33b2a820e4ef2541536847c4a007965ab01186d1df1771517c31b.png"
+            ],
+            "app_id": "com.YoStarJP.MajSoul",
+            "archive_status": 2,
+            "avatar_body_image_url": "",
+            "blur_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/ec1256ea47b41dc4e81328675f4d0f77510788ccf317681fbb16a7189a564b66_m.jpeg?blur=80&1746109278",
+            "collab_user_profile_image_urls": [],
+            "ended_at": 1746109382,
+            "following_viewer_image_urls": [],
+            "following_viewer_num": 0,
+            "has_recording": false,
+            "image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/ec1256ea47b41dc4e81328675f4d0f77510788ccf317681fbb16a7189a564b66_m.jpeg?1746109278",
+            "is_collab": false,
+            "is_live": false,
+            "is_nuu_welcome": false,
+            "is_omotenashi": false,
+            "is_private": false,
+            "joined_live_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/ec1256ea47b41dc4e81328675f4d0f77510788ccf317681fbb16a7189a564b66_m.jpeg?1746109278",
+            "live_id": "F9OWYRKHEA_Xsi-1EwvFrw",
+            "orientation_v2": 6,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_super_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_super_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "ﾀｺﾏﾙﾁｬﾝ🐙",
+              "profile_frame_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/profile_frame/1354/image_l_1744944691.png",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/45389ea5ca5a04b335691cd81437a180a7e8ef74f2254dc2cf90a890e63c56be_m.jpeg?1746118697",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "141744082",
+              "yell_level": 1,
+              "yell_rank": 0
+            },
+            "preview": null,
+            "private_invited_user_image_urls": [],
+            "private_invited_user_num": 0,
+            "private_viewer_image_urls": [],
+            "private_viewer_num": 0,
+            "recommend": null,
+            "started_at": 1746105971,
+            "thumbnail_frame": {
+              "icon_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/icon_image_1733114956.png",
+              "id": 16778037,
+              "left_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/left_image_1733191210.png",
+              "right_thumbnail_animation_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/right_animation_image_1733114956.webp",
+              "right_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/right_image_1733114956.png"
+            },
+            "title": "初見さん待ち🔰",
+            "total_viewer_num": 60,
+            "user_app_status": [],
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrorman-prod/assets/gift/ribbon/roulette/2102/roulette_2102_day10.png"
+          },
+          "log_id": "137754290-1746138917245474749-8",
+          "type": "archive"
+        },
+        {
+          "archive": {
+            "app_icon_urls": [
+              "https://cdn.mirrativ.com/mirrorman-prod/image/app_icon/a6fa408d94272e99c28d989bd04bd5bc55ce09c1910e64c3c4ff23226d29186e.png"
+            ],
+            "app_id": "com.miniclip.agar.io",
+            "archive_status": 1,
+            "avatar_body_image_url": "",
+            "blur_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/75a17936a897f42070a934bc0ac2e9aaebecced0000662a4dd071b6543a63a35_m.jpeg?blur=80&1746106860",
+            "collab_user_profile_image_urls": [],
+            "ended_at": 1746106934,
+            "following_viewer_image_urls": [],
+            "following_viewer_num": 0,
+            "has_recording": true,
+            "image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/75a17936a897f42070a934bc0ac2e9aaebecced0000662a4dd071b6543a63a35_m.jpeg?1746106860",
+            "is_collab": false,
+            "is_live": false,
+            "is_nuu_welcome": false,
+            "is_omotenashi": false,
+            "is_private": false,
+            "joined_live_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/75a17936a897f42070a934bc0ac2e9aaebecced0000662a4dd071b6543a63a35_m.jpeg?1746106860",
+            "live_id": "H0cvXSmqQFqNAQLIbczHqw",
+            "orientation_v2": 8,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_extreme_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_extreme_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "💟q-TOSHI-p💟トシパパ",
+              "profile_frame_image_url": "",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/95fefefdbe158333f9fc11cbd2531710c08b94c03aa82dc0910f9168d6777d0d_m.jpeg?1746134240",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "2846847",
+              "yell_level": 1,
+              "yell_rank": 0
+            },
+            "preview": null,
+            "private_invited_user_image_urls": [],
+            "private_invited_user_num": 0,
+            "private_viewer_image_urls": [],
+            "private_viewer_num": 0,
+            "recommend": null,
+            "started_at": 1746101899,
+            "thumbnail_frame": null,
+            "title": "💟トシパパの【人だかり】ゲーム配信💟アガリオ10周年おめでとう",
+            "total_viewer_num": 743,
+            "user_app_status": [],
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/ribbon/227293/image_1744794767.png"
+          },
+          "log_id": "137754290-1746138917245474749-9",
+          "type": "archive"
+        },
+        {
+          "archive": {
+            "app_icon_urls": [
+              "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/app/c08ce6bed34a4cc4b96e2cfc69e96dd3bf5d05b8ebf284c65b8cb38252cf613f_iOS.png"
+            ],
+            "app_id": "com.supercell.brawlstars",
+            "archive_status": 2,
+            "avatar_body_image_url": "",
+            "blur_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/e01bd6e8c2bd79d79ea1027a61ea3ee24d423bd55bfe6ef2d0e360d66afb05ca_m.jpeg?blur=80&1746103799",
+            "collab_user_profile_image_urls": [],
+            "ended_at": 1746103827,
+            "following_viewer_image_urls": [],
+            "following_viewer_num": 0,
+            "has_recording": false,
+            "image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/e01bd6e8c2bd79d79ea1027a61ea3ee24d423bd55bfe6ef2d0e360d66afb05ca_m.jpeg?1746103799",
+            "is_collab": false,
+            "is_live": false,
+            "is_nuu_welcome": false,
+            "is_omotenashi": false,
+            "is_private": false,
+            "joined_live_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/e01bd6e8c2bd79d79ea1027a61ea3ee24d423bd55bfe6ef2d0e360d66afb05ca_m.jpeg?1746103799",
+            "live_id": "TGK7Yq6DeYG6Plm4R0A7cw",
+            "orientation_v2": 1,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_super_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_super_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "ﾀｺﾏﾙﾁｬﾝ🐙",
+              "profile_frame_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/profile_frame/1354/image_l_1744944691.png",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/45389ea5ca5a04b335691cd81437a180a7e8ef74f2254dc2cf90a890e63c56be_m.jpeg?1746118697",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "141744082",
+              "yell_level": 1,
+              "yell_rank": 0
+            },
+            "preview": null,
+            "private_invited_user_image_urls": [],
+            "private_invited_user_num": 0,
+            "private_viewer_image_urls": [],
+            "private_viewer_num": 0,
+            "recommend": null,
+            "started_at": 1746099736,
+            "thumbnail_frame": {
+              "icon_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/icon_image_1733114956.png",
+              "id": 16778037,
+              "left_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/left_image_1733191210.png",
+              "right_thumbnail_animation_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/right_animation_image_1733114956.webp",
+              "right_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/right_image_1733114956.png"
+            },
+            "title": "初見さん待ち🔰",
+            "total_viewer_num": 153,
+            "user_app_status": [
+              {
+                "icon_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/live_tag/img_brawlstars_best_trophies.png",
+                "label": "最多トロフィー数",
+                "value": "79432"
+              },
+              {
+                "icon_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/live_tag/img_brawlstars_trio_victories.png",
+                "label": "3:3 勝利数",
+                "value": "17627"
+              }
+            ],
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrorman-prod/assets/gift/ribbon/roulette/2102/roulette_2102_day10.png"
+          },
+          "log_id": "137754290-1746138917245474749-10",
+          "type": "archive"
+        },
+        {
+          "archive": {
+            "app_icon_urls": [
+              "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/app/fb29a6f9e8d57f7a5d3e7f9d714020f8a95065f1d8724de74898b41e97e7600a_iOS.png"
+            ],
+            "app_id": "com.HoYoverse.hkrpgoversea",
+            "archive_status": 2,
+            "avatar_body_image_url": "",
+            "blur_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/bc6816882491a6de1530ea3447f22c3bf0bf1cab78e9fae4096043fb544b701d_m.jpeg?crop=16:9,offset-x0,offset-y26&blur=80&1746090207",
+            "collab_user_profile_image_urls": [],
+            "ended_at": 1746090284,
+            "following_viewer_image_urls": [],
+            "following_viewer_num": 0,
+            "has_recording": false,
+            "image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/bc6816882491a6de1530ea3447f22c3bf0bf1cab78e9fae4096043fb544b701d_m.jpeg?crop=16:9,offset-x0,offset-y26&1746090207",
+            "is_collab": false,
+            "is_live": false,
+            "is_nuu_welcome": false,
+            "is_omotenashi": false,
+            "is_private": false,
+            "joined_live_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/bc6816882491a6de1530ea3447f22c3bf0bf1cab78e9fae4096043fb544b701d_m.jpeg?1746090207",
+            "live_id": "UwaJQ0LJfdAInhEDkOh3hg",
+            "orientation_v2": 2,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "ライト　ꪶ ⚡️ ꫂ",
+              "profile_frame_image_url": "",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/40f1d412983995217163cb756181feabe2a8e3bd11f3e1dad1f3f4b832fb98e0_m.jpeg?1746090285",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "104760851",
+              "yell_level": 0,
+              "yell_rank": 0
+            },
+            "preview": null,
+            "private_invited_user_image_urls": [],
+            "private_invited_user_num": 0,
+            "private_viewer_image_urls": [],
+            "private_viewer_num": 0,
+            "recommend": null,
+            "started_at": 1746089296,
+            "thumbnail_frame": null,
+            "title": "コイン欲しいいいい広告見たくないいいいいいいいいい",
+            "total_viewer_num": 7,
+            "user_app_status": [],
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/ribbon/227294/image_1744794818.png"
+          },
+          "log_id": "137754290-1746138917245474749-11",
+          "type": "archive"
+        },
+        {
+          "archive": {
+            "app_icon_urls": [
+              "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/app/fb29a6f9e8d57f7a5d3e7f9d714020f8a95065f1d8724de74898b41e97e7600a_iOS.png"
+            ],
+            "app_id": "com.HoYoverse.hkrpgoversea",
+            "archive_status": 2,
+            "avatar_body_image_url": "",
+            "blur_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/1160f5f406a5ca3c0234ba6e9adc18f2cab6004301aed7c5da45cb3f60b536a3_m.jpeg?crop=16:9,offset-x0,offset-y26&blur=80&1746089075",
+            "collab_user_profile_image_urls": [],
+            "ended_at": 1746089089,
+            "following_viewer_image_urls": [],
+            "following_viewer_num": 0,
+            "has_recording": false,
+            "image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/1160f5f406a5ca3c0234ba6e9adc18f2cab6004301aed7c5da45cb3f60b536a3_m.jpeg?crop=16:9,offset-x0,offset-y26&1746089075",
+            "is_collab": false,
+            "is_live": false,
+            "is_nuu_welcome": false,
+            "is_omotenashi": false,
+            "is_private": false,
+            "joined_live_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/1160f5f406a5ca3c0234ba6e9adc18f2cab6004301aed7c5da45cb3f60b536a3_m.jpeg?1746089075",
+            "live_id": "XfgvodzDP3t6n7gpGn8jNw",
+            "orientation_v2": 2,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "ライト　ꪶ ⚡️ ꫂ",
+              "profile_frame_image_url": "",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/40f1d412983995217163cb756181feabe2a8e3bd11f3e1dad1f3f4b832fb98e0_m.jpeg?1746090285",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "104760851",
+              "yell_level": 0,
+              "yell_rank": 0
+            },
+            "preview": null,
+            "private_invited_user_image_urls": [],
+            "private_invited_user_num": 0,
+            "private_viewer_image_urls": [],
+            "private_viewer_num": 0,
+            "recommend": null,
+            "started_at": 1746088916,
+            "thumbnail_frame": null,
+            "title": "コイン欲しいいいい広告見たくないいいいいいいいいい",
+            "total_viewer_num": 1,
+            "user_app_status": [],
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/ribbon/227294/image_1744794818.png"
+          },
+          "log_id": "137754290-1746138917245474749-12",
+          "type": "archive"
+        },
+        {
+          "archive": {
+            "app_icon_urls": [
+              "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/app/dfadbd47df8a71eef4220019c37aacc150919b9d73b0f6dfcf8af380c6efdde0_iOS.png"
+            ],
+            "app_id": "livegame.scopenext.picopicosurvivors",
+            "archive_status": 2,
+            "avatar_body_image_url": "",
+            "blur_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/6f668c87624b02ddadbe2297d06f4101e9825b5af471b749b7b43455a8d6f9df_m.jpeg?blur=80&1746089330",
+            "collab_user_profile_image_urls": [],
+            "ended_at": 1746089423,
+            "following_viewer_image_urls": [],
+            "following_viewer_num": 0,
+            "has_recording": false,
+            "image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/6f668c87624b02ddadbe2297d06f4101e9825b5af471b749b7b43455a8d6f9df_m.jpeg?1746089330",
+            "is_collab": false,
+            "is_live": false,
+            "is_nuu_welcome": false,
+            "is_omotenashi": false,
+            "is_private": false,
+            "joined_live_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/6f668c87624b02ddadbe2297d06f4101e9825b5af471b749b7b43455a8d6f9df_m.jpeg?1746089330",
+            "live_id": "yeHp3aV-oleWrvkokmPg3g",
+            "orientation_v2": 1,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_super_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_super_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "ﾀｺﾏﾙﾁｬﾝ🐙",
+              "profile_frame_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/profile_frame/1354/image_l_1744944691.png",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/45389ea5ca5a04b335691cd81437a180a7e8ef74f2254dc2cf90a890e63c56be_m.jpeg?1746118697",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "141744082",
+              "yell_level": 1,
+              "yell_rank": 0
+            },
+            "preview": null,
+            "private_invited_user_image_urls": [],
+            "private_invited_user_num": 0,
+            "private_viewer_image_urls": [],
+            "private_viewer_num": 0,
+            "recommend": null,
+            "started_at": 1746087667,
+            "thumbnail_frame": {
+              "icon_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/icon_image_1733114956.png",
+              "id": 16778037,
+              "left_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/left_image_1733191210.png",
+              "right_thumbnail_animation_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/right_animation_image_1733114956.webp",
+              "right_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/right_image_1733114956.png"
+            },
+            "title": "デイリー",
+            "total_viewer_num": 7,
+            "user_app_status": [],
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrorman-prod/assets/gift/ribbon/roulette/2102/roulette_2102_day10.png"
+          },
+          "log_id": "137754290-1746138917245474749-13",
+          "type": "archive"
+        },
+        {
+          "live_announcement": {
+            "app_icon_url": "",
+            "body": "羽ほすぃ...という訳で寝ます",
+            "created_at": 1746038522,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "🐺",
+              "profile_frame_image_url": "",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/93f43ceb3208824c09cf35d2dc677d7381cc7f8c4ec86b579b51ff025dc90b73_m.jpeg?1746130818",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "146912573",
+              "yell_level": 1,
+              "yell_rank": 0
+            },
+            "recommend": null,
+            "start_at": 0,
+            "url": "mirr:///user/146912573",
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/ribbon/226917/image_1743759816.png"
+          },
+          "log_id": "137754290-1746138917245474749-14",
+          "type": "live_announcement"
+        },
+        {
+          "live_announcement": {
+            "app_icon_url": "",
+            "body": "やっぱり羽は8位以内かぁ...",
+            "created_at": 1746018610,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "🐺",
+              "profile_frame_image_url": "",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/93f43ceb3208824c09cf35d2dc677d7381cc7f8c4ec86b579b51ff025dc90b73_m.jpeg?1746130818",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "146912573",
+              "yell_level": 1,
+              "yell_rank": 0
+            },
+            "recommend": null,
+            "start_at": 0,
+            "url": "mirr:///user/146912573",
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/ribbon/226917/image_1743759816.png"
+          },
+          "log_id": "137754290-1746138917245474749-15",
+          "type": "live_announcement"
+        },
+        {
+          "live_announcement": {
+            "app_icon_url": "",
+            "body": " ぬぶさん配信頼んます",
+            "created_at": 1746018487,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "🐺",
+              "profile_frame_image_url": "",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/93f43ceb3208824c09cf35d2dc677d7381cc7f8c4ec86b579b51ff025dc90b73_m.jpeg?1746130818",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "146912573",
+              "yell_level": 1,
+              "yell_rank": 0
+            },
+            "recommend": null,
+            "start_at": 1746018479,
+            "url": "mirr:///user/146912573",
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/ribbon/226917/image_1743759816.png"
+          },
+          "log_id": "137754290-1746138917245474749-16",
+          "type": "live_announcement"
+        },
+        {
+          "archive": {
+            "app_icon_urls": [
+              "https://cdn.mirrativ.com/mirrorman-prod/image/app_icon/08eccea4e8b33b2a820e4ef2541536847c4a007965ab01186d1df1771517c31b.png"
+            ],
+            "app_id": "com.YoStarJP.MajSoul",
+            "archive_status": 2,
+            "avatar_body_image_url": "",
+            "blur_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/d1918d39c5139dc01eb89d556ef3b216fc75b82c93ea091378644dab06e6aa2f_m.jpeg?blur=80&1746023453",
+            "collab_user_profile_image_urls": [],
+            "ended_at": 1746023521,
+            "following_viewer_image_urls": [],
+            "following_viewer_num": 0,
+            "has_recording": false,
+            "image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/d1918d39c5139dc01eb89d556ef3b216fc75b82c93ea091378644dab06e6aa2f_m.jpeg?1746023453",
+            "is_collab": false,
+            "is_live": false,
+            "is_nuu_welcome": false,
+            "is_omotenashi": false,
+            "is_private": false,
+            "joined_live_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/d1918d39c5139dc01eb89d556ef3b216fc75b82c93ea091378644dab06e6aa2f_m.jpeg?1746023453",
+            "live_id": "NllnnIPZtOOztVnTfqbcWA",
+            "orientation_v2": 1,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_super_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_super_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "ﾀｺﾏﾙﾁｬﾝ🐙",
+              "profile_frame_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/profile_frame/1354/image_l_1744944691.png",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/45389ea5ca5a04b335691cd81437a180a7e8ef74f2254dc2cf90a890e63c56be_m.jpeg?1746118697",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "141744082",
+              "yell_level": 1,
+              "yell_rank": 0
+            },
+            "preview": null,
+            "private_invited_user_image_urls": [],
+            "private_invited_user_num": 0,
+            "private_viewer_image_urls": [],
+            "private_viewer_num": 0,
+            "recommend": null,
+            "started_at": 1746016692,
+            "thumbnail_frame": {
+              "icon_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/icon_image_1733114956.png",
+              "id": 16778037,
+              "left_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/left_image_1733191210.png",
+              "right_thumbnail_animation_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/right_animation_image_1733114956.webp",
+              "right_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/right_image_1733114956.png"
+            },
+            "title": "初見さん待ち",
+            "total_viewer_num": 118,
+            "user_app_status": [],
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrorman-prod/assets/gift/ribbon/roulette/2102/roulette_2102_day10.png"
+          },
+          "log_id": "137754290-1746138917245474749-17",
+          "type": "archive"
+        },
+        {
+          "archive": {
+            "app_icon_urls": [],
+            "app_id": "",
+            "archive_status": 2,
+            "avatar_body_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/user_closet_body_image_1/3d2371c835faece1cb86888f465a513273474aefbd9b76ac13b4b08d436a39b9_origin.png?1745580029",
+            "blur_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/b4ea1b43e8a8f79476886cf46a3fe3b62167aca22ff675de89e5ab33c4163cf8_m.jpeg?crop=16:9,offset-x0,offset-y26&blur=80&1746016587",
+            "collab_user_profile_image_urls": [],
+            "ended_at": 1746016675,
+            "following_viewer_image_urls": [],
+            "following_viewer_num": 0,
+            "has_recording": false,
+            "image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/b4ea1b43e8a8f79476886cf46a3fe3b62167aca22ff675de89e5ab33c4163cf8_m.jpeg?crop=16:9,offset-x0,offset-y26&1746016587",
+            "is_collab": false,
+            "is_live": false,
+            "is_nuu_welcome": false,
+            "is_omotenashi": false,
+            "is_private": false,
+            "joined_live_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/b4ea1b43e8a8f79476886cf46a3fe3b62167aca22ff675de89e5ab33c4163cf8_m.jpeg?1746016587",
+            "live_id": "DuF-7pRWV2Tayq3gOISBrQ",
+            "orientation_v2": 1,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "",
+                  "small_image_url": ""
+                }
+              ],
+              "is_new": false,
+              "name": "らいとらいと",
+              "profile_frame_image_url": "",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/3d2371c835faece1cb86888f465a513273474aefbd9b76ac13b4b08d436a39b9_m.jpeg?1746016675",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "148200072",
+              "yell_level": 0,
+              "yell_rank": 0
+            },
+            "preview": null,
+            "private_invited_user_image_urls": [],
+            "private_invited_user_num": 0,
+            "private_viewer_image_urls": [],
+            "private_viewer_num": 0,
+            "recommend": null,
+            "started_at": 1746015525,
+            "thumbnail_frame": null,
+            "title": "無反応　入室❌",
+            "total_viewer_num": 2,
+            "user_app_status": [],
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/ribbon/227292/image_1744794726.png"
+          },
+          "log_id": "137754290-1746138917245474749-18",
+          "type": "archive"
+        },
+        {
+          "archive": {
+            "app_icon_urls": [
+              "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/app/c4383e75f4d864b81d5525d447c2183c83118dead58ec74345f4e5ea4e115d0b_iOS.png"
+            ],
+            "app_id": "com.dena.mirrativa",
+            "archive_status": 2,
+            "avatar_body_image_url": "",
+            "blur_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/5b186ab6227f0da9f39867e63f1920c57e7d7b1e4ffb231be37c74f25ef7deda_m.jpeg?crop=16:9,offset-x0,offset-y26&blur=80&1746016111",
+            "collab_user_profile_image_urls": [],
+            "ended_at": 1746016153,
+            "following_viewer_image_urls": [],
+            "following_viewer_num": 0,
+            "has_recording": false,
+            "image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/5b186ab6227f0da9f39867e63f1920c57e7d7b1e4ffb231be37c74f25ef7deda_m.jpeg?crop=16:9,offset-x0,offset-y26&1746016111",
+            "is_collab": false,
+            "is_live": false,
+            "is_nuu_welcome": false,
+            "is_omotenashi": false,
+            "is_private": false,
+            "joined_live_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/5b186ab6227f0da9f39867e63f1920c57e7d7b1e4ffb231be37c74f25ef7deda_m.jpeg?1746016111",
+            "live_id": "AirNj9Glabv3bqipRcr3Kg",
+            "orientation_v2": 2,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "ライト　ꪶ ⚡️ ꫂ",
+              "profile_frame_image_url": "",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/40f1d412983995217163cb756181feabe2a8e3bd11f3e1dad1f3f4b832fb98e0_m.jpeg?1746090285",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "104760851",
+              "yell_level": 0,
+              "yell_rank": 0
+            },
+            "preview": null,
+            "private_invited_user_image_urls": [],
+            "private_invited_user_num": 0,
+            "private_viewer_image_urls": [],
+            "private_viewer_num": 0,
+            "recommend": null,
+            "started_at": 1746015049,
+            "thumbnail_frame": null,
+            "title": "入室❌",
+            "total_viewer_num": 4,
+            "user_app_status": [],
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/ribbon/227294/image_1744794818.png"
+          },
+          "log_id": "137754290-1746138917245474749-19",
+          "type": "archive"
+        },
+        {
+          "archive": {
+            "app_icon_urls": [],
+            "app_id": "",
+            "archive_status": 2,
+            "avatar_body_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/user_closet_body_image_1/3d2371c835faece1cb86888f465a513273474aefbd9b76ac13b4b08d436a39b9_origin.png?1745580029",
+            "blur_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/e85de045fd95b7856a39ad15e8f824103b6898f6dcf8f0ce23f80060f902ea97_m.jpeg?crop=16:9,offset-x0,offset-y26&blur=80&1746015358",
+            "collab_user_profile_image_urls": [],
+            "ended_at": 1746015461,
+            "following_viewer_image_urls": [],
+            "following_viewer_num": 0,
+            "has_recording": false,
+            "image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/e85de045fd95b7856a39ad15e8f824103b6898f6dcf8f0ce23f80060f902ea97_m.jpeg?crop=16:9,offset-x0,offset-y26&1746015358",
+            "is_collab": false,
+            "is_live": false,
+            "is_nuu_welcome": false,
+            "is_omotenashi": false,
+            "is_private": false,
+            "joined_live_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/e85de045fd95b7856a39ad15e8f824103b6898f6dcf8f0ce23f80060f902ea97_m.jpeg?1746015358",
+            "live_id": "gx-S02QnvzENRxPPCI54iQ",
+            "orientation_v2": 1,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "",
+                  "small_image_url": ""
+                }
+              ],
+              "is_new": false,
+              "name": "らいとらいと",
+              "profile_frame_image_url": "",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/3d2371c835faece1cb86888f465a513273474aefbd9b76ac13b4b08d436a39b9_m.jpeg?1746016675",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "148200072",
+              "yell_level": 0,
+              "yell_rank": 0
+            },
+            "preview": null,
+            "private_invited_user_image_urls": [],
+            "private_invited_user_num": 0,
+            "private_viewer_image_urls": [],
+            "private_viewer_num": 0,
+            "recommend": null,
+            "started_at": 1746015047,
+            "thumbnail_frame": null,
+            "title": "無反応　入室❌",
+            "total_viewer_num": 2,
+            "user_app_status": [],
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/ribbon/227292/image_1744794726.png"
+          },
+          "log_id": "137754290-1746138917245474749-20",
+          "type": "archive"
+        },
+        {
+          "archive": {
+            "app_icon_urls": [
+              "https://cdn.mirrativ.com/mirrorman-prod/image/app_icon/a6fa408d94272e99c28d989bd04bd5bc55ce09c1910e64c3c4ff23226d29186e.png"
+            ],
+            "app_id": "com.miniclip.agar.io",
+            "archive_status": 1,
+            "avatar_body_image_url": "",
+            "blur_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/87a1739b8a7d49a1cdce3ea60ee03cfbbb7ae55fe6ff47d86fd78274942fb574_m.jpeg?blur=80&1746021047",
+            "collab_user_profile_image_urls": [],
+            "ended_at": 1746021146,
+            "following_viewer_image_urls": [],
+            "following_viewer_num": 0,
+            "has_recording": false,
+            "image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/87a1739b8a7d49a1cdce3ea60ee03cfbbb7ae55fe6ff47d86fd78274942fb574_m.jpeg?1746021047",
+            "is_collab": false,
+            "is_live": false,
+            "is_nuu_welcome": false,
+            "is_omotenashi": false,
+            "is_private": false,
+            "joined_live_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/87a1739b8a7d49a1cdce3ea60ee03cfbbb7ae55fe6ff47d86fd78274942fb574_m.jpeg?1746021047",
+            "live_id": "eBpTTb9ZYCQxSk6BBUbYhQ",
+            "orientation_v2": 2,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_extreme_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_extreme_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "💟q-TOSHI-p💟トシパパ",
+              "profile_frame_image_url": "",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/95fefefdbe158333f9fc11cbd2531710c08b94c03aa82dc0910f9168d6777d0d_m.jpeg?1746134240",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "2846847",
+              "yell_level": 1,
+              "yell_rank": 0
+            },
+            "preview": null,
+            "private_invited_user_image_urls": [],
+            "private_invited_user_num": 0,
+            "private_viewer_image_urls": [],
+            "private_viewer_num": 0,
+            "recommend": null,
+            "started_at": 1746014588,
+            "thumbnail_frame": null,
+            "title": "💟トシパパの【人だかり】ゲーム配信💟アガリオ10周年おめでとう",
+            "total_viewer_num": 824,
+            "user_app_status": [],
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/ribbon/227293/image_1744794767.png"
+          },
+          "log_id": "137754290-1746138917245474749-21",
+          "type": "archive"
+        },
+        {
+          "archive": {
+            "app_icon_urls": [
+              "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/app/c4383e75f4d864b81d5525d447c2183c83118dead58ec74345f4e5ea4e115d0b_iOS.png"
+            ],
+            "app_id": "com.dena.mirrativa",
+            "archive_status": 1,
+            "avatar_body_image_url": "",
+            "blur_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/64a2cbb9ea8d81f81db94a8d8f97b39dbfc4104c31e866791fc5c7babc446502_m.jpeg?blur=80&1746010719",
+            "collab_user_profile_image_urls": [],
+            "ended_at": 1746010779,
+            "following_viewer_image_urls": [],
+            "following_viewer_num": 0,
+            "has_recording": true,
+            "image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/64a2cbb9ea8d81f81db94a8d8f97b39dbfc4104c31e866791fc5c7babc446502_m.jpeg?1746010719",
+            "is_collab": false,
+            "is_live": false,
+            "is_nuu_welcome": false,
+            "is_omotenashi": false,
+            "is_private": false,
+            "joined_live_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/64a2cbb9ea8d81f81db94a8d8f97b39dbfc4104c31e866791fc5c7babc446502_m.jpeg?1746010719",
+            "live_id": "psimWgCji3_cggDnwfF1Uw",
+            "orientation_v2": 1,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/ic_badge_L.png?v2",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/ic_badge_S.png?v2"
+                }
+              ],
+              "is_new": false,
+              "name": "ミラティブ運営",
+              "profile_frame_image_url": "",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/53f14e2f4f0bae9187650c730270e972fea0fc47b9fae1dcf762bf138890d1d4_m.jpeg?1746010779",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "46525",
+              "yell_level": 0,
+              "yell_rank": 0
+            },
+            "preview": null,
+            "private_invited_user_image_urls": [],
+            "private_invited_user_num": 0,
+            "private_viewer_image_urls": [],
+            "private_viewer_num": 0,
+            "recommend": null,
+            "started_at": 1746008907,
+            "thumbnail_frame": null,
+            "title": "#ミラティブ運営配信 エモモデザイナーさんの🎨こだわりポイント🌟",
+            "total_viewer_num": 15691,
+            "user_app_status": [],
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/ribbon/226798/image_1743513204.png"
+          },
+          "log_id": "137754290-1746138917245474749-22",
+          "type": "archive"
+        },
+        {
+          "live_announcement": {
+            "app_icon_url": "",
+            "body": "行ってきます！",
+            "created_at": 1745974425,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "🐺",
+              "profile_frame_image_url": "",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/93f43ceb3208824c09cf35d2dc677d7381cc7f8c4ec86b579b51ff025dc90b73_m.jpeg?1746130818",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "146912573",
+              "yell_level": 1,
+              "yell_rank": 0
+            },
+            "recommend": null,
+            "start_at": 1745974421,
+            "url": "mirr:///user/146912573",
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/ribbon/226917/image_1743759816.png"
+          },
+          "log_id": "137754290-1746138917245474749-23",
+          "type": "live_announcement"
+        },
+        {
+          "live_announcement": {
+            "app_icon_url": "",
+            "body": "何でギフランで羽来るねん欲しくなるだろ😡",
+            "created_at": 1745943621,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "🐺",
+              "profile_frame_image_url": "",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/93f43ceb3208824c09cf35d2dc677d7381cc7f8c4ec86b579b51ff025dc90b73_m.jpeg?1746130818",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "146912573",
+              "yell_level": 1,
+              "yell_rank": 0
+            },
+            "recommend": null,
+            "start_at": 0,
+            "url": "mirr:///user/146912573",
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/ribbon/226917/image_1743759816.png"
+          },
+          "log_id": "137754290-1746138917245474749-24",
+          "type": "live_announcement"
+        },
+        {
+          "live_announcement": {
+            "app_icon_url": "",
+            "body": "はなくそ世界",
+            "created_at": 1745939383,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "🐺",
+              "profile_frame_image_url": "",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/93f43ceb3208824c09cf35d2dc677d7381cc7f8c4ec86b579b51ff025dc90b73_m.jpeg?1746130818",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "146912573",
+              "yell_level": 1,
+              "yell_rank": 0
+            },
+            "recommend": null,
+            "start_at": 0,
+            "url": "mirr:///user/146912573",
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/ribbon/226917/image_1743759816.png"
+          },
+          "log_id": "137754290-1746138917245474749-25",
+          "type": "live_announcement"
+        },
+        {
+          "archive": {
+            "app_icon_urls": [
+              "https://cdn.mirrativ.com/mirrorman-prod/image/app_icon/f59bc14f65c339202bd71c738ea7aaa877a60f6e834e86612ed1c3f51af2e068.png"
+            ],
+            "app_id": "com.mojang.minecraftpe",
+            "archive_status": 2,
+            "avatar_body_image_url": "",
+            "blur_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/890e78316c25c8e58bf4dace163d7f6e15078adf08f47b84616ea13c2e4a5908_m.jpeg?blur=80&1745939572",
+            "collab_user_profile_image_urls": [],
+            "ended_at": 1745939620,
+            "following_viewer_image_urls": [],
+            "following_viewer_num": 0,
+            "has_recording": false,
+            "image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/890e78316c25c8e58bf4dace163d7f6e15078adf08f47b84616ea13c2e4a5908_m.jpeg?1745939572",
+            "is_collab": false,
+            "is_live": false,
+            "is_nuu_welcome": false,
+            "is_omotenashi": false,
+            "is_private": false,
+            "joined_live_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/890e78316c25c8e58bf4dace163d7f6e15078adf08f47b84616ea13c2e4a5908_m.jpeg?1745939572",
+            "live_id": "KCJqRVQqVmzn6JMksOwujQ",
+            "orientation_v2": 1,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_super_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_super_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "ﾀｺﾏﾙﾁｬﾝ🐙",
+              "profile_frame_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/profile_frame/1354/image_l_1744944691.png",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/45389ea5ca5a04b335691cd81437a180a7e8ef74f2254dc2cf90a890e63c56be_m.jpeg?1746118697",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "141744082",
+              "yell_level": 1,
+              "yell_rank": 0
+            },
+            "preview": null,
+            "private_invited_user_image_urls": [],
+            "private_invited_user_num": 0,
+            "private_viewer_image_urls": [],
+            "private_viewer_num": 0,
+            "recommend": null,
+            "started_at": 1745932961,
+            "thumbnail_frame": {
+              "icon_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/icon_image_1733114956.png",
+              "id": 16778037,
+              "left_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/left_image_1733191210.png",
+              "right_thumbnail_animation_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/right_animation_image_1733114956.webp",
+              "right_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/right_image_1733114956.png"
+            },
+            "title": "初見さん待ち",
+            "total_viewer_num": 172,
+            "user_app_status": [],
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrorman-prod/assets/gift/ribbon/roulette/2102/roulette_2102_day10.png"
+          },
+          "log_id": "137754290-1746138917245474749-26",
+          "type": "archive"
+        },
+        {
+          "archive": {
+            "app_icon_urls": [
+              "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/app/9363c42fff2e786cbfb17e4937622eedc8ac67d3eb1164b402b9832ea1ec6f6f_iOS.png"
+            ],
+            "app_id": "com.mirrativ.colosseum",
+            "archive_status": 2,
+            "avatar_body_image_url": "",
+            "blur_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/5d396deeb2c341712de81cfbf4b47750f4236a7e1585d2a9ec0b6d58e2ca8e66_m.jpeg?blur=80&1745932787",
+            "collab_user_profile_image_urls": [],
+            "ended_at": 1745932919,
+            "following_viewer_image_urls": [],
+            "following_viewer_num": 0,
+            "has_recording": false,
+            "image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/5d396deeb2c341712de81cfbf4b47750f4236a7e1585d2a9ec0b6d58e2ca8e66_m.jpeg?1745932787",
+            "is_collab": false,
+            "is_live": false,
+            "is_nuu_welcome": false,
+            "is_omotenashi": false,
+            "is_private": false,
+            "joined_live_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/5d396deeb2c341712de81cfbf4b47750f4236a7e1585d2a9ec0b6d58e2ca8e66_m.jpeg?1745932787",
+            "live_id": "QTBPblmQPmyZfsphMAdKtQ",
+            "orientation_v2": 1,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_super_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_super_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "ﾀｺﾏﾙﾁｬﾝ🐙",
+              "profile_frame_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/profile_frame/1354/image_l_1744944691.png",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/45389ea5ca5a04b335691cd81437a180a7e8ef74f2254dc2cf90a890e63c56be_m.jpeg?1746118697",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "141744082",
+              "yell_level": 1,
+              "yell_rank": 0
+            },
+            "preview": null,
+            "private_invited_user_image_urls": [],
+            "private_invited_user_num": 0,
+            "private_viewer_image_urls": [],
+            "private_viewer_num": 0,
+            "recommend": null,
+            "started_at": 1745931875,
+            "thumbnail_frame": {
+              "icon_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/icon_image_1733114956.png",
+              "id": 16778037,
+              "left_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/left_image_1733191210.png",
+              "right_thumbnail_animation_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/right_animation_image_1733114956.webp",
+              "right_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/right_image_1733114956.png"
+            },
+            "title": "初見さん待ち",
+            "total_viewer_num": 28,
+            "user_app_status": [],
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrorman-prod/assets/gift/ribbon/roulette/2102/roulette_2102_day10.png"
+          },
+          "log_id": "137754290-1746138917245474749-27",
+          "type": "archive"
+        },
+        {
+          "archive": {
+            "app_icon_urls": [
+              "https://cdn.mirrativ.com/mirrorman-prod/image/app_icon/a6fa408d94272e99c28d989bd04bd5bc55ce09c1910e64c3c4ff23226d29186e.png"
+            ],
+            "app_id": "com.miniclip.agar.io",
+            "archive_status": 1,
+            "avatar_body_image_url": "",
+            "blur_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/b9a37af58d27f1156ffe93357916823dc5ea5bddebdf1529805a599a358bba12_m.jpeg?blur=80&1745934615",
+            "collab_user_profile_image_urls": [],
+            "ended_at": 1745934665,
+            "following_viewer_image_urls": [],
+            "following_viewer_num": 0,
+            "has_recording": true,
+            "image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/b9a37af58d27f1156ffe93357916823dc5ea5bddebdf1529805a599a358bba12_m.jpeg?1745934615",
+            "is_collab": false,
+            "is_live": false,
+            "is_nuu_welcome": false,
+            "is_omotenashi": false,
+            "is_private": false,
+            "joined_live_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/b9a37af58d27f1156ffe93357916823dc5ea5bddebdf1529805a599a358bba12_m.jpeg?1745934615",
+            "live_id": "PASYHi0z1gNYp_dRDq5Czw",
+            "orientation_v2": 2,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_extreme_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_extreme_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "💟q-TOSHI-p💟トシパパ",
+              "profile_frame_image_url": "",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/95fefefdbe158333f9fc11cbd2531710c08b94c03aa82dc0910f9168d6777d0d_m.jpeg?1746134240",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "2846847",
+              "yell_level": 1,
+              "yell_rank": 0
+            },
+            "preview": null,
+            "private_invited_user_image_urls": [],
+            "private_invited_user_num": 0,
+            "private_viewer_image_urls": [],
+            "private_viewer_num": 0,
+            "recommend": null,
+            "started_at": 1745927702,
+            "thumbnail_frame": null,
+            "title": "💟トシパパの【人だかり】ゲーム配信💟アガリオ10周年おめでとう",
+            "total_viewer_num": 1344,
+            "user_app_status": [],
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/ribbon/227293/image_1744794767.png"
+          },
+          "log_id": "137754290-1746138917245474749-28",
+          "type": "archive"
+        },
+        {
+          "archive": {
+            "app_icon_urls": [
+              "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/app/9363c42fff2e786cbfb17e4937622eedc8ac67d3eb1164b402b9832ea1ec6f6f_iOS.png"
+            ],
+            "app_id": "com.mirrativ.colosseum",
+            "archive_status": 2,
+            "avatar_body_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/user_closet_body_image_1/3d2371c835faece1cb86888f465a513273474aefbd9b76ac13b4b08d436a39b9_origin.png?1745580029",
+            "blur_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/6f68547fda9e04e7eb10aa5a9aa1cd4c94cbd8168152b75b5d4d541d3cfe1b9d_m.jpeg?crop=16:9,offset-x0,offset-y26&blur=80&1745922591",
+            "collab_user_profile_image_urls": [],
+            "ended_at": 1745922590,
+            "following_viewer_image_urls": [],
+            "following_viewer_num": 0,
+            "has_recording": false,
+            "image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/6f68547fda9e04e7eb10aa5a9aa1cd4c94cbd8168152b75b5d4d541d3cfe1b9d_m.jpeg?crop=16:9,offset-x0,offset-y26&1745922591",
+            "is_collab": false,
+            "is_live": false,
+            "is_nuu_welcome": false,
+            "is_omotenashi": false,
+            "is_private": false,
+            "joined_live_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/6f68547fda9e04e7eb10aa5a9aa1cd4c94cbd8168152b75b5d4d541d3cfe1b9d_m.jpeg?1745922591",
+            "live_id": "AyCsg75cksNajWtNgj7Vow",
+            "orientation_v2": 1,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "",
+                  "small_image_url": ""
+                }
+              ],
+              "is_new": false,
+              "name": "らいとらいと",
+              "profile_frame_image_url": "",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/3d2371c835faece1cb86888f465a513273474aefbd9b76ac13b4b08d436a39b9_m.jpeg?1746016675",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "148200072",
+              "yell_level": 0,
+              "yell_rank": 0
+            },
+            "preview": null,
+            "private_invited_user_image_urls": [],
+            "private_invited_user_num": 0,
+            "private_viewer_image_urls": [],
+            "private_viewer_num": 0,
+            "recommend": null,
+            "started_at": 1745921528,
+            "thumbnail_frame": null,
+            "title": "無反応　デイリー投げ逃げ⭕️ボックス❌",
+            "total_viewer_num": 3,
+            "user_app_status": [],
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/ribbon/227292/image_1744794726.png"
+          },
+          "log_id": "137754290-1746138917245474749-29",
+          "type": "archive"
+        },
+        {
+          "archive": {
+            "app_icon_urls": [
+              "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/app/d64a91d6349b3c5777a796e6576ed5b3d72bbc644a56a854d11a62b4974881e1.png"
+            ],
+            "app_id": "livegame.haruni.pokapokaputinouen",
+            "archive_status": 2,
+            "avatar_body_image_url": "",
+            "blur_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/fae36018354b4b001358f1de89e26bc70f4d079dde4cddab61e736432833571b_m.jpeg?crop=16:9,offset-x0,offset-y26&blur=80&1745922417",
+            "collab_user_profile_image_urls": [],
+            "ended_at": 1745922446,
+            "following_viewer_image_urls": [],
+            "following_viewer_num": 0,
+            "has_recording": false,
+            "image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/fae36018354b4b001358f1de89e26bc70f4d079dde4cddab61e736432833571b_m.jpeg?crop=16:9,offset-x0,offset-y26&1745922417",
+            "is_collab": false,
+            "is_live": false,
+            "is_nuu_welcome": false,
+            "is_omotenashi": false,
+            "is_private": false,
+            "joined_live_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/fae36018354b4b001358f1de89e26bc70f4d079dde4cddab61e736432833571b_m.jpeg?1745922417",
+            "live_id": "vN60BtLLi9QDV4hnhDUorQ",
+            "orientation_v2": 1,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "ライト　ꪶ ⚡️ ꫂ",
+              "profile_frame_image_url": "",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/40f1d412983995217163cb756181feabe2a8e3bd11f3e1dad1f3f4b832fb98e0_m.jpeg?1746090285",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "104760851",
+              "yell_level": 0,
+              "yell_rank": 0
+            },
+            "preview": null,
+            "private_invited_user_image_urls": [],
+            "private_invited_user_num": 0,
+            "private_viewer_image_urls": [],
+            "private_viewer_num": 0,
+            "recommend": null,
+            "started_at": 1745921509,
+            "thumbnail_frame": null,
+            "title": "こっちは疲れとんじゃ",
+            "total_viewer_num": 10,
+            "user_app_status": [],
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/ribbon/227294/image_1744794818.png"
+          },
+          "log_id": "137754290-1746138917245474749-30",
+          "type": "archive"
+        },
+        {
+          "archive": {
+            "app_icon_urls": [
+              "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/app/9363c42fff2e786cbfb17e4937622eedc8ac67d3eb1164b402b9832ea1ec6f6f_iOS.png"
+            ],
+            "app_id": "com.mirrativ.colosseum",
+            "archive_status": 2,
+            "avatar_body_image_url": "",
+            "blur_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/d604a4284bcddbb3430ebfb110495c73173607747e092adea330dfeb91166934_m.jpeg?crop=16:9,offset-x0,offset-y26&blur=80&1745921327",
+            "collab_user_profile_image_urls": [],
+            "ended_at": 1745921390,
+            "following_viewer_image_urls": [],
+            "following_viewer_num": 0,
+            "has_recording": false,
+            "image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/d604a4284bcddbb3430ebfb110495c73173607747e092adea330dfeb91166934_m.jpeg?crop=16:9,offset-x0,offset-y26&1745921327",
+            "is_collab": false,
+            "is_live": false,
+            "is_nuu_welcome": false,
+            "is_omotenashi": false,
+            "is_private": false,
+            "joined_live_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/d604a4284bcddbb3430ebfb110495c73173607747e092adea330dfeb91166934_m.jpeg?1745921327",
+            "live_id": "c66kGGswmiC5VX7Dtco_tw",
+            "orientation_v2": 1,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "ライト　ꪶ ⚡️ ꫂ",
+              "profile_frame_image_url": "",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/40f1d412983995217163cb756181feabe2a8e3bd11f3e1dad1f3f4b832fb98e0_m.jpeg?1746090285",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "104760851",
+              "yell_level": 0,
+              "yell_rank": 0
+            },
+            "preview": null,
+            "private_invited_user_image_urls": [],
+            "private_invited_user_num": 0,
+            "private_viewer_image_urls": [],
+            "private_viewer_num": 0,
+            "recommend": null,
+            "started_at": 1745920417,
+            "thumbnail_frame": null,
+            "title": "こっちは疲れとんじゃ",
+            "total_viewer_num": 11,
+            "user_app_status": [],
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/ribbon/227294/image_1744794818.png"
+          },
+          "log_id": "137754290-1746138917245474749-31",
+          "type": "archive"
+        },
+        {
+          "archive": {
+            "app_icon_urls": [
+              "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/app/c08ce6bed34a4cc4b96e2cfc69e96dd3bf5d05b8ebf284c65b8cb38252cf613f_iOS.png",
+              "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/app/c4383e75f4d864b81d5525d447c2183c83118dead58ec74345f4e5ea4e115d0b_iOS.png"
+            ],
+            "app_id": "com.supercell.brawlstars",
+            "archive_status": 2,
+            "avatar_body_image_url": "",
+            "blur_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/02bb9723e26fc572357eda82510920e4d51b358cf12e40fff0ca582811d0ced1_m.jpeg?blur=80&1745921855",
+            "collab_user_profile_image_urls": [],
+            "ended_at": 1745921896,
+            "following_viewer_image_urls": [],
+            "following_viewer_num": 0,
+            "has_recording": false,
+            "image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/02bb9723e26fc572357eda82510920e4d51b358cf12e40fff0ca582811d0ced1_m.jpeg?1745921855",
+            "is_collab": false,
+            "is_live": false,
+            "is_nuu_welcome": false,
+            "is_omotenashi": false,
+            "is_private": false,
+            "joined_live_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/02bb9723e26fc572357eda82510920e4d51b358cf12e40fff0ca582811d0ced1_m.jpeg?1745921855",
+            "live_id": "BTo_SaSXshe-l-zJWeUgZQ",
+            "orientation_v2": 1,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_super_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_super_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "ﾀｺﾏﾙﾁｬﾝ🐙",
+              "profile_frame_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/profile_frame/1354/image_l_1744944691.png",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/45389ea5ca5a04b335691cd81437a180a7e8ef74f2254dc2cf90a890e63c56be_m.jpeg?1746118697",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "141744082",
+              "yell_level": 1,
+              "yell_rank": 0
+            },
+            "preview": null,
+            "private_invited_user_image_urls": [],
+            "private_invited_user_num": 0,
+            "private_viewer_image_urls": [],
+            "private_viewer_num": 0,
+            "recommend": null,
+            "started_at": 1745905048,
+            "thumbnail_frame": {
+              "icon_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/icon_image_1733114956.png",
+              "id": 16778037,
+              "left_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/left_image_1733191210.png",
+              "right_thumbnail_animation_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/right_animation_image_1733114956.webp",
+              "right_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/right_image_1733114956.png"
+            },
+            "title": "初見さん待ち",
+            "total_viewer_num": 372,
+            "user_app_status": [],
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrorman-prod/assets/gift/ribbon/roulette/2102/roulette_2102_day10.png"
+          },
+          "log_id": "137754290-1746138917245474749-32",
+          "type": "archive"
+        },
+        {
+          "archive": {
+            "app_icon_urls": [
+              "https://cdn.mirrativ.com/mirrorman-prod/image/app_icon/08eccea4e8b33b2a820e4ef2541536847c4a007965ab01186d1df1771517c31b.png"
+            ],
+            "app_id": "com.YoStarJP.MajSoul",
+            "archive_status": 2,
+            "avatar_body_image_url": "",
+            "blur_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/d096908789d062af13cb79326eb0d9c79a7be53a6aeff5d150a680bb9ea9cf3a_m.jpeg?blur=80&1745903111",
+            "collab_user_profile_image_urls": [],
+            "ended_at": 1745903183,
+            "following_viewer_image_urls": [],
+            "following_viewer_num": 0,
+            "has_recording": false,
+            "image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/d096908789d062af13cb79326eb0d9c79a7be53a6aeff5d150a680bb9ea9cf3a_m.jpeg?1745903111",
+            "is_collab": false,
+            "is_live": false,
+            "is_nuu_welcome": false,
+            "is_omotenashi": false,
+            "is_private": false,
+            "joined_live_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/d096908789d062af13cb79326eb0d9c79a7be53a6aeff5d150a680bb9ea9cf3a_m.jpeg?1745903111",
+            "live_id": "pK1X3PCXOF8mqXYqhanqug",
+            "orientation_v2": 1,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_super_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_super_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "ﾀｺﾏﾙﾁｬﾝ🐙",
+              "profile_frame_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/profile_frame/1354/image_l_1744944691.png",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/45389ea5ca5a04b335691cd81437a180a7e8ef74f2254dc2cf90a890e63c56be_m.jpeg?1746118697",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "141744082",
+              "yell_level": 1,
+              "yell_rank": 0
+            },
+            "preview": null,
+            "private_invited_user_image_urls": [],
+            "private_invited_user_num": 0,
+            "private_viewer_image_urls": [],
+            "private_viewer_num": 0,
+            "recommend": null,
+            "started_at": 1745891552,
+            "thumbnail_frame": {
+              "icon_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/icon_image_1733114956.png",
+              "id": 16778037,
+              "left_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/left_image_1733191210.png",
+              "right_thumbnail_animation_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/right_animation_image_1733114956.webp",
+              "right_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_frame/klV5947fe9Q/right_image_1733114956.png"
+            },
+            "title": "初見さん待ち",
+            "total_viewer_num": 224,
+            "user_app_status": [],
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrorman-prod/assets/gift/ribbon/roulette/2102/roulette_2102_day10.png"
+          },
+          "log_id": "137754290-1746138917245474749-33",
+          "type": "archive"
+        },
+        {
+          "archive": {
+            "app_icon_urls": [
+              "https://cdn.mirrativ.com/mirrorman-prod/image/app_icon/a6fa408d94272e99c28d989bd04bd5bc55ce09c1910e64c3c4ff23226d29186e.png"
+            ],
+            "app_id": "com.miniclip.agar.io",
+            "archive_status": 1,
+            "avatar_body_image_url": "",
+            "blur_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/f7f906f6997d7cbc7a9417cfa4f4235c13d1f55c64021cefc12fd6a30cee402b_m.jpeg?blur=80&1745889740",
+            "collab_user_profile_image_urls": [],
+            "ended_at": 1745889823,
+            "following_viewer_image_urls": [],
+            "following_viewer_num": 0,
+            "has_recording": true,
+            "image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/thumbnail_image_url/f7f906f6997d7cbc7a9417cfa4f4235c13d1f55c64021cefc12fd6a30cee402b_m.jpeg?1745889740",
+            "is_collab": false,
+            "is_live": false,
+            "is_nuu_welcome": false,
+            "is_omotenashi": false,
+            "is_private": false,
+            "joined_live_thumbnail_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/live_capture/f7f906f6997d7cbc7a9417cfa4f4235c13d1f55c64021cefc12fd6a30cee402b_m.jpeg?1745889740",
+            "live_id": "K84nREpAFk7hcEIXlZwf8g",
+            "orientation_v2": 2,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "",
+                  "small_image_url": ""
+                }
+              ],
+              "is_new": false,
+              "name": "おっこ",
+              "profile_frame_image_url": "",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/359be36f990c59d656e51330114cdf7ed94e5bb33674af184624c6f81dc1d743_m.jpeg?1745889823",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "128208430",
+              "yell_level": 1,
+              "yell_rank": 0
+            },
+            "preview": null,
+            "private_invited_user_image_urls": [],
+            "private_invited_user_num": 0,
+            "private_viewer_image_urls": [],
+            "private_viewer_num": 0,
+            "recommend": null,
+            "started_at": 1745886578,
+            "thumbnail_frame": null,
+            "title": "声なしww",
+            "total_viewer_num": 27,
+            "user_app_status": [],
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/ribbon/227292/image_1744794726.png"
+          },
+          "log_id": "137754290-1746138917245474749-34",
+          "type": "archive"
+        },
+        {
+          "live_announcement": {
+            "app_icon_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/app/c4383e75f4d864b81d5525d447c2183c83118dead58ec74345f4e5ea4e115d0b_iOS.png",
+            "body": "キャスの光円錐ちゃんと引けました",
+            "created_at": 1745884461,
+            "owner": {
+              "badges": [
+                {
+                  "image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_L.ja.png?v6",
+                  "small_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/img/continuous_streamer/ic_badge_master_holiday_S.ja.png?v6"
+                }
+              ],
+              "is_new": false,
+              "name": "🐺",
+              "profile_frame_image_url": "",
+              "profile_image_url": "https://cdn.mirrativ.com/mirrorman-prod/image/profile_image/93f43ceb3208824c09cf35d2dc677d7381cc7f8c4ec86b579b51ff025dc90b73_m.jpeg?1746130818",
+              "season_rating": {
+                "class_name": "",
+                "icon_url": ""
+              },
+              "user_id": "146912573",
+              "yell_level": 1,
+              "yell_rank": 0
+            },
+            "recommend": null,
+            "start_at": 0,
+            "url": "mirr:///user/146912573",
+            "user_label_image_url": "https://cdn.mirrativ.com/mirrativ-prod-assets/master_data/ribbon/226917/image_1743759816.png"
+          },
+          "log_id": "137754290-1746138917245474749-35",
+          "type": "live_announcement"
+        }
+      ],
+      "next_cursor": "",
+      "status": {
+        "ok": 1,
+        "error": "",
+        "error_code": 0
+      }
+    }
+  }
+}

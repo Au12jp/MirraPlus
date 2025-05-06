@@ -1,0 +1,1320 @@
+{
+  "host": "www.mirrativ.com",
+  "generatedAt": "2025-05-06T14:29:10.876Z",
+  "totalPaths": 164,
+  "paths": [
+    {
+      "path": "/api/analytics/log",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/app/add_my_app",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/app/app_user_detail",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/app/appeal_banners",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/app/delete_app_user_detail",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/app/delete_my_app",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/app/my_app",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 2
+    },
+    {
+      "path": "/api/app/onlive_apps",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/app/post_app_user_detail",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/app/recommend_apps",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/app/search",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 2
+    },
+    {
+      "path": "/api/app/user_apps",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/campaign/completed_mission",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/campaign/detail",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/catalog/banners",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/catalog/follow",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/catalog/lives",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/catalog/myapp_recommend_lives",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/catalog/tabs",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/chat/join",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/chat/post_text",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/chat/read",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/chat/thread",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/chat/thread_visibility",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/chat/threads",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/closet/avatar",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/closet/avatar_parts",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/closet/closets",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/closet/update_closet_avatar",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/closet/update_closet_images",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/coin_box/status",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/collab/collaborating_users",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/contract/summary",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/event/notice",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/feature/register_device_token",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/gift/emomo_run_gifts",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/gift/panels",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/gift/ranking",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 2
+    },
+    {
+      "path": "/api/gift/send",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/gift/unique_emomo_gift_config",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/gift/unique_emomo_gift_slots",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/gift/update_simple_unique_emomo_gift",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/gift_appeal_popup/read",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/google/connect",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/google/disconnect",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/graph/block",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/graph/blocked_users",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/graph/follow",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/graph/followers",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 2
+    },
+    {
+      "path": "/api/graph/followings",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 2
+    },
+    {
+      "path": "/api/graph/recommend_users",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/graph/search",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/graph/unblock",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/graph/unfollow",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/group/edit",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/group/invite_users",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/group/leave",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/group/users",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/live/appeal_links",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/live/campaign",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/live/get_streaming_url",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/live/leave",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/live/live",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/live/live_comment",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/live/live_comments",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/live/live_create",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/live/live_edit",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/live/live_game_catalog",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/live/live_history",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 2
+    },
+    {
+      "path": "/api/live/live_polling",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/live/online_users",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 2
+    },
+    {
+      "path": "/api/live/preview_end",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/live/preview_polling",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/live/preview_start",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/live/sanitize_text",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/live/search",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 2
+    },
+    {
+      "path": "/api/live/update_archive_settings",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/live/view_history",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/live_game/end",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/live_game/list",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/live_game/new_counts",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/live_game/start",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/mission/current_login_bonus",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/mission/daily",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/mission/status",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/mission/tutorial_status",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/mission/weekly",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/notice/campaigns",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/notice/counts",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 8
+    },
+    {
+      "path": "/api/notice/news",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/notice/popups",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/notice/present_boxes",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/notice/yours_v2",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/notification/push_settings_v3",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "operationCount": 2,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/ranking/focusable",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/ranking/user_detail",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/reward_ad/available_reward_ad_ids",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/reward_ad/check_available_device",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/reward_ad/complete",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/season_rating/status",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/season_yell/status",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 2
+    },
+    {
+      "path": "/api/season_yell/viewers",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/tooltip/start_live_button",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/user/bad_report",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/user/broadcast_settings",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/user/check_minor",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/user/currency",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/user/date_of_birth",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/user/delete_live_announcement",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/user/favorite_live_setting",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/user/logout",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/user/me",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/user/post_live_announcement",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/user/post_live_request",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/user/post_review_confirmation",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/user/profile",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/user/profile_edit",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/user/search",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 2
+    },
+    {
+      "path": "/api/user/setting_root",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/user/tos",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/user/update_favorite_live_setting",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/user/update_recording_settings",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/user/use_favorite_live_setting",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/user/watchword",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/lp/watchword/register",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/notice/popup",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 3
+    },
+    {
+      "path": "/api/chat/agree",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/chat/post_thanks",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/chat/post_thanks_to_live_watched_users",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/collab/close",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/collab/connected_streaming_collab_lives",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/collab/invitable_users",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 2
+    },
+    {
+      "path": "/api/collab/invite",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/collab/send_to_peer",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/collab/start",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/gift/update_rich_unique_emomo_gift",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/gift_gacha/user_stocks",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/graph/follow_live_watched_users",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/karaoke/",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 2
+    },
+    {
+      "path": "/api/karaoke//",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 2
+    },
+    {
+      "path": "/api/karaoke/by_genre",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 4
+    },
+    {
+      "path": "/api/karaoke/genres",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/karaoke/recommend_singers",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/karaoke/search",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 2
+    },
+    {
+      "path": "/api/karaoke/singers",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/live/broadcast_result",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/live/delete_live_history",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/live/kick_out",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/live/live_app_identifier_changed",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/live/live_capture_image",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/live/live_end",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/live/live_heartbeat",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/live/live_start",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/live/update_emomo_visible",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/live/update_wipe_enabled",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/live/viewers_result",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/live_game/ping",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/mission/receive_login_bonus_reward",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/moderator/add",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/moderator/delete",
+      "methods": [
+        "POST"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/reward_ad/offerwalls",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/api/season_rating/live_result",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    },
+    {
+      "path": "/api/shooter/matching",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 0
+    },
+    {
+      "path": "/page/lp",
+      "methods": [
+        "GET"
+      ],
+      "operationCount": 1,
+      "parametersCount": 1
+    }
+  ]
+}
