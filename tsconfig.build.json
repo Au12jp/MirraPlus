@@ -5,5 +5,7 @@
     "outDir": "lib/cjs",
     "declaration": false
   },
-  "include": ["source"]
+  "include": [
+    "src"
+  ]
 }

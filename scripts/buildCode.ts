@@ -112,8 +112,23 @@ export const build = async (endpoint: string): Promise<void> => {
   console.log(`🔧 Quoting invalid TS keys in ${params.tsFile}`);
   quoteInvalidTsKeys(params.tsFile);
 
+  const apiEndpoints = ["www.mirrativ.com"];
+  if (apiEndpoints.includes(endpoint)) {
+    console.log(`🔄 ${endpoint} では build:api を先に実行します…`);
+    try {
+      // 必要なファイルが揃っているか確認
+      const apiScript = path.join(__dirname, 'generate-mirrativ-api.ts');
+      if (!fs.existsSync(apiScript)) {
+        console.warn(`⚠️ build:api スクリプトが見つからないためスキップします (${apiScript})`);
+      } else {
+        await shell('npm run build:api');
+      }
+    } catch (err) {
+      console.warn(`⚠️ build:api 実行中にエラーが発生しましたがスキップします: ${err}`);
+    }
+  }
 
-  // 4) ESLint で自動整形
+  // 5) ESLint で自動整形
   await shell(`eslint --fix ${params.tsFile}`);
 };
 

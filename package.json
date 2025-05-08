@@ -13,7 +13,7 @@
   "module": "lib/esm/index.js",
   "types": "lib/esm/index.d.ts",
   "scripts": {
-    "build": "run-s clean build:flow build:code build:docs build:api",
+    "build": "run-s clean build:flow build:code build:docs",
     "postbuild": "yarn ts ./src/main.ts",
     "build:flow": "yarn ts ./scripts/buildFlow.ts",
     "build:api": "yarn ts ./scripts/generate-mirrativ-api.ts",

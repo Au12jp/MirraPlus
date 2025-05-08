@@ -40,8 +40,8 @@ interface Endpoint {
 
 async function main() {
     const ROOT = process.cwd()
-    const IN = path.join(ROOT, 'source/www.mirrativ.com.ts')
-    const OUT = path.join(ROOT, 'source/mirrativApi.ts')
+    const IN = path.join(ROOT, 'src/www.mirrativ.com.ts')
+    const OUT = path.join(ROOT, 'src/mirrativApi.ts')
 
     const args = process.argv.slice(2)
     const dryRun = args.includes('--dry')

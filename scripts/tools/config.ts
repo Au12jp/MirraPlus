@@ -17,7 +17,7 @@ export const docsDir = path.resolve(pkgRoot, "docs");
 
 export const distDir = path.resolve(pkgRoot, "dist");
 
-export const sourceDir = path.resolve(pkgRoot, "source");
+export const sourceDir = path.resolve(pkgRoot, "src");
 
 export const endpointsOutputDir = path.join(docsDir, "endpoints");
 

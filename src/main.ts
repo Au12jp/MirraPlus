@@ -1,6 +1,6 @@
 #!/usr/bin/env ts-node
 import { Account, AccountOptions } from './managers/Account'
-import { MirrativApiConfig } from '../source/mirrativApi'
+import { MirrativApiConfig } from './mirrativApi'
 
 /**
  * サンプル main.ts
