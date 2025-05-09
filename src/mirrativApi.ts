@@ -219,6 +219,9 @@ import {
   RequestBody$postApiUserUse_favorite_live_setting,
   Response$postApiUserUse_favorite_live_setting$Status$200,
   Response$getApiUserWatchword$Status$200,
+  Response$getLpWatchwordRegister$Status$200,
+  Response$getNoticePopup$Status$200,
+  Parameter$getNoticePopup,
   RequestBody$postApiChatAgree,
   Response$postApiChatAgree$Status$200,
   RequestBody$postApiChatPost_thanks,
@@ -288,6 +291,8 @@ import {
   Response$getApiSeason_ratingLive_result$Status$200,
   Parameter$getApiSeason_ratingLive_result,
   Response$getApiShooterMatching$Status$200,
+  Response$getPageLp$Status$200,
+  Parameter$getPageLp,
 } from './www.mirrativ.com';
 
 // MRID を取得したい full-response メソッドの key (rawKey) を列挙
@@ -559,6 +564,10 @@ export type UserUse_favorite_live_settingStatus = ExtractStatus<Response$postApi
 
 export type UserWatchwordStatus = ExtractStatus<Response$getApiUserWatchword$Status$200>;
 
+export type LpWatchwordRegisterStatus = ExtractStatus<Response$getLpWatchwordRegister$Status$200>;
+
+export type NoticePopupStatus = ExtractStatus<Response$getNoticePopup$Status$200>;
+
 export type ChatAgreeStatus = ExtractStatus<Response$postApiChatAgree$Status$200>;
 
 export type ChatPost_thanksStatus = ExtractStatus<Response$postApiChatPost_thanks$Status$200>;
@@ -630,6 +639,256 @@ export type Reward_adOfferwallsStatus = ExtractStatus<Response$getApiReward_adOf
 export type Season_ratingLive_resultStatus = ExtractStatus<Response$getApiSeason_ratingLive_result$Status$200>;
 
 export type ShooterMatchingStatus = ExtractStatus<Response$getApiShooterMatching$Status$200>;
+
+export type PageLpStatus = ExtractStatus<Response$getPageLp$Status$200>;
+
+export type AppApp_user_detailParams = Parameter$getApiAppApp_user_detail;
+
+export type AppAppeal_bannersParams = Parameter$getApiAppAppeal_banners;
+
+export type AppMy_appParams = Parameter$getApiAppMy_app;
+
+export type AppSearchParams = Parameter$getApiAppSearch;
+
+export type AppUser_appsParams = Parameter$getApiAppUser_apps;
+
+export type CampaignCompleted_missionParams = Parameter$getApiCampaignCompleted_mission;
+
+export type CampaignDetailParams = Parameter$getApiCampaignDetail;
+
+export type CatalogBannersParams = Parameter$getApiCatalogBanners;
+
+export type CatalogLivesParams = Parameter$getApiCatalogLives;
+
+export type ChatThreadParams = Parameter$getApiChatThread;
+
+export type ChatThreadsParams = Parameter$getApiChatThreads;
+
+export type ClosetAvatarParams = Parameter$getApiClosetAvatar;
+
+export type Coin_boxStatusParams = Parameter$getApiCoin_boxStatus;
+
+export type CollabCollaborating_usersParams = Parameter$getApiCollabCollaborating_users;
+
+export type EventNoticeParams = Parameter$getApiEventNotice;
+
+export type GiftPanelsParams = Parameter$getApiGiftPanels;
+
+export type GiftRankingParams = Parameter$getApiGiftRanking;
+
+export type GraphBlocked_usersParams = Parameter$getApiGraphBlocked_users;
+
+export type GraphFollowersParams = Parameter$getApiGraphFollowers;
+
+export type GraphFollowingsParams = Parameter$getApiGraphFollowings;
+
+export type GraphRecommend_usersParams = Parameter$getApiGraphRecommend_users;
+
+export type GraphSearchParams = Parameter$getApiGraphSearch;
+
+export type GroupUsersParams = Parameter$getApiGroupUsers;
+
+export type LiveAppeal_linksParams = Parameter$getApiLiveAppeal_links;
+
+export type LiveCampaignParams = Parameter$getApiLiveCampaign;
+
+export type LiveGet_streaming_urlParams = Parameter$getApiLiveGet_streaming_url;
+
+export type LiveLiveParams = Parameter$getApiLiveLive;
+
+export type LiveLive_commentsParams = Parameter$getApiLiveLive_comments;
+
+export type LiveLive_game_catalogParams = Parameter$getApiLiveLive_game_catalog;
+
+export type LiveLive_historyParams = Parameter$getApiLiveLive_history;
+
+export type LiveOnline_usersParams = Parameter$getApiLiveOnline_users;
+
+export type LiveSearchParams = Parameter$getApiLiveSearch;
+
+export type Live_gameNew_countsParams = Parameter$getApiLive_gameNew_counts;
+
+export type NoticeCampaignsParams = Parameter$getApiNoticeCampaigns;
+
+export type NoticeCountsParams = Parameter$getApiNoticeCounts;
+
+export type NoticePopupsParams = Parameter$getApiNoticePopups;
+
+export type RankingUser_detailParams = Parameter$getApiRankingUser_detail;
+
+export type Reward_adAvailable_reward_ad_idsParams = Parameter$getApiReward_adAvailable_reward_ad_ids;
+
+export type Season_ratingStatusParams = Parameter$getApiSeason_ratingStatus;
+
+export type Season_yellStatusParams = Parameter$getApiSeason_yellStatus;
+
+export type Season_yellViewersParams = Parameter$getApiSeason_yellViewers;
+
+export type UserProfileParams = Parameter$getApiUserProfile;
+
+export type UserSearchParams = Parameter$getApiUserSearch;
+
+export type NoticePopupParams = Parameter$getNoticePopup;
+
+export type CollabConnected_streaming_collab_livesParams = Parameter$getApiCollabConnected_streaming_collab_lives;
+
+export type CollabInvitable_usersParams = Parameter$getApiCollabInvitable_users;
+
+export type Gift_gachaUser_stocksParams = Parameter$getApiGift_gachaUser_stocks;
+
+export type KaraokeParams = Parameter$getApiKaraoke;
+
+export type KaraokeBy_genreParams = Parameter$getApiKaraokeBy_genre;
+
+export type KaraokeRecommend_singersParams = Parameter$getApiKaraokeRecommend_singers;
+
+export type KaraokeSearchParams = Parameter$getApiKaraokeSearch;
+
+export type KaraokeSingersParams = Parameter$getApiKaraokeSingers;
+
+export type LiveBroadcast_resultParams = Parameter$getApiLiveBroadcast_result;
+
+export type LiveViewers_resultParams = Parameter$getApiLiveViewers_result;
+
+export type Season_ratingLive_resultParams = Parameter$getApiSeason_ratingLive_result;
+
+export type PageLpParams = Parameter$getPageLp;
+
+export type AnalyticsLogRequest = NonNullable<RequestBody$postApiAnalyticsLog['application/json']>;
+
+export type AppAdd_my_appRequest = NonNullable<RequestBody$postApiAppAdd_my_app['application/json']>;
+
+export type AppDelete_app_user_detailRequest = NonNullable<RequestBody$postApiAppDelete_app_user_detail['application/x-www-form-urlencoded']>;
+
+export type AppDelete_my_appRequest = NonNullable<RequestBody$postApiAppDelete_my_app['application/json']>;
+
+export type AppPost_app_user_detailRequest = NonNullable<RequestBody$postApiAppPost_app_user_detail['application/x-www-form-urlencoded']>;
+
+export type ChatJoinRequest = NonNullable<RequestBody$postApiChatJoin['application/x-www-form-urlencoded']>;
+
+export type ChatPost_textRequest = NonNullable<RequestBody$postApiChatPost_text['application/x-www-form-urlencoded']>;
+
+export type ChatReadRequest = NonNullable<RequestBody$postApiChatRead['application/x-www-form-urlencoded']>;
+
+export type ChatThread_visibilityRequest = NonNullable<RequestBody$postApiChatThread_visibility['application/x-www-form-urlencoded']>;
+
+export type ClosetUpdate_closet_avatarRequest = NonNullable<RequestBody$postApiClosetUpdate_closet_avatar['application/json']>;
+
+export type ClosetUpdate_closet_imagesRequest = NonNullable<RequestBody$postApiClosetUpdate_closet_images['application/x-www-form-urlencoded']>;
+
+export type FeatureRegister_device_tokenRequest = NonNullable<RequestBody$postApiFeatureRegister_device_token['application/x-www-form-urlencoded']>;
+
+export type GiftSendRequest = NonNullable<RequestBody$postApiGiftSend['application/x-www-form-urlencoded']>;
+
+export type GiftUpdate_simple_unique_emomo_giftRequest = NonNullable<RequestBody$postApiGiftUpdate_simple_unique_emomo_gift['application/x-www-form-urlencoded']>;
+
+export type Gift_appeal_popupReadRequest = NonNullable<RequestBody$postApiGift_appeal_popupRead['application/x-www-form-urlencoded']>;
+
+export type GoogleConnectRequest = NonNullable<RequestBody$postApiGoogleConnect['application/x-www-form-urlencoded']>;
+
+export type GraphBlockRequest = NonNullable<RequestBody$postApiGraphBlock['application/x-www-form-urlencoded']>;
+
+export type GraphFollowRequest = NonNullable<RequestBody$postApiGraphFollow['application/x-www-form-urlencoded']>;
+
+export type GraphUnblockRequest = NonNullable<RequestBody$postApiGraphUnblock['application/x-www-form-urlencoded']>;
+
+export type GraphUnfollowRequest = NonNullable<RequestBody$postApiGraphUnfollow['application/x-www-form-urlencoded']>;
+
+export type GroupEditRequest = NonNullable<RequestBody$postApiGroupEdit['application/x-www-form-urlencoded']>;
+
+export type GroupInvite_usersRequest = NonNullable<RequestBody$postApiGroupInvite_users['application/x-www-form-urlencoded']>;
+
+export type GroupLeaveRequest = NonNullable<RequestBody$postApiGroupLeave['application/x-www-form-urlencoded']>;
+
+export type LiveLeaveRequest = NonNullable<RequestBody$postApiLiveLeave['application/x-www-form-urlencoded']>;
+
+export type LiveLive_commentRequest = NonNullable<RequestBody$postApiLiveLive_comment['application/x-www-form-urlencoded']>;
+
+export type LiveLive_editRequest = NonNullable<RequestBody$postApiLiveLive_edit['application/x-www-form-urlencoded']>;
+
+export type LiveLive_pollingRequest = NonNullable<RequestBody$postApiLiveLive_polling['application/x-www-form-urlencoded']>;
+
+export type LivePreview_endRequest = NonNullable<RequestBody$postApiLivePreview_end['application/x-www-form-urlencoded']>;
+
+export type LivePreview_pollingRequest = NonNullable<RequestBody$postApiLivePreview_polling['application/x-www-form-urlencoded']>;
+
+export type LivePreview_startRequest = NonNullable<RequestBody$postApiLivePreview_start['application/x-www-form-urlencoded']>;
+
+export type LiveSanitize_textRequest = NonNullable<RequestBody$postApiLiveSanitize_text['application/x-www-form-urlencoded']>;
+
+export type LiveUpdate_archive_settingsRequest = NonNullable<RequestBody$postApiLiveUpdate_archive_settings['application/x-www-form-urlencoded']>;
+
+export type Live_gameEndRequest = NonNullable<RequestBody$postApiLive_gameEnd['application/x-www-form-urlencoded']>;
+
+export type Live_gameStartRequest = NonNullable<RequestBody$postApiLive_gameStart['application/x-www-form-urlencoded']>;
+
+export type PostNotificationPush_settings_v3Request = NonNullable<RequestBody$postApiNotificationPush_settings_v3['application/x-www-form-urlencoded']>;
+
+export type Reward_adCompleteRequest = NonNullable<RequestBody$postApiReward_adComplete['application/x-www-form-urlencoded']>;
+
+export type UserBad_reportRequest = NonNullable<RequestBody$postApiUserBad_report['application/x-www-form-urlencoded']>;
+
+export type UserCheck_minorRequest = NonNullable<RequestBody$postApiUserCheck_minor['application/x-www-form-urlencoded']>;
+
+export type UserDate_of_birthRequest = NonNullable<RequestBody$postApiUserDate_of_birth['application/x-www-form-urlencoded']>;
+
+export type UserPost_live_announcementRequest = NonNullable<RequestBody$postApiUserPost_live_announcement['application/x-www-form-urlencoded']>;
+
+export type UserPost_live_requestRequest = NonNullable<RequestBody$postApiUserPost_live_request['application/x-www-form-urlencoded']>;
+
+export type UserPost_review_confirmationRequest = NonNullable<RequestBody$postApiUserPost_review_confirmation['application/x-www-form-urlencoded']>;
+
+export type UserProfile_editRequest = NonNullable<RequestBody$postApiUserProfile_edit['application/x-www-form-urlencoded']>;
+
+export type UserUpdate_favorite_live_settingRequest = NonNullable<RequestBody$postApiUserUpdate_favorite_live_setting['application/x-www-form-urlencoded']>;
+
+export type UserUpdate_recording_settingsRequest = NonNullable<RequestBody$postApiUserUpdate_recording_settings['application/x-www-form-urlencoded']>;
+
+export type UserUse_favorite_live_settingRequest = NonNullable<RequestBody$postApiUserUse_favorite_live_setting['application/x-www-form-urlencoded']>;
+
+export type ChatAgreeRequest = NonNullable<RequestBody$postApiChatAgree['application/x-www-form-urlencoded']>;
+
+export type ChatPost_thanksRequest = NonNullable<RequestBody$postApiChatPost_thanks['application/x-www-form-urlencoded']>;
+
+export type ChatPost_thanks_to_live_watched_usersRequest = NonNullable<RequestBody$postApiChatPost_thanks_to_live_watched_users['application/x-www-form-urlencoded']>;
+
+export type CollabCloseRequest = NonNullable<RequestBody$postApiCollabClose['application/x-www-form-urlencoded']>;
+
+export type CollabInviteRequest = NonNullable<RequestBody$postApiCollabInvite['application/x-www-form-urlencoded']>;
+
+export type CollabSend_to_peerRequest = NonNullable<RequestBody$postApiCollabSend_to_peer['application/x-www-form-urlencoded']>;
+
+export type CollabStartRequest = NonNullable<RequestBody$postApiCollabStart['application/x-www-form-urlencoded']>;
+
+export type GiftUpdate_rich_unique_emomo_giftRequest = NonNullable<RequestBody$postApiGiftUpdate_rich_unique_emomo_gift['application/x-www-form-urlencoded']>;
+
+export type GraphFollow_live_watched_usersRequest = NonNullable<RequestBody$postApiGraphFollow_live_watched_users['application/x-www-form-urlencoded']>;
+
+export type LiveDelete_live_historyRequest = NonNullable<RequestBody$postApiLiveDelete_live_history['application/x-www-form-urlencoded']>;
+
+export type LiveKick_outRequest = NonNullable<RequestBody$postApiLiveKick_out['application/x-www-form-urlencoded']>;
+
+export type LiveLive_app_identifier_changedRequest = NonNullable<RequestBody$postApiLiveLive_app_identifier_changed['application/x-www-form-urlencoded']>;
+
+export type LiveLive_capture_imageRequest = NonNullable<RequestBody$postApiLiveLive_capture_image['application/x-www-form-urlencoded']>;
+
+export type LiveLive_endRequest = NonNullable<RequestBody$postApiLiveLive_end['application/x-www-form-urlencoded']>;
+
+export type LiveLive_heartbeatRequest = NonNullable<RequestBody$postApiLiveLive_heartbeat['application/x-www-form-urlencoded']>;
+
+export type LiveLive_startRequest = NonNullable<RequestBody$postApiLiveLive_start['application/x-www-form-urlencoded']>;
+
+export type LiveUpdate_emomo_visibleRequest = NonNullable<RequestBody$postApiLiveUpdate_emomo_visible['application/x-www-form-urlencoded']>;
+
+export type LiveUpdate_wipe_enabledRequest = NonNullable<RequestBody$postApiLiveUpdate_wipe_enabled['application/x-www-form-urlencoded']>;
+
+export type Live_gamePingRequest = NonNullable<RequestBody$postApiLive_gamePing['application/x-www-form-urlencoded']>;
+
+export type MissionReceive_login_bonus_rewardRequest = NonNullable<RequestBody$postApiMissionReceive_login_bonus_reward['application/x-www-form-urlencoded']>;
+
+export type ModeratorAddRequest = NonNullable<RequestBody$postApiModeratorAdd['application/x-www-form-urlencoded']>;
+
+export type ModeratorDeleteRequest = NonNullable<RequestBody$postApiModeratorDelete['application/x-www-form-urlencoded']>;
 
 export type AnalyticsLogResponse = NonNullable<Response$postApiAnalyticsLog$Status$200['application/json']>;
 
@@ -881,6 +1140,10 @@ export type UserUse_favorite_live_settingResponse = NonNullable<Response$postApi
 
 export type UserWatchwordResponse = NonNullable<Response$getApiUserWatchword$Status$200['application/json']>;
 
+export type LpWatchwordRegisterResponse = NonNullable<Response$getLpWatchwordRegister$Status$200['application/json']>;
+
+export type NoticePopupResponse = NonNullable<Response$getNoticePopup$Status$200['application/json']>;
+
 export type ChatAgreeResponse = NonNullable<Response$postApiChatAgree$Status$200['application/json']>;
 
 export type ChatPost_thanksResponse = NonNullable<Response$postApiChatPost_thanks$Status$200['application/json']>;
@@ -952,6 +1215,8 @@ export type Reward_adOfferwallsResponse = NonNullable<Response$getApiReward_adOf
 export type Season_ratingLive_resultResponse = NonNullable<Response$getApiSeason_ratingLive_result$Status$200['application/json']>;
 
 export type ShooterMatchingResponse = NonNullable<Response$getApiShooterMatching$Status$200['application/json']>;
+
+export type PageLpResponse = NonNullable<Response$getPageLp$Status$200['application/json']>;
 
 const MEDIA_TYPES = {
   analyticsLog: 'application/json',
@@ -1079,6 +1344,8 @@ const MEDIA_TYPES = {
   userUpdate_recording_settings: 'application/x-www-form-urlencoded',
   userUse_favorite_live_setting: 'application/x-www-form-urlencoded',
   userWatchword: '',
+  lpWatchwordRegister: '',
+  noticePopup: '',
   chatAgree: 'application/x-www-form-urlencoded',
   chatPost_thanks: 'application/x-www-form-urlencoded',
   chatPost_thanks_to_live_watched_users: 'application/x-www-form-urlencoded',
@@ -1115,6 +1382,7 @@ const MEDIA_TYPES = {
   reward_adOfferwalls: '',
   season_ratingLive_result: '',
   shooterMatching: '',
+  pageLp: '',
 } as const;
 
 const HTTP_VERBS = {
@@ -1243,6 +1511,8 @@ const HTTP_VERBS = {
   userUpdate_recording_settings: 'post',
   userUse_favorite_live_setting: 'post',
   userWatchword: 'get',
+  lpWatchwordRegister: 'get',
+  noticePopup: 'get',
   chatAgree: 'post',
   chatPost_thanks: 'post',
   chatPost_thanks_to_live_watched_users: 'post',
@@ -1279,6 +1549,7 @@ const HTTP_VERBS = {
   reward_adOfferwalls: 'get',
   season_ratingLive_result: 'get',
   shooterMatching: 'get',
+  pageLp: 'get',
 } as const;
 
 const ENDPOINTS = {
@@ -2157,6 +2428,20 @@ const ENDPOINTS = {
       return j.status as any;
     },
   },
+  lpWatchwordRegister: {
+    methodName: 'getLpWatchwordRegister' as const,
+    extractStatus: (j: any) => {
+      if (j.status == null) throw new Error('no status');
+      return j.status as any;
+    },
+  },
+  noticePopup: {
+    methodName: 'getNoticePopup' as const,
+    extractStatus: (j: any) => {
+      if (j.status == null) throw new Error('no status');
+      return j.status as any;
+    },
+  },
   chatAgree: {
     methodName: 'postApiChatAgree' as const,
     extractStatus: (j: any) => {
@@ -2409,6 +2694,13 @@ const ENDPOINTS = {
       return j.status as any;
     },
   },
+  pageLp: {
+    methodName: 'getPageLp' as const,
+    extractStatus: (j: any) => {
+      if (j.status == null) throw new Error('no status');
+      return j.status as any;
+    },
+  },
 } as const;
 
 export class MirrativApi {
@@ -2593,7 +2885,7 @@ export class MirrativApi {
    * ```
    */
   public analyticsLog!: (
-    body: RequestBody$postApiAnalyticsLog['application/json'],
+    body: AnalyticsLogRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<AnalyticsLogStatus>;
@@ -2614,7 +2906,7 @@ export class MirrativApi {
    * ```
    */
   public analyticsLogFull!: (
-    body: RequestBody$postApiAnalyticsLog['application/json'],
+    body: AnalyticsLogRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<AnalyticsLogResponse>;
@@ -2636,7 +2928,7 @@ export class MirrativApi {
    * ```
    */
   public appAdd_my_app!: (
-    body: RequestBody$postApiAppAdd_my_app['application/json'],
+    body: AppAdd_my_appRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<AppAdd_my_appStatus>;
@@ -2657,7 +2949,7 @@ export class MirrativApi {
    * ```
    */
   public appAdd_my_appFull!: (
-    body: RequestBody$postApiAppAdd_my_app['application/json'],
+    body: AppAdd_my_appRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<AppAdd_my_appResponse>;
@@ -2677,7 +2969,7 @@ export class MirrativApi {
    * ```
    */
   public appApp_user_detail!: (
-    query?: Parameter$getApiAppApp_user_detail,
+    query?: AppApp_user_detailParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<AppApp_user_detailStatus>;
@@ -2697,7 +2989,7 @@ export class MirrativApi {
    * ```
    */
   public appApp_user_detailFull!: (
-    query?: Parameter$getApiAppApp_user_detail,
+    query?: AppApp_user_detailParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<AppApp_user_detailResponse>;
@@ -2717,7 +3009,7 @@ export class MirrativApi {
    * ```
    */
   public appAppeal_banners!: (
-    query?: Parameter$getApiAppAppeal_banners,
+    query?: AppAppeal_bannersParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<AppAppeal_bannersStatus>;
@@ -2737,7 +3029,7 @@ export class MirrativApi {
    * ```
    */
   public appAppeal_bannersFull!: (
-    query?: Parameter$getApiAppAppeal_banners,
+    query?: AppAppeal_bannersParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<AppAppeal_bannersResponse>;
@@ -2759,7 +3051,7 @@ export class MirrativApi {
    * ```
    */
   public appDelete_app_user_detail!: (
-    body: RequestBody$postApiAppDelete_app_user_detail['application/x-www-form-urlencoded'],
+    body: AppDelete_app_user_detailRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<AppDelete_app_user_detailStatus>;
@@ -2780,7 +3072,7 @@ export class MirrativApi {
    * ```
    */
   public appDelete_app_user_detailFull!: (
-    body: RequestBody$postApiAppDelete_app_user_detail['application/x-www-form-urlencoded'],
+    body: AppDelete_app_user_detailRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<AppDelete_app_user_detailResponse>;
@@ -2802,7 +3094,7 @@ export class MirrativApi {
    * ```
    */
   public appDelete_my_app!: (
-    body: RequestBody$postApiAppDelete_my_app['application/json'],
+    body: AppDelete_my_appRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<AppDelete_my_appStatus>;
@@ -2823,7 +3115,7 @@ export class MirrativApi {
    * ```
    */
   public appDelete_my_appFull!: (
-    body: RequestBody$postApiAppDelete_my_app['application/json'],
+    body: AppDelete_my_appRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<AppDelete_my_appResponse>;
@@ -2843,7 +3135,7 @@ export class MirrativApi {
    * ```
    */
   public appMy_app!: (
-    query?: Parameter$getApiAppMy_app,
+    query?: AppMy_appParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<AppMy_appStatus>;
@@ -2863,7 +3155,7 @@ export class MirrativApi {
    * ```
    */
   public appMy_appFull!: (
-    query?: Parameter$getApiAppMy_app,
+    query?: AppMy_appParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<AppMy_appResponse>;
@@ -2925,7 +3217,7 @@ export class MirrativApi {
    * ```
    */
   public appPost_app_user_detail!: (
-    body: RequestBody$postApiAppPost_app_user_detail['application/x-www-form-urlencoded'],
+    body: AppPost_app_user_detailRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<AppPost_app_user_detailStatus>;
@@ -2946,7 +3238,7 @@ export class MirrativApi {
    * ```
    */
   public appPost_app_user_detailFull!: (
-    body: RequestBody$postApiAppPost_app_user_detail['application/x-www-form-urlencoded'],
+    body: AppPost_app_user_detailRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<AppPost_app_user_detailResponse>;
@@ -3006,7 +3298,7 @@ export class MirrativApi {
    * ```
    */
   public appSearch!: (
-    query?: Parameter$getApiAppSearch,
+    query?: AppSearchParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<AppSearchStatus>;
@@ -3026,7 +3318,7 @@ export class MirrativApi {
    * ```
    */
   public appSearchFull!: (
-    query?: Parameter$getApiAppSearch,
+    query?: AppSearchParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<AppSearchResponse>;
@@ -3046,7 +3338,7 @@ export class MirrativApi {
    * ```
    */
   public appUser_apps!: (
-    query?: Parameter$getApiAppUser_apps,
+    query?: AppUser_appsParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<AppUser_appsStatus>;
@@ -3066,7 +3358,7 @@ export class MirrativApi {
    * ```
    */
   public appUser_appsFull!: (
-    query?: Parameter$getApiAppUser_apps,
+    query?: AppUser_appsParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<AppUser_appsResponse>;
@@ -3086,7 +3378,7 @@ export class MirrativApi {
    * ```
    */
   public campaignCompleted_mission!: (
-    query?: Parameter$getApiCampaignCompleted_mission,
+    query?: CampaignCompleted_missionParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<CampaignCompleted_missionStatus>;
@@ -3106,7 +3398,7 @@ export class MirrativApi {
    * ```
    */
   public campaignCompleted_missionFull!: (
-    query?: Parameter$getApiCampaignCompleted_mission,
+    query?: CampaignCompleted_missionParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<CampaignCompleted_missionResponse>;
@@ -3126,7 +3418,7 @@ export class MirrativApi {
    * ```
    */
   public campaignDetail!: (
-    query?: Parameter$getApiCampaignDetail,
+    query?: CampaignDetailParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<CampaignDetailStatus>;
@@ -3146,7 +3438,7 @@ export class MirrativApi {
    * ```
    */
   public campaignDetailFull!: (
-    query?: Parameter$getApiCampaignDetail,
+    query?: CampaignDetailParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<CampaignDetailResponse>;
@@ -3166,7 +3458,7 @@ export class MirrativApi {
    * ```
    */
   public catalogBanners!: (
-    query?: Parameter$getApiCatalogBanners,
+    query?: CatalogBannersParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<CatalogBannersStatus>;
@@ -3186,7 +3478,7 @@ export class MirrativApi {
    * ```
    */
   public catalogBannersFull!: (
-    query?: Parameter$getApiCatalogBanners,
+    query?: CatalogBannersParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<CatalogBannersResponse>;
@@ -3246,7 +3538,7 @@ export class MirrativApi {
    * ```
    */
   public catalogLives!: (
-    query?: Parameter$getApiCatalogLives,
+    query?: CatalogLivesParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<CatalogLivesStatus>;
@@ -3266,7 +3558,7 @@ export class MirrativApi {
    * ```
    */
   public catalogLivesFull!: (
-    query?: Parameter$getApiCatalogLives,
+    query?: CatalogLivesParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<CatalogLivesResponse>;
@@ -3368,7 +3660,7 @@ export class MirrativApi {
    * ```
    */
   public chatJoin!: (
-    body: RequestBody$postApiChatJoin['application/x-www-form-urlencoded'],
+    body: ChatJoinRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<ChatJoinStatus>;
@@ -3389,7 +3681,7 @@ export class MirrativApi {
    * ```
    */
   public chatJoinFull!: (
-    body: RequestBody$postApiChatJoin['application/x-www-form-urlencoded'],
+    body: ChatJoinRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<ChatJoinResponse>;
@@ -3411,7 +3703,7 @@ export class MirrativApi {
    * ```
    */
   public chatPost_text!: (
-    body: RequestBody$postApiChatPost_text['application/x-www-form-urlencoded'],
+    body: ChatPost_textRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<ChatPost_textStatus>;
@@ -3432,7 +3724,7 @@ export class MirrativApi {
    * ```
    */
   public chatPost_textFull!: (
-    body: RequestBody$postApiChatPost_text['application/x-www-form-urlencoded'],
+    body: ChatPost_textRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<ChatPost_textResponse>;
@@ -3454,7 +3746,7 @@ export class MirrativApi {
    * ```
    */
   public chatRead!: (
-    body: RequestBody$postApiChatRead['application/x-www-form-urlencoded'],
+    body: ChatReadRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<ChatReadStatus>;
@@ -3475,7 +3767,7 @@ export class MirrativApi {
    * ```
    */
   public chatReadFull!: (
-    body: RequestBody$postApiChatRead['application/x-www-form-urlencoded'],
+    body: ChatReadRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<ChatReadResponse>;
@@ -3495,7 +3787,7 @@ export class MirrativApi {
    * ```
    */
   public chatThread!: (
-    query?: Parameter$getApiChatThread,
+    query?: ChatThreadParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<ChatThreadStatus>;
@@ -3515,7 +3807,7 @@ export class MirrativApi {
    * ```
    */
   public chatThreadFull!: (
-    query?: Parameter$getApiChatThread,
+    query?: ChatThreadParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<ChatThreadResponse>;
@@ -3537,7 +3829,7 @@ export class MirrativApi {
    * ```
    */
   public chatThread_visibility!: (
-    body: RequestBody$postApiChatThread_visibility['application/x-www-form-urlencoded'],
+    body: ChatThread_visibilityRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<ChatThread_visibilityStatus>;
@@ -3558,7 +3850,7 @@ export class MirrativApi {
    * ```
    */
   public chatThread_visibilityFull!: (
-    body: RequestBody$postApiChatThread_visibility['application/x-www-form-urlencoded'],
+    body: ChatThread_visibilityRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<ChatThread_visibilityResponse>;
@@ -3578,7 +3870,7 @@ export class MirrativApi {
    * ```
    */
   public chatThreads!: (
-    query?: Parameter$getApiChatThreads,
+    query?: ChatThreadsParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<ChatThreadsStatus>;
@@ -3598,7 +3890,7 @@ export class MirrativApi {
    * ```
    */
   public chatThreadsFull!: (
-    query?: Parameter$getApiChatThreads,
+    query?: ChatThreadsParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<ChatThreadsResponse>;
@@ -3618,7 +3910,7 @@ export class MirrativApi {
    * ```
    */
   public closetAvatar!: (
-    query?: Parameter$getApiClosetAvatar,
+    query?: ClosetAvatarParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<ClosetAvatarStatus>;
@@ -3638,7 +3930,7 @@ export class MirrativApi {
    * ```
    */
   public closetAvatarFull!: (
-    query?: Parameter$getApiClosetAvatar,
+    query?: ClosetAvatarParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<ClosetAvatarResponse>;
@@ -3740,7 +4032,7 @@ export class MirrativApi {
    * ```
    */
   public closetUpdate_closet_avatar!: (
-    body: RequestBody$postApiClosetUpdate_closet_avatar['application/json'],
+    body: ClosetUpdate_closet_avatarRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<ClosetUpdate_closet_avatarStatus>;
@@ -3761,7 +4053,7 @@ export class MirrativApi {
    * ```
    */
   public closetUpdate_closet_avatarFull!: (
-    body: RequestBody$postApiClosetUpdate_closet_avatar['application/json'],
+    body: ClosetUpdate_closet_avatarRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<ClosetUpdate_closet_avatarResponse>;
@@ -3783,7 +4075,7 @@ export class MirrativApi {
    * ```
    */
   public closetUpdate_closet_images!: (
-    body: RequestBody$postApiClosetUpdate_closet_images['application/x-www-form-urlencoded'],
+    body: ClosetUpdate_closet_imagesRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<ClosetUpdate_closet_imagesStatus>;
@@ -3804,7 +4096,7 @@ export class MirrativApi {
    * ```
    */
   public closetUpdate_closet_imagesFull!: (
-    body: RequestBody$postApiClosetUpdate_closet_images['application/x-www-form-urlencoded'],
+    body: ClosetUpdate_closet_imagesRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<ClosetUpdate_closet_imagesResponse>;
@@ -3824,7 +4116,7 @@ export class MirrativApi {
    * ```
    */
   public coin_boxStatus!: (
-    query?: Parameter$getApiCoin_boxStatus,
+    query?: Coin_boxStatusParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<Coin_boxStatusStatus>;
@@ -3844,7 +4136,7 @@ export class MirrativApi {
    * ```
    */
   public coin_boxStatusFull!: (
-    query?: Parameter$getApiCoin_boxStatus,
+    query?: Coin_boxStatusParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<Coin_boxStatusResponse>;
@@ -3864,7 +4156,7 @@ export class MirrativApi {
    * ```
    */
   public collabCollaborating_users!: (
-    query?: Parameter$getApiCollabCollaborating_users,
+    query?: CollabCollaborating_usersParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<CollabCollaborating_usersStatus>;
@@ -3884,7 +4176,7 @@ export class MirrativApi {
    * ```
    */
   public collabCollaborating_usersFull!: (
-    query?: Parameter$getApiCollabCollaborating_users,
+    query?: CollabCollaborating_usersParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<CollabCollaborating_usersResponse>;
@@ -3944,7 +4236,7 @@ export class MirrativApi {
    * ```
    */
   public eventNotice!: (
-    query?: Parameter$getApiEventNotice,
+    query?: EventNoticeParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<EventNoticeStatus>;
@@ -3964,7 +4256,7 @@ export class MirrativApi {
    * ```
    */
   public eventNoticeFull!: (
-    query?: Parameter$getApiEventNotice,
+    query?: EventNoticeParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<EventNoticeResponse>;
@@ -3986,7 +4278,7 @@ export class MirrativApi {
    * ```
    */
   public featureRegister_device_token!: (
-    body: RequestBody$postApiFeatureRegister_device_token['application/x-www-form-urlencoded'],
+    body: FeatureRegister_device_tokenRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<FeatureRegister_device_tokenStatus>;
@@ -4007,7 +4299,7 @@ export class MirrativApi {
    * ```
    */
   public featureRegister_device_tokenFull!: (
-    body: RequestBody$postApiFeatureRegister_device_token['application/x-www-form-urlencoded'],
+    body: FeatureRegister_device_tokenRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<FeatureRegister_device_tokenResponse>;
@@ -4067,7 +4359,7 @@ export class MirrativApi {
    * ```
    */
   public giftPanels!: (
-    query?: Parameter$getApiGiftPanels,
+    query?: GiftPanelsParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GiftPanelsStatus>;
@@ -4087,7 +4379,7 @@ export class MirrativApi {
    * ```
    */
   public giftPanelsFull!: (
-    query?: Parameter$getApiGiftPanels,
+    query?: GiftPanelsParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GiftPanelsResponse>;
@@ -4107,7 +4399,7 @@ export class MirrativApi {
    * ```
    */
   public giftRanking!: (
-    query?: Parameter$getApiGiftRanking,
+    query?: GiftRankingParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GiftRankingStatus>;
@@ -4127,7 +4419,7 @@ export class MirrativApi {
    * ```
    */
   public giftRankingFull!: (
-    query?: Parameter$getApiGiftRanking,
+    query?: GiftRankingParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GiftRankingResponse>;
@@ -4149,7 +4441,7 @@ export class MirrativApi {
    * ```
    */
   public giftSend!: (
-    body: RequestBody$postApiGiftSend['application/x-www-form-urlencoded'],
+    body: GiftSendRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GiftSendStatus>;
@@ -4170,7 +4462,7 @@ export class MirrativApi {
    * ```
    */
   public giftSendFull!: (
-    body: RequestBody$postApiGiftSend['application/x-www-form-urlencoded'],
+    body: GiftSendRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GiftSendResponse>;
@@ -4272,7 +4564,7 @@ export class MirrativApi {
    * ```
    */
   public giftUpdate_simple_unique_emomo_gift!: (
-    body: RequestBody$postApiGiftUpdate_simple_unique_emomo_gift['application/x-www-form-urlencoded'],
+    body: GiftUpdate_simple_unique_emomo_giftRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GiftUpdate_simple_unique_emomo_giftStatus>;
@@ -4293,7 +4585,7 @@ export class MirrativApi {
    * ```
    */
   public giftUpdate_simple_unique_emomo_giftFull!: (
-    body: RequestBody$postApiGiftUpdate_simple_unique_emomo_gift['application/x-www-form-urlencoded'],
+    body: GiftUpdate_simple_unique_emomo_giftRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GiftUpdate_simple_unique_emomo_giftResponse>;
@@ -4315,7 +4607,7 @@ export class MirrativApi {
    * ```
    */
   public gift_appeal_popupRead!: (
-    body: RequestBody$postApiGift_appeal_popupRead['application/x-www-form-urlencoded'],
+    body: Gift_appeal_popupReadRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<Gift_appeal_popupReadStatus>;
@@ -4336,7 +4628,7 @@ export class MirrativApi {
    * ```
    */
   public gift_appeal_popupReadFull!: (
-    body: RequestBody$postApiGift_appeal_popupRead['application/x-www-form-urlencoded'],
+    body: Gift_appeal_popupReadRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<Gift_appeal_popupReadResponse>;
@@ -4358,7 +4650,7 @@ export class MirrativApi {
    * ```
    */
   public googleConnect!: (
-    body: RequestBody$postApiGoogleConnect['application/x-www-form-urlencoded'],
+    body: GoogleConnectRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GoogleConnectStatus>;
@@ -4379,7 +4671,7 @@ export class MirrativApi {
    * ```
    */
   public googleConnectFull!: (
-    body: RequestBody$postApiGoogleConnect['application/x-www-form-urlencoded'],
+    body: GoogleConnectRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GoogleConnectResponse & { mrid?: string }>;
@@ -4442,7 +4734,7 @@ export class MirrativApi {
    * ```
    */
   public graphBlock!: (
-    body: RequestBody$postApiGraphBlock['application/x-www-form-urlencoded'],
+    body: GraphBlockRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GraphBlockStatus>;
@@ -4463,7 +4755,7 @@ export class MirrativApi {
    * ```
    */
   public graphBlockFull!: (
-    body: RequestBody$postApiGraphBlock['application/x-www-form-urlencoded'],
+    body: GraphBlockRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GraphBlockResponse>;
@@ -4483,7 +4775,7 @@ export class MirrativApi {
    * ```
    */
   public graphBlocked_users!: (
-    query?: Parameter$getApiGraphBlocked_users,
+    query?: GraphBlocked_usersParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GraphBlocked_usersStatus>;
@@ -4503,7 +4795,7 @@ export class MirrativApi {
    * ```
    */
   public graphBlocked_usersFull!: (
-    query?: Parameter$getApiGraphBlocked_users,
+    query?: GraphBlocked_usersParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GraphBlocked_usersResponse>;
@@ -4525,7 +4817,7 @@ export class MirrativApi {
    * ```
    */
   public graphFollow!: (
-    body: RequestBody$postApiGraphFollow['application/x-www-form-urlencoded'],
+    body: GraphFollowRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GraphFollowStatus>;
@@ -4546,7 +4838,7 @@ export class MirrativApi {
    * ```
    */
   public graphFollowFull!: (
-    body: RequestBody$postApiGraphFollow['application/x-www-form-urlencoded'],
+    body: GraphFollowRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GraphFollowResponse>;
@@ -4566,7 +4858,7 @@ export class MirrativApi {
    * ```
    */
   public graphFollowers!: (
-    query?: Parameter$getApiGraphFollowers,
+    query?: GraphFollowersParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GraphFollowersStatus>;
@@ -4586,7 +4878,7 @@ export class MirrativApi {
    * ```
    */
   public graphFollowersFull!: (
-    query?: Parameter$getApiGraphFollowers,
+    query?: GraphFollowersParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GraphFollowersResponse>;
@@ -4606,7 +4898,7 @@ export class MirrativApi {
    * ```
    */
   public graphFollowings!: (
-    query?: Parameter$getApiGraphFollowings,
+    query?: GraphFollowingsParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GraphFollowingsStatus>;
@@ -4626,7 +4918,7 @@ export class MirrativApi {
    * ```
    */
   public graphFollowingsFull!: (
-    query?: Parameter$getApiGraphFollowings,
+    query?: GraphFollowingsParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GraphFollowingsResponse>;
@@ -4646,7 +4938,7 @@ export class MirrativApi {
    * ```
    */
   public graphRecommend_users!: (
-    query?: Parameter$getApiGraphRecommend_users,
+    query?: GraphRecommend_usersParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GraphRecommend_usersStatus>;
@@ -4666,7 +4958,7 @@ export class MirrativApi {
    * ```
    */
   public graphRecommend_usersFull!: (
-    query?: Parameter$getApiGraphRecommend_users,
+    query?: GraphRecommend_usersParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GraphRecommend_usersResponse>;
@@ -4686,7 +4978,7 @@ export class MirrativApi {
    * ```
    */
   public graphSearch!: (
-    query?: Parameter$getApiGraphSearch,
+    query?: GraphSearchParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GraphSearchStatus>;
@@ -4706,7 +4998,7 @@ export class MirrativApi {
    * ```
    */
   public graphSearchFull!: (
-    query?: Parameter$getApiGraphSearch,
+    query?: GraphSearchParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GraphSearchResponse>;
@@ -4728,7 +5020,7 @@ export class MirrativApi {
    * ```
    */
   public graphUnblock!: (
-    body: RequestBody$postApiGraphUnblock['application/x-www-form-urlencoded'],
+    body: GraphUnblockRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GraphUnblockStatus>;
@@ -4749,7 +5041,7 @@ export class MirrativApi {
    * ```
    */
   public graphUnblockFull!: (
-    body: RequestBody$postApiGraphUnblock['application/x-www-form-urlencoded'],
+    body: GraphUnblockRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GraphUnblockResponse>;
@@ -4771,7 +5063,7 @@ export class MirrativApi {
    * ```
    */
   public graphUnfollow!: (
-    body: RequestBody$postApiGraphUnfollow['application/x-www-form-urlencoded'],
+    body: GraphUnfollowRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GraphUnfollowStatus>;
@@ -4792,7 +5084,7 @@ export class MirrativApi {
    * ```
    */
   public graphUnfollowFull!: (
-    body: RequestBody$postApiGraphUnfollow['application/x-www-form-urlencoded'],
+    body: GraphUnfollowRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GraphUnfollowResponse>;
@@ -4814,7 +5106,7 @@ export class MirrativApi {
    * ```
    */
   public groupEdit!: (
-    body: RequestBody$postApiGroupEdit['application/x-www-form-urlencoded'],
+    body: GroupEditRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GroupEditStatus>;
@@ -4835,7 +5127,7 @@ export class MirrativApi {
    * ```
    */
   public groupEditFull!: (
-    body: RequestBody$postApiGroupEdit['application/x-www-form-urlencoded'],
+    body: GroupEditRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GroupEditResponse>;
@@ -4857,7 +5149,7 @@ export class MirrativApi {
    * ```
    */
   public groupInvite_users!: (
-    body: RequestBody$postApiGroupInvite_users['application/x-www-form-urlencoded'],
+    body: GroupInvite_usersRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GroupInvite_usersStatus>;
@@ -4878,7 +5170,7 @@ export class MirrativApi {
    * ```
    */
   public groupInvite_usersFull!: (
-    body: RequestBody$postApiGroupInvite_users['application/x-www-form-urlencoded'],
+    body: GroupInvite_usersRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GroupInvite_usersResponse>;
@@ -4900,7 +5192,7 @@ export class MirrativApi {
    * ```
    */
   public groupLeave!: (
-    body: RequestBody$postApiGroupLeave['application/x-www-form-urlencoded'],
+    body: GroupLeaveRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GroupLeaveStatus>;
@@ -4921,7 +5213,7 @@ export class MirrativApi {
    * ```
    */
   public groupLeaveFull!: (
-    body: RequestBody$postApiGroupLeave['application/x-www-form-urlencoded'],
+    body: GroupLeaveRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GroupLeaveResponse>;
@@ -4941,7 +5233,7 @@ export class MirrativApi {
    * ```
    */
   public groupUsers!: (
-    query?: Parameter$getApiGroupUsers,
+    query?: GroupUsersParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GroupUsersStatus>;
@@ -4961,7 +5253,7 @@ export class MirrativApi {
    * ```
    */
   public groupUsersFull!: (
-    query?: Parameter$getApiGroupUsers,
+    query?: GroupUsersParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GroupUsersResponse>;
@@ -4981,7 +5273,7 @@ export class MirrativApi {
    * ```
    */
   public liveAppeal_links!: (
-    query?: Parameter$getApiLiveAppeal_links,
+    query?: LiveAppeal_linksParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveAppeal_linksStatus>;
@@ -5001,7 +5293,7 @@ export class MirrativApi {
    * ```
    */
   public liveAppeal_linksFull!: (
-    query?: Parameter$getApiLiveAppeal_links,
+    query?: LiveAppeal_linksParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveAppeal_linksResponse>;
@@ -5021,7 +5313,7 @@ export class MirrativApi {
    * ```
    */
   public liveCampaign!: (
-    query?: Parameter$getApiLiveCampaign,
+    query?: LiveCampaignParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveCampaignStatus>;
@@ -5041,7 +5333,7 @@ export class MirrativApi {
    * ```
    */
   public liveCampaignFull!: (
-    query?: Parameter$getApiLiveCampaign,
+    query?: LiveCampaignParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveCampaignResponse>;
@@ -5061,7 +5353,7 @@ export class MirrativApi {
    * ```
    */
   public liveGet_streaming_url!: (
-    query?: Parameter$getApiLiveGet_streaming_url,
+    query?: LiveGet_streaming_urlParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveGet_streaming_urlStatus>;
@@ -5081,7 +5373,7 @@ export class MirrativApi {
    * ```
    */
   public liveGet_streaming_urlFull!: (
-    query?: Parameter$getApiLiveGet_streaming_url,
+    query?: LiveGet_streaming_urlParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveGet_streaming_urlResponse>;
@@ -5103,7 +5395,7 @@ export class MirrativApi {
    * ```
    */
   public liveLeave!: (
-    body: RequestBody$postApiLiveLeave['application/x-www-form-urlencoded'],
+    body: LiveLeaveRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveLeaveStatus>;
@@ -5124,7 +5416,7 @@ export class MirrativApi {
    * ```
    */
   public liveLeaveFull!: (
-    body: RequestBody$postApiLiveLeave['application/x-www-form-urlencoded'],
+    body: LiveLeaveRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveLeaveResponse>;
@@ -5144,7 +5436,7 @@ export class MirrativApi {
    * ```
    */
   public liveLive!: (
-    query?: Parameter$getApiLiveLive,
+    query?: LiveLiveParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveLiveStatus>;
@@ -5164,7 +5456,7 @@ export class MirrativApi {
    * ```
    */
   public liveLiveFull!: (
-    query?: Parameter$getApiLiveLive,
+    query?: LiveLiveParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveLiveResponse>;
@@ -5186,7 +5478,7 @@ export class MirrativApi {
    * ```
    */
   public liveLive_comment!: (
-    body: RequestBody$postApiLiveLive_comment['application/x-www-form-urlencoded'],
+    body: LiveLive_commentRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveLive_commentStatus>;
@@ -5207,7 +5499,7 @@ export class MirrativApi {
    * ```
    */
   public liveLive_commentFull!: (
-    body: RequestBody$postApiLiveLive_comment['application/x-www-form-urlencoded'],
+    body: LiveLive_commentRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveLive_commentResponse>;
@@ -5227,7 +5519,7 @@ export class MirrativApi {
    * ```
    */
   public liveLive_comments!: (
-    query?: Parameter$getApiLiveLive_comments,
+    query?: LiveLive_commentsParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveLive_commentsStatus>;
@@ -5247,7 +5539,7 @@ export class MirrativApi {
    * ```
    */
   public liveLive_commentsFull!: (
-    query?: Parameter$getApiLiveLive_comments,
+    query?: LiveLive_commentsParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveLive_commentsResponse>;
@@ -5310,7 +5602,7 @@ export class MirrativApi {
    * ```
    */
   public liveLive_edit!: (
-    body: RequestBody$postApiLiveLive_edit['application/x-www-form-urlencoded'],
+    body: LiveLive_editRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveLive_editStatus>;
@@ -5331,7 +5623,7 @@ export class MirrativApi {
    * ```
    */
   public liveLive_editFull!: (
-    body: RequestBody$postApiLiveLive_edit['application/x-www-form-urlencoded'],
+    body: LiveLive_editRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveLive_editResponse>;
@@ -5351,7 +5643,7 @@ export class MirrativApi {
    * ```
    */
   public liveLive_game_catalog!: (
-    query?: Parameter$getApiLiveLive_game_catalog,
+    query?: LiveLive_game_catalogParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveLive_game_catalogStatus>;
@@ -5371,7 +5663,7 @@ export class MirrativApi {
    * ```
    */
   public liveLive_game_catalogFull!: (
-    query?: Parameter$getApiLiveLive_game_catalog,
+    query?: LiveLive_game_catalogParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveLive_game_catalogResponse>;
@@ -5391,7 +5683,7 @@ export class MirrativApi {
    * ```
    */
   public liveLive_history!: (
-    query?: Parameter$getApiLiveLive_history,
+    query?: LiveLive_historyParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveLive_historyStatus>;
@@ -5411,7 +5703,7 @@ export class MirrativApi {
    * ```
    */
   public liveLive_historyFull!: (
-    query?: Parameter$getApiLiveLive_history,
+    query?: LiveLive_historyParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveLive_historyResponse>;
@@ -5433,7 +5725,7 @@ export class MirrativApi {
    * ```
    */
   public liveLive_polling!: (
-    body: RequestBody$postApiLiveLive_polling['application/x-www-form-urlencoded'],
+    body: LiveLive_pollingRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveLive_pollingStatus>;
@@ -5454,7 +5746,7 @@ export class MirrativApi {
    * ```
    */
   public liveLive_pollingFull!: (
-    body: RequestBody$postApiLiveLive_polling['application/x-www-form-urlencoded'],
+    body: LiveLive_pollingRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveLive_pollingResponse>;
@@ -5474,7 +5766,7 @@ export class MirrativApi {
    * ```
    */
   public liveOnline_users!: (
-    query?: Parameter$getApiLiveOnline_users,
+    query?: LiveOnline_usersParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveOnline_usersStatus>;
@@ -5494,7 +5786,7 @@ export class MirrativApi {
    * ```
    */
   public liveOnline_usersFull!: (
-    query?: Parameter$getApiLiveOnline_users,
+    query?: LiveOnline_usersParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveOnline_usersResponse>;
@@ -5516,7 +5808,7 @@ export class MirrativApi {
    * ```
    */
   public livePreview_end!: (
-    body: RequestBody$postApiLivePreview_end['application/x-www-form-urlencoded'],
+    body: LivePreview_endRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LivePreview_endStatus>;
@@ -5537,7 +5829,7 @@ export class MirrativApi {
    * ```
    */
   public livePreview_endFull!: (
-    body: RequestBody$postApiLivePreview_end['application/x-www-form-urlencoded'],
+    body: LivePreview_endRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LivePreview_endResponse>;
@@ -5559,7 +5851,7 @@ export class MirrativApi {
    * ```
    */
   public livePreview_polling!: (
-    body: RequestBody$postApiLivePreview_polling['application/x-www-form-urlencoded'],
+    body: LivePreview_pollingRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LivePreview_pollingStatus>;
@@ -5580,7 +5872,7 @@ export class MirrativApi {
    * ```
    */
   public livePreview_pollingFull!: (
-    body: RequestBody$postApiLivePreview_polling['application/x-www-form-urlencoded'],
+    body: LivePreview_pollingRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LivePreview_pollingResponse>;
@@ -5602,7 +5894,7 @@ export class MirrativApi {
    * ```
    */
   public livePreview_start!: (
-    body: RequestBody$postApiLivePreview_start['application/x-www-form-urlencoded'],
+    body: LivePreview_startRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LivePreview_startStatus>;
@@ -5623,7 +5915,7 @@ export class MirrativApi {
    * ```
    */
   public livePreview_startFull!: (
-    body: RequestBody$postApiLivePreview_start['application/x-www-form-urlencoded'],
+    body: LivePreview_startRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LivePreview_startResponse>;
@@ -5645,7 +5937,7 @@ export class MirrativApi {
    * ```
    */
   public liveSanitize_text!: (
-    body: RequestBody$postApiLiveSanitize_text['application/x-www-form-urlencoded'],
+    body: LiveSanitize_textRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveSanitize_textStatus>;
@@ -5666,7 +5958,7 @@ export class MirrativApi {
    * ```
    */
   public liveSanitize_textFull!: (
-    body: RequestBody$postApiLiveSanitize_text['application/x-www-form-urlencoded'],
+    body: LiveSanitize_textRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveSanitize_textResponse>;
@@ -5686,7 +5978,7 @@ export class MirrativApi {
    * ```
    */
   public liveSearch!: (
-    query?: Parameter$getApiLiveSearch,
+    query?: LiveSearchParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveSearchStatus>;
@@ -5706,7 +5998,7 @@ export class MirrativApi {
    * ```
    */
   public liveSearchFull!: (
-    query?: Parameter$getApiLiveSearch,
+    query?: LiveSearchParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveSearchResponse>;
@@ -5728,7 +6020,7 @@ export class MirrativApi {
    * ```
    */
   public liveUpdate_archive_settings!: (
-    body: RequestBody$postApiLiveUpdate_archive_settings['application/x-www-form-urlencoded'],
+    body: LiveUpdate_archive_settingsRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveUpdate_archive_settingsStatus>;
@@ -5749,7 +6041,7 @@ export class MirrativApi {
    * ```
    */
   public liveUpdate_archive_settingsFull!: (
-    body: RequestBody$postApiLiveUpdate_archive_settings['application/x-www-form-urlencoded'],
+    body: LiveUpdate_archive_settingsRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveUpdate_archive_settingsResponse>;
@@ -5811,7 +6103,7 @@ export class MirrativApi {
    * ```
    */
   public live_gameEnd!: (
-    body: RequestBody$postApiLive_gameEnd['application/x-www-form-urlencoded'],
+    body: Live_gameEndRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<Live_gameEndStatus>;
@@ -5832,7 +6124,7 @@ export class MirrativApi {
    * ```
    */
   public live_gameEndFull!: (
-    body: RequestBody$postApiLive_gameEnd['application/x-www-form-urlencoded'],
+    body: Live_gameEndRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<Live_gameEndResponse>;
@@ -5892,7 +6184,7 @@ export class MirrativApi {
    * ```
    */
   public live_gameNew_counts!: (
-    query?: Parameter$getApiLive_gameNew_counts,
+    query?: Live_gameNew_countsParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<Live_gameNew_countsStatus>;
@@ -5912,7 +6204,7 @@ export class MirrativApi {
    * ```
    */
   public live_gameNew_countsFull!: (
-    query?: Parameter$getApiLive_gameNew_counts,
+    query?: Live_gameNew_countsParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<Live_gameNew_countsResponse>;
@@ -5934,7 +6226,7 @@ export class MirrativApi {
    * ```
    */
   public live_gameStart!: (
-    body: RequestBody$postApiLive_gameStart['application/x-www-form-urlencoded'],
+    body: Live_gameStartRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<Live_gameStartStatus>;
@@ -5955,7 +6247,7 @@ export class MirrativApi {
    * ```
    */
   public live_gameStartFull!: (
-    body: RequestBody$postApiLive_gameStart['application/x-www-form-urlencoded'],
+    body: Live_gameStartRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<Live_gameStartResponse>;
@@ -6175,7 +6467,7 @@ export class MirrativApi {
    * ```
    */
   public noticeCampaigns!: (
-    query?: Parameter$getApiNoticeCampaigns,
+    query?: NoticeCampaignsParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<NoticeCampaignsStatus>;
@@ -6195,7 +6487,7 @@ export class MirrativApi {
    * ```
    */
   public noticeCampaignsFull!: (
-    query?: Parameter$getApiNoticeCampaigns,
+    query?: NoticeCampaignsParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<NoticeCampaignsResponse>;
@@ -6215,7 +6507,7 @@ export class MirrativApi {
    * ```
    */
   public noticeCounts!: (
-    query?: Parameter$getApiNoticeCounts,
+    query?: NoticeCountsParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<NoticeCountsStatus>;
@@ -6235,7 +6527,7 @@ export class MirrativApi {
    * ```
    */
   public noticeCountsFull!: (
-    query?: Parameter$getApiNoticeCounts,
+    query?: NoticeCountsParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<NoticeCountsResponse>;
@@ -6295,7 +6587,7 @@ export class MirrativApi {
    * ```
    */
   public noticePopups!: (
-    query?: Parameter$getApiNoticePopups,
+    query?: NoticePopupsParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<NoticePopupsStatus>;
@@ -6315,7 +6607,7 @@ export class MirrativApi {
    * ```
    */
   public noticePopupsFull!: (
-    query?: Parameter$getApiNoticePopups,
+    query?: NoticePopupsParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<NoticePopupsResponse>;
@@ -6457,7 +6749,7 @@ export class MirrativApi {
    * ```
    */
   public postNotificationPush_settings_v3!: (
-    body: RequestBody$postApiNotificationPush_settings_v3['application/x-www-form-urlencoded'],
+    body: PostNotificationPush_settings_v3Request,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<PostNotificationPush_settings_v3Status>;
@@ -6478,7 +6770,7 @@ export class MirrativApi {
    * ```
    */
   public postNotificationPush_settings_v3Full!: (
-    body: RequestBody$postApiNotificationPush_settings_v3['application/x-www-form-urlencoded'],
+    body: PostNotificationPush_settings_v3Request,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<PostNotificationPush_settings_v3Response>;
@@ -6538,7 +6830,7 @@ export class MirrativApi {
    * ```
    */
   public rankingUser_detail!: (
-    query?: Parameter$getApiRankingUser_detail,
+    query?: RankingUser_detailParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<RankingUser_detailStatus>;
@@ -6558,7 +6850,7 @@ export class MirrativApi {
    * ```
    */
   public rankingUser_detailFull!: (
-    query?: Parameter$getApiRankingUser_detail,
+    query?: RankingUser_detailParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<RankingUser_detailResponse>;
@@ -6578,7 +6870,7 @@ export class MirrativApi {
    * ```
    */
   public reward_adAvailable_reward_ad_ids!: (
-    query?: Parameter$getApiReward_adAvailable_reward_ad_ids,
+    query?: Reward_adAvailable_reward_ad_idsParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<Reward_adAvailable_reward_ad_idsStatus>;
@@ -6598,7 +6890,7 @@ export class MirrativApi {
    * ```
    */
   public reward_adAvailable_reward_ad_idsFull!: (
-    query?: Parameter$getApiReward_adAvailable_reward_ad_ids,
+    query?: Reward_adAvailable_reward_ad_idsParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<Reward_adAvailable_reward_ad_idsResponse>;
@@ -6660,7 +6952,7 @@ export class MirrativApi {
    * ```
    */
   public reward_adComplete!: (
-    body: RequestBody$postApiReward_adComplete['application/x-www-form-urlencoded'],
+    body: Reward_adCompleteRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<Reward_adCompleteStatus>;
@@ -6681,7 +6973,7 @@ export class MirrativApi {
    * ```
    */
   public reward_adCompleteFull!: (
-    body: RequestBody$postApiReward_adComplete['application/x-www-form-urlencoded'],
+    body: Reward_adCompleteRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<Reward_adCompleteResponse>;
@@ -6701,7 +6993,7 @@ export class MirrativApi {
    * ```
    */
   public season_ratingStatus!: (
-    query?: Parameter$getApiSeason_ratingStatus,
+    query?: Season_ratingStatusParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<Season_ratingStatusStatus>;
@@ -6721,7 +7013,7 @@ export class MirrativApi {
    * ```
    */
   public season_ratingStatusFull!: (
-    query?: Parameter$getApiSeason_ratingStatus,
+    query?: Season_ratingStatusParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<Season_ratingStatusResponse>;
@@ -6741,7 +7033,7 @@ export class MirrativApi {
    * ```
    */
   public season_yellStatus!: (
-    query?: Parameter$getApiSeason_yellStatus,
+    query?: Season_yellStatusParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<Season_yellStatusStatus>;
@@ -6761,7 +7053,7 @@ export class MirrativApi {
    * ```
    */
   public season_yellStatusFull!: (
-    query?: Parameter$getApiSeason_yellStatus,
+    query?: Season_yellStatusParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<Season_yellStatusResponse>;
@@ -6781,7 +7073,7 @@ export class MirrativApi {
    * ```
    */
   public season_yellViewers!: (
-    query?: Parameter$getApiSeason_yellViewers,
+    query?: Season_yellViewersParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<Season_yellViewersStatus>;
@@ -6801,7 +7093,7 @@ export class MirrativApi {
    * ```
    */
   public season_yellViewersFull!: (
-    query?: Parameter$getApiSeason_yellViewers,
+    query?: Season_yellViewersParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<Season_yellViewersResponse>;
@@ -6863,7 +7155,7 @@ export class MirrativApi {
    * ```
    */
   public userBad_report!: (
-    body: RequestBody$postApiUserBad_report['application/x-www-form-urlencoded'],
+    body: UserBad_reportRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<UserBad_reportStatus>;
@@ -6884,7 +7176,7 @@ export class MirrativApi {
    * ```
    */
   public userBad_reportFull!: (
-    body: RequestBody$postApiUserBad_report['application/x-www-form-urlencoded'],
+    body: UserBad_reportRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<UserBad_reportResponse>;
@@ -6946,7 +7238,7 @@ export class MirrativApi {
    * ```
    */
   public userCheck_minor!: (
-    body: RequestBody$postApiUserCheck_minor['application/x-www-form-urlencoded'],
+    body: UserCheck_minorRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<UserCheck_minorStatus>;
@@ -6967,7 +7259,7 @@ export class MirrativApi {
    * ```
    */
   public userCheck_minorFull!: (
-    body: RequestBody$postApiUserCheck_minor['application/x-www-form-urlencoded'],
+    body: UserCheck_minorRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<UserCheck_minorResponse>;
@@ -7029,7 +7321,7 @@ export class MirrativApi {
    * ```
    */
   public userDate_of_birth!: (
-    body: RequestBody$postApiUserDate_of_birth['application/x-www-form-urlencoded'],
+    body: UserDate_of_birthRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<UserDate_of_birthStatus>;
@@ -7050,7 +7342,7 @@ export class MirrativApi {
    * ```
    */
   public userDate_of_birthFull!: (
-    body: RequestBody$postApiUserDate_of_birth['application/x-www-form-urlencoded'],
+    body: UserDate_of_birthRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<UserDate_of_birthResponse>;
@@ -7234,7 +7526,7 @@ export class MirrativApi {
    * ```
    */
   public userPost_live_announcement!: (
-    body: RequestBody$postApiUserPost_live_announcement['application/x-www-form-urlencoded'],
+    body: UserPost_live_announcementRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<UserPost_live_announcementStatus>;
@@ -7255,7 +7547,7 @@ export class MirrativApi {
    * ```
    */
   public userPost_live_announcementFull!: (
-    body: RequestBody$postApiUserPost_live_announcement['application/x-www-form-urlencoded'],
+    body: UserPost_live_announcementRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<UserPost_live_announcementResponse>;
@@ -7277,7 +7569,7 @@ export class MirrativApi {
    * ```
    */
   public userPost_live_request!: (
-    body: RequestBody$postApiUserPost_live_request['application/x-www-form-urlencoded'],
+    body: UserPost_live_requestRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<UserPost_live_requestStatus>;
@@ -7298,7 +7590,7 @@ export class MirrativApi {
    * ```
    */
   public userPost_live_requestFull!: (
-    body: RequestBody$postApiUserPost_live_request['application/x-www-form-urlencoded'],
+    body: UserPost_live_requestRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<UserPost_live_requestResponse>;
@@ -7320,7 +7612,7 @@ export class MirrativApi {
    * ```
    */
   public userPost_review_confirmation!: (
-    body: RequestBody$postApiUserPost_review_confirmation['application/x-www-form-urlencoded'],
+    body: UserPost_review_confirmationRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<UserPost_review_confirmationStatus>;
@@ -7341,7 +7633,7 @@ export class MirrativApi {
    * ```
    */
   public userPost_review_confirmationFull!: (
-    body: RequestBody$postApiUserPost_review_confirmation['application/x-www-form-urlencoded'],
+    body: UserPost_review_confirmationRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<UserPost_review_confirmationResponse>;
@@ -7361,7 +7653,7 @@ export class MirrativApi {
    * ```
    */
   public userProfile!: (
-    query?: Parameter$getApiUserProfile,
+    query?: UserProfileParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<UserProfileStatus>;
@@ -7381,7 +7673,7 @@ export class MirrativApi {
    * ```
    */
   public userProfileFull!: (
-    query?: Parameter$getApiUserProfile,
+    query?: UserProfileParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<UserProfileResponse>;
@@ -7403,7 +7695,7 @@ export class MirrativApi {
    * ```
    */
   public userProfile_edit!: (
-    body: RequestBody$postApiUserProfile_edit['application/x-www-form-urlencoded'],
+    body: UserProfile_editRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<UserProfile_editStatus>;
@@ -7424,7 +7716,7 @@ export class MirrativApi {
    * ```
    */
   public userProfile_editFull!: (
-    body: RequestBody$postApiUserProfile_edit['application/x-www-form-urlencoded'],
+    body: UserProfile_editRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<UserProfile_editResponse>;
@@ -7444,7 +7736,7 @@ export class MirrativApi {
    * ```
    */
   public userSearch!: (
-    query?: Parameter$getApiUserSearch,
+    query?: UserSearchParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<UserSearchStatus>;
@@ -7464,7 +7756,7 @@ export class MirrativApi {
    * ```
    */
   public userSearchFull!: (
-    query?: Parameter$getApiUserSearch,
+    query?: UserSearchParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<UserSearchResponse>;
@@ -7566,7 +7858,7 @@ export class MirrativApi {
    * ```
    */
   public userUpdate_favorite_live_setting!: (
-    body: RequestBody$postApiUserUpdate_favorite_live_setting['application/x-www-form-urlencoded'],
+    body: UserUpdate_favorite_live_settingRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<UserUpdate_favorite_live_settingStatus>;
@@ -7587,7 +7879,7 @@ export class MirrativApi {
    * ```
    */
   public userUpdate_favorite_live_settingFull!: (
-    body: RequestBody$postApiUserUpdate_favorite_live_setting['application/x-www-form-urlencoded'],
+    body: UserUpdate_favorite_live_settingRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<UserUpdate_favorite_live_settingResponse>;
@@ -7609,7 +7901,7 @@ export class MirrativApi {
    * ```
    */
   public userUpdate_recording_settings!: (
-    body: RequestBody$postApiUserUpdate_recording_settings['application/x-www-form-urlencoded'],
+    body: UserUpdate_recording_settingsRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<UserUpdate_recording_settingsStatus>;
@@ -7630,7 +7922,7 @@ export class MirrativApi {
    * ```
    */
   public userUpdate_recording_settingsFull!: (
-    body: RequestBody$postApiUserUpdate_recording_settings['application/x-www-form-urlencoded'],
+    body: UserUpdate_recording_settingsRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<UserUpdate_recording_settingsResponse>;
@@ -7652,7 +7944,7 @@ export class MirrativApi {
    * ```
    */
   public userUse_favorite_live_setting!: (
-    body: RequestBody$postApiUserUse_favorite_live_setting['application/x-www-form-urlencoded'],
+    body: UserUse_favorite_live_settingRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<UserUse_favorite_live_settingStatus>;
@@ -7673,7 +7965,7 @@ export class MirrativApi {
    * ```
    */
   public userUse_favorite_live_settingFull!: (
-    body: RequestBody$postApiUserUse_favorite_live_setting['application/x-www-form-urlencoded'],
+    body: UserUse_favorite_live_settingRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<UserUse_favorite_live_settingResponse>;
@@ -7719,6 +8011,86 @@ export class MirrativApi {
   ) => Promise<UserWatchwordResponse>;
 
   /**
+   * ### GET /lpWatchwordRegister
+   *
+   * @param query - Record<string, any> URL クエリパラメータ (任意)
+   * @param extraHeaders 追加ヘッダー (任意)
+   * @param axiosOpts   Axios オプション (任意)
+   * @returns Promise<LpWatchwordRegisterStatus> ステータスのみを返します
+   * @throws AxiosError ネットワーク／HTTP エラー
+   * @example
+   * ```ts
+   * const res = await api.lpWatchwordRegister({});
+   * console.log(res);
+   * ```
+   */
+  public lpWatchwordRegister!: (
+    query?: Record<string, any>,
+    extraHeaders?: Record<string, string>,
+    axiosOpts?: AxiosRequestConfig
+  ) => Promise<LpWatchwordRegisterStatus>;
+
+  /**
+   * ### GET /lpWatchwordRegister (full response)
+   *
+   * @param query - Record<string, any> URL クエリパラメータ (任意)
+   * @param extraHeaders 追加ヘッダー (任意)
+   * @param axiosOpts   Axios オプション (任意)
+   * @returns Promise<LpWatchwordRegisterResponse>
+   * @throws AxiosError ネットワーク／HTTP エラー
+   * @example
+   * ```ts
+   * const res = await api.lpWatchwordRegisterFull({});
+   * console.log(res);
+   * ```
+   */
+  public lpWatchwordRegisterFull!: (
+    query?: Record<string, any>,
+    extraHeaders?: Record<string, string>,
+    axiosOpts?: AxiosRequestConfig
+  ) => Promise<LpWatchwordRegisterResponse>;
+
+  /**
+   * ### GET /noticePopup
+   *
+   * @param query - { obfuscated_user_id?: string | undefined; id?: number | undefined; new_popup?: number | undefined } URL クエリパラメータ (任意)
+   * @param extraHeaders 追加ヘッダー (任意)
+   * @param axiosOpts   Axios オプション (任意)
+   * @returns Promise<NoticePopupStatus> ステータスのみを返します
+   * @throws AxiosError ネットワーク／HTTP エラー
+   * @example
+   * ```ts
+   * const res = await api.noticePopup({ obfuscated_user_id?: string | undefined; id?: number | undefined; new_popup?: number | undefined });
+   * console.log(res);
+   * ```
+   */
+  public noticePopup!: (
+    query?: NoticePopupParams,
+    extraHeaders?: Record<string, string>,
+    axiosOpts?: AxiosRequestConfig
+  ) => Promise<NoticePopupStatus>;
+
+  /**
+   * ### GET /noticePopup (full response)
+   *
+   * @param query - { obfuscated_user_id?: string | undefined; id?: number | undefined; new_popup?: number | undefined } URL クエリパラメータ (任意)
+   * @param extraHeaders 追加ヘッダー (任意)
+   * @param axiosOpts   Axios オプション (任意)
+   * @returns Promise<NoticePopupResponse>
+   * @throws AxiosError ネットワーク／HTTP エラー
+   * @example
+   * ```ts
+   * const res = await api.noticePopupFull({ obfuscated_user_id?: string | undefined; id?: number | undefined; new_popup?: number | undefined });
+   * console.log(res);
+   * ```
+   */
+  public noticePopupFull!: (
+    query?: NoticePopupParams,
+    extraHeaders?: Record<string, string>,
+    axiosOpts?: AxiosRequestConfig
+  ) => Promise<NoticePopupResponse>;
+
+  /**
    * ### POST /chatAgree
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
@@ -7735,7 +8107,7 @@ export class MirrativApi {
    * ```
    */
   public chatAgree!: (
-    body: RequestBody$postApiChatAgree['application/x-www-form-urlencoded'],
+    body: ChatAgreeRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<ChatAgreeStatus>;
@@ -7756,7 +8128,7 @@ export class MirrativApi {
    * ```
    */
   public chatAgreeFull!: (
-    body: RequestBody$postApiChatAgree['application/x-www-form-urlencoded'],
+    body: ChatAgreeRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<ChatAgreeResponse>;
@@ -7778,7 +8150,7 @@ export class MirrativApi {
    * ```
    */
   public chatPost_thanks!: (
-    body: RequestBody$postApiChatPost_thanks['application/x-www-form-urlencoded'],
+    body: ChatPost_thanksRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<ChatPost_thanksStatus>;
@@ -7799,7 +8171,7 @@ export class MirrativApi {
    * ```
    */
   public chatPost_thanksFull!: (
-    body: RequestBody$postApiChatPost_thanks['application/x-www-form-urlencoded'],
+    body: ChatPost_thanksRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<ChatPost_thanksResponse>;
@@ -7821,7 +8193,7 @@ export class MirrativApi {
    * ```
    */
   public chatPost_thanks_to_live_watched_users!: (
-    body: RequestBody$postApiChatPost_thanks_to_live_watched_users['application/x-www-form-urlencoded'],
+    body: ChatPost_thanks_to_live_watched_usersRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<ChatPost_thanks_to_live_watched_usersStatus>;
@@ -7842,7 +8214,7 @@ export class MirrativApi {
    * ```
    */
   public chatPost_thanks_to_live_watched_usersFull!: (
-    body: RequestBody$postApiChatPost_thanks_to_live_watched_users['application/x-www-form-urlencoded'],
+    body: ChatPost_thanks_to_live_watched_usersRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<ChatPost_thanks_to_live_watched_usersResponse>;
@@ -7864,7 +8236,7 @@ export class MirrativApi {
    * ```
    */
   public collabClose!: (
-    body: RequestBody$postApiCollabClose['application/x-www-form-urlencoded'],
+    body: CollabCloseRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<CollabCloseStatus>;
@@ -7885,7 +8257,7 @@ export class MirrativApi {
    * ```
    */
   public collabCloseFull!: (
-    body: RequestBody$postApiCollabClose['application/x-www-form-urlencoded'],
+    body: CollabCloseRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<CollabCloseResponse>;
@@ -7905,7 +8277,7 @@ export class MirrativApi {
    * ```
    */
   public collabConnected_streaming_collab_lives!: (
-    query?: Parameter$getApiCollabConnected_streaming_collab_lives,
+    query?: CollabConnected_streaming_collab_livesParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<CollabConnected_streaming_collab_livesStatus>;
@@ -7925,7 +8297,7 @@ export class MirrativApi {
    * ```
    */
   public collabConnected_streaming_collab_livesFull!: (
-    query?: Parameter$getApiCollabConnected_streaming_collab_lives,
+    query?: CollabConnected_streaming_collab_livesParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<CollabConnected_streaming_collab_livesResponse>;
@@ -7945,7 +8317,7 @@ export class MirrativApi {
    * ```
    */
   public collabInvitable_users!: (
-    query?: Parameter$getApiCollabInvitable_users,
+    query?: CollabInvitable_usersParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<CollabInvitable_usersStatus>;
@@ -7965,7 +8337,7 @@ export class MirrativApi {
    * ```
    */
   public collabInvitable_usersFull!: (
-    query?: Parameter$getApiCollabInvitable_users,
+    query?: CollabInvitable_usersParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<CollabInvitable_usersResponse>;
@@ -7987,7 +8359,7 @@ export class MirrativApi {
    * ```
    */
   public collabInvite!: (
-    body: RequestBody$postApiCollabInvite['application/x-www-form-urlencoded'],
+    body: CollabInviteRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<CollabInviteStatus>;
@@ -8008,7 +8380,7 @@ export class MirrativApi {
    * ```
    */
   public collabInviteFull!: (
-    body: RequestBody$postApiCollabInvite['application/x-www-form-urlencoded'],
+    body: CollabInviteRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<CollabInviteResponse>;
@@ -8030,7 +8402,7 @@ export class MirrativApi {
    * ```
    */
   public collabSend_to_peer!: (
-    body: RequestBody$postApiCollabSend_to_peer['application/x-www-form-urlencoded'],
+    body: CollabSend_to_peerRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<CollabSend_to_peerStatus>;
@@ -8051,7 +8423,7 @@ export class MirrativApi {
    * ```
    */
   public collabSend_to_peerFull!: (
-    body: RequestBody$postApiCollabSend_to_peer['application/x-www-form-urlencoded'],
+    body: CollabSend_to_peerRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<CollabSend_to_peerResponse>;
@@ -8073,7 +8445,7 @@ export class MirrativApi {
    * ```
    */
   public collabStart!: (
-    body: RequestBody$postApiCollabStart['application/x-www-form-urlencoded'],
+    body: CollabStartRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<CollabStartStatus>;
@@ -8094,7 +8466,7 @@ export class MirrativApi {
    * ```
    */
   public collabStartFull!: (
-    body: RequestBody$postApiCollabStart['application/x-www-form-urlencoded'],
+    body: CollabStartRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<CollabStartResponse>;
@@ -8116,7 +8488,7 @@ export class MirrativApi {
    * ```
    */
   public giftUpdate_rich_unique_emomo_gift!: (
-    body: RequestBody$postApiGiftUpdate_rich_unique_emomo_gift['application/x-www-form-urlencoded'],
+    body: GiftUpdate_rich_unique_emomo_giftRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GiftUpdate_rich_unique_emomo_giftStatus>;
@@ -8137,7 +8509,7 @@ export class MirrativApi {
    * ```
    */
   public giftUpdate_rich_unique_emomo_giftFull!: (
-    body: RequestBody$postApiGiftUpdate_rich_unique_emomo_gift['application/x-www-form-urlencoded'],
+    body: GiftUpdate_rich_unique_emomo_giftRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GiftUpdate_rich_unique_emomo_giftResponse>;
@@ -8157,7 +8529,7 @@ export class MirrativApi {
    * ```
    */
   public gift_gachaUser_stocks!: (
-    query?: Parameter$getApiGift_gachaUser_stocks,
+    query?: Gift_gachaUser_stocksParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<Gift_gachaUser_stocksStatus>;
@@ -8177,7 +8549,7 @@ export class MirrativApi {
    * ```
    */
   public gift_gachaUser_stocksFull!: (
-    query?: Parameter$getApiGift_gachaUser_stocks,
+    query?: Gift_gachaUser_stocksParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<Gift_gachaUser_stocksResponse>;
@@ -8199,7 +8571,7 @@ export class MirrativApi {
    * ```
    */
   public graphFollow_live_watched_users!: (
-    body: RequestBody$postApiGraphFollow_live_watched_users['application/x-www-form-urlencoded'],
+    body: GraphFollow_live_watched_usersRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GraphFollow_live_watched_usersStatus>;
@@ -8220,7 +8592,7 @@ export class MirrativApi {
    * ```
    */
   public graphFollow_live_watched_usersFull!: (
-    body: RequestBody$postApiGraphFollow_live_watched_users['application/x-www-form-urlencoded'],
+    body: GraphFollow_live_watched_usersRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<GraphFollow_live_watched_usersResponse>;
@@ -8240,7 +8612,7 @@ export class MirrativApi {
    * ```
    */
   public karaoke!: (
-    query?: Parameter$getApiKaraoke,
+    query?: KaraokeParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<KaraokeStatus>;
@@ -8260,7 +8632,7 @@ export class MirrativApi {
    * ```
    */
   public karaokeFull!: (
-    query?: Parameter$getApiKaraoke,
+    query?: KaraokeParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<KaraokeResponse>;
@@ -8280,7 +8652,7 @@ export class MirrativApi {
    * ```
    */
   public karaokeBy_genre!: (
-    query?: Parameter$getApiKaraokeBy_genre,
+    query?: KaraokeBy_genreParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<KaraokeBy_genreStatus>;
@@ -8300,7 +8672,7 @@ export class MirrativApi {
    * ```
    */
   public karaokeBy_genreFull!: (
-    query?: Parameter$getApiKaraokeBy_genre,
+    query?: KaraokeBy_genreParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<KaraokeBy_genreResponse>;
@@ -8360,7 +8732,7 @@ export class MirrativApi {
    * ```
    */
   public karaokeRecommend_singers!: (
-    query?: Parameter$getApiKaraokeRecommend_singers,
+    query?: KaraokeRecommend_singersParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<KaraokeRecommend_singersStatus>;
@@ -8380,7 +8752,7 @@ export class MirrativApi {
    * ```
    */
   public karaokeRecommend_singersFull!: (
-    query?: Parameter$getApiKaraokeRecommend_singers,
+    query?: KaraokeRecommend_singersParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<KaraokeRecommend_singersResponse>;
@@ -8400,7 +8772,7 @@ export class MirrativApi {
    * ```
    */
   public karaokeSearch!: (
-    query?: Parameter$getApiKaraokeSearch,
+    query?: KaraokeSearchParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<KaraokeSearchStatus>;
@@ -8420,7 +8792,7 @@ export class MirrativApi {
    * ```
    */
   public karaokeSearchFull!: (
-    query?: Parameter$getApiKaraokeSearch,
+    query?: KaraokeSearchParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<KaraokeSearchResponse>;
@@ -8440,7 +8812,7 @@ export class MirrativApi {
    * ```
    */
   public karaokeSingers!: (
-    query?: Parameter$getApiKaraokeSingers,
+    query?: KaraokeSingersParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<KaraokeSingersStatus>;
@@ -8460,7 +8832,7 @@ export class MirrativApi {
    * ```
    */
   public karaokeSingersFull!: (
-    query?: Parameter$getApiKaraokeSingers,
+    query?: KaraokeSingersParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<KaraokeSingersResponse>;
@@ -8480,7 +8852,7 @@ export class MirrativApi {
    * ```
    */
   public liveBroadcast_result!: (
-    query?: Parameter$getApiLiveBroadcast_result,
+    query?: LiveBroadcast_resultParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveBroadcast_resultStatus>;
@@ -8500,7 +8872,7 @@ export class MirrativApi {
    * ```
    */
   public liveBroadcast_resultFull!: (
-    query?: Parameter$getApiLiveBroadcast_result,
+    query?: LiveBroadcast_resultParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveBroadcast_resultResponse>;
@@ -8522,7 +8894,7 @@ export class MirrativApi {
    * ```
    */
   public liveDelete_live_history!: (
-    body: RequestBody$postApiLiveDelete_live_history['application/x-www-form-urlencoded'],
+    body: LiveDelete_live_historyRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveDelete_live_historyStatus>;
@@ -8543,7 +8915,7 @@ export class MirrativApi {
    * ```
    */
   public liveDelete_live_historyFull!: (
-    body: RequestBody$postApiLiveDelete_live_history['application/x-www-form-urlencoded'],
+    body: LiveDelete_live_historyRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveDelete_live_historyResponse>;
@@ -8565,7 +8937,7 @@ export class MirrativApi {
    * ```
    */
   public liveKick_out!: (
-    body: RequestBody$postApiLiveKick_out['application/x-www-form-urlencoded'],
+    body: LiveKick_outRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveKick_outStatus>;
@@ -8586,7 +8958,7 @@ export class MirrativApi {
    * ```
    */
   public liveKick_outFull!: (
-    body: RequestBody$postApiLiveKick_out['application/x-www-form-urlencoded'],
+    body: LiveKick_outRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveKick_outResponse>;
@@ -8608,7 +8980,7 @@ export class MirrativApi {
    * ```
    */
   public liveLive_app_identifier_changed!: (
-    body: RequestBody$postApiLiveLive_app_identifier_changed['application/x-www-form-urlencoded'],
+    body: LiveLive_app_identifier_changedRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveLive_app_identifier_changedStatus>;
@@ -8629,7 +9001,7 @@ export class MirrativApi {
    * ```
    */
   public liveLive_app_identifier_changedFull!: (
-    body: RequestBody$postApiLiveLive_app_identifier_changed['application/x-www-form-urlencoded'],
+    body: LiveLive_app_identifier_changedRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveLive_app_identifier_changedResponse>;
@@ -8651,7 +9023,7 @@ export class MirrativApi {
    * ```
    */
   public liveLive_capture_image!: (
-    body: RequestBody$postApiLiveLive_capture_image['application/x-www-form-urlencoded'],
+    body: LiveLive_capture_imageRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveLive_capture_imageStatus>;
@@ -8672,7 +9044,7 @@ export class MirrativApi {
    * ```
    */
   public liveLive_capture_imageFull!: (
-    body: RequestBody$postApiLiveLive_capture_image['application/x-www-form-urlencoded'],
+    body: LiveLive_capture_imageRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveLive_capture_imageResponse>;
@@ -8694,7 +9066,7 @@ export class MirrativApi {
    * ```
    */
   public liveLive_end!: (
-    body: RequestBody$postApiLiveLive_end['application/x-www-form-urlencoded'],
+    body: LiveLive_endRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveLive_endStatus>;
@@ -8715,7 +9087,7 @@ export class MirrativApi {
    * ```
    */
   public liveLive_endFull!: (
-    body: RequestBody$postApiLiveLive_end['application/x-www-form-urlencoded'],
+    body: LiveLive_endRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveLive_endResponse>;
@@ -8737,7 +9109,7 @@ export class MirrativApi {
    * ```
    */
   public liveLive_heartbeat!: (
-    body: RequestBody$postApiLiveLive_heartbeat['application/x-www-form-urlencoded'],
+    body: LiveLive_heartbeatRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveLive_heartbeatStatus>;
@@ -8758,7 +9130,7 @@ export class MirrativApi {
    * ```
    */
   public liveLive_heartbeatFull!: (
-    body: RequestBody$postApiLiveLive_heartbeat['application/x-www-form-urlencoded'],
+    body: LiveLive_heartbeatRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveLive_heartbeatResponse>;
@@ -8780,7 +9152,7 @@ export class MirrativApi {
    * ```
    */
   public liveLive_start!: (
-    body: RequestBody$postApiLiveLive_start['application/x-www-form-urlencoded'],
+    body: LiveLive_startRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveLive_startStatus>;
@@ -8801,7 +9173,7 @@ export class MirrativApi {
    * ```
    */
   public liveLive_startFull!: (
-    body: RequestBody$postApiLiveLive_start['application/x-www-form-urlencoded'],
+    body: LiveLive_startRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveLive_startResponse>;
@@ -8823,7 +9195,7 @@ export class MirrativApi {
    * ```
    */
   public liveUpdate_emomo_visible!: (
-    body: RequestBody$postApiLiveUpdate_emomo_visible['application/x-www-form-urlencoded'],
+    body: LiveUpdate_emomo_visibleRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveUpdate_emomo_visibleStatus>;
@@ -8844,7 +9216,7 @@ export class MirrativApi {
    * ```
    */
   public liveUpdate_emomo_visibleFull!: (
-    body: RequestBody$postApiLiveUpdate_emomo_visible['application/x-www-form-urlencoded'],
+    body: LiveUpdate_emomo_visibleRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveUpdate_emomo_visibleResponse>;
@@ -8866,7 +9238,7 @@ export class MirrativApi {
    * ```
    */
   public liveUpdate_wipe_enabled!: (
-    body: RequestBody$postApiLiveUpdate_wipe_enabled['application/x-www-form-urlencoded'],
+    body: LiveUpdate_wipe_enabledRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveUpdate_wipe_enabledStatus>;
@@ -8887,7 +9259,7 @@ export class MirrativApi {
    * ```
    */
   public liveUpdate_wipe_enabledFull!: (
-    body: RequestBody$postApiLiveUpdate_wipe_enabled['application/x-www-form-urlencoded'],
+    body: LiveUpdate_wipe_enabledRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveUpdate_wipe_enabledResponse>;
@@ -8907,7 +9279,7 @@ export class MirrativApi {
    * ```
    */
   public liveViewers_result!: (
-    query?: Parameter$getApiLiveViewers_result,
+    query?: LiveViewers_resultParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveViewers_resultStatus>;
@@ -8927,7 +9299,7 @@ export class MirrativApi {
    * ```
    */
   public liveViewers_resultFull!: (
-    query?: Parameter$getApiLiveViewers_result,
+    query?: LiveViewers_resultParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<LiveViewers_resultResponse>;
@@ -8949,7 +9321,7 @@ export class MirrativApi {
    * ```
    */
   public live_gamePing!: (
-    body: RequestBody$postApiLive_gamePing['application/x-www-form-urlencoded'],
+    body: Live_gamePingRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<Live_gamePingStatus>;
@@ -8970,7 +9342,7 @@ export class MirrativApi {
    * ```
    */
   public live_gamePingFull!: (
-    body: RequestBody$postApiLive_gamePing['application/x-www-form-urlencoded'],
+    body: Live_gamePingRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<Live_gamePingResponse>;
@@ -8992,7 +9364,7 @@ export class MirrativApi {
    * ```
    */
   public missionReceive_login_bonus_reward!: (
-    body: RequestBody$postApiMissionReceive_login_bonus_reward['application/x-www-form-urlencoded'],
+    body: MissionReceive_login_bonus_rewardRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<MissionReceive_login_bonus_rewardStatus>;
@@ -9013,7 +9385,7 @@ export class MirrativApi {
    * ```
    */
   public missionReceive_login_bonus_rewardFull!: (
-    body: RequestBody$postApiMissionReceive_login_bonus_reward['application/x-www-form-urlencoded'],
+    body: MissionReceive_login_bonus_rewardRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<MissionReceive_login_bonus_rewardResponse>;
@@ -9035,7 +9407,7 @@ export class MirrativApi {
    * ```
    */
   public moderatorAdd!: (
-    body: RequestBody$postApiModeratorAdd['application/x-www-form-urlencoded'],
+    body: ModeratorAddRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<ModeratorAddStatus>;
@@ -9056,7 +9428,7 @@ export class MirrativApi {
    * ```
    */
   public moderatorAddFull!: (
-    body: RequestBody$postApiModeratorAdd['application/x-www-form-urlencoded'],
+    body: ModeratorAddRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<ModeratorAddResponse>;
@@ -9078,7 +9450,7 @@ export class MirrativApi {
    * ```
    */
   public moderatorDelete!: (
-    body: RequestBody$postApiModeratorDelete['application/x-www-form-urlencoded'],
+    body: ModeratorDeleteRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<ModeratorDeleteStatus>;
@@ -9099,7 +9471,7 @@ export class MirrativApi {
    * ```
    */
   public moderatorDeleteFull!: (
-    body: RequestBody$postApiModeratorDelete['application/x-www-form-urlencoded'],
+    body: ModeratorDeleteRequest,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<ModeratorDeleteResponse>;
@@ -9159,7 +9531,7 @@ export class MirrativApi {
    * ```
    */
   public season_ratingLive_result!: (
-    query?: Parameter$getApiSeason_ratingLive_result,
+    query?: Season_ratingLive_resultParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<Season_ratingLive_resultStatus>;
@@ -9179,7 +9551,7 @@ export class MirrativApi {
    * ```
    */
   public season_ratingLive_resultFull!: (
-    query?: Parameter$getApiSeason_ratingLive_result,
+    query?: Season_ratingLive_resultParams,
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<Season_ratingLive_resultResponse>;
@@ -9223,5 +9595,45 @@ export class MirrativApi {
     extraHeaders?: Record<string, string>,
     axiosOpts?: AxiosRequestConfig
   ) => Promise<ShooterMatchingResponse>;
+
+  /**
+   * ### GET /pageLp
+   *
+   * @param query - { path?: string | undefined } URL クエリパラメータ (任意)
+   * @param extraHeaders 追加ヘッダー (任意)
+   * @param axiosOpts   Axios オプション (任意)
+   * @returns Promise<PageLpStatus> ステータスのみを返します
+   * @throws AxiosError ネットワーク／HTTP エラー
+   * @example
+   * ```ts
+   * const res = await api.pageLp({ path?: string | undefined });
+   * console.log(res);
+   * ```
+   */
+  public pageLp!: (
+    query?: PageLpParams,
+    extraHeaders?: Record<string, string>,
+    axiosOpts?: AxiosRequestConfig
+  ) => Promise<PageLpStatus>;
+
+  /**
+   * ### GET /pageLp (full response)
+   *
+   * @param query - { path?: string | undefined } URL クエリパラメータ (任意)
+   * @param extraHeaders 追加ヘッダー (任意)
+   * @param axiosOpts   Axios オプション (任意)
+   * @returns Promise<PageLpResponse>
+   * @throws AxiosError ネットワーク／HTTP エラー
+   * @example
+   * ```ts
+   * const res = await api.pageLpFull({ path?: string | undefined });
+   * console.log(res);
+   * ```
+   */
+  public pageLpFull!: (
+    query?: PageLpParams,
+    extraHeaders?: Record<string, string>,
+    axiosOpts?: AxiosRequestConfig
+  ) => Promise<PageLpResponse>;
 
 }

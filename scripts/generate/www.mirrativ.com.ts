@@ -40,8 +40,8 @@ interface Endpoint {
 
 async function main() {
     const ROOT = process.cwd()
-    const IN = path.join(ROOT, 'source/www.mirrativ.com.ts')
-    const OUT = path.join(ROOT, 'source/mirrativApi.ts')
+    const IN = path.join(ROOT, 'src/www.mirrativ.com.ts')
+    const OUT = path.join(ROOT, 'src/mirrativApi.ts')
 
     const args = process.argv.slice(2)
     const dryRun = args.includes('--dry')
@@ -69,10 +69,9 @@ async function main() {
     // ── 元クライアント読み込み
     const src = project.addSourceFileAtPath(IN)
     const clientClass = src.getClassOrThrow('Client')
-    const apiMethods = clientClass.getMethods().filter(m => {
-        const n = m.getName()
-        return n !== 'constructor' && /^(get|post|put|delete|patch)Api/.test(n)
-    })
+    // include every public method (except constructor)
+    const apiMethods = clientClass.getMethods().filter(m => m.getName() !== 'constructor')
+
 
     const preferredTypes = [
         'application/x-www-form-urlencoded',
@@ -88,7 +87,7 @@ async function main() {
         const httpVerb = (methodName.match(/^(get|post|put|delete|patch)/)?.[1] || 'post') as HttpVerb
 
         // rawKey: “postApiFoo”→“foo”
-        const base = methodName.replace(/^[a-z]+Api/, '')
+        const base = methodName.replace(/^[a-z]+(?:Api)?/, '')
         const rawKey = base.charAt(0).toLowerCase() + base.slice(1)
 
         // Response interface
@@ -239,6 +238,21 @@ async function main() {
             writer.writeLine(
                 `export type ${alias} = ExtractStatus<${respWrap}>;\n`
             );
+        });
+
+        // --- query-param 型エイリアス ---
+        endpoints.forEach(({ key, paramType }) => {
+            if (!paramType) return;
+            const name = capitalize(key);
+            // e.g. export type CatalogLivesParams = Parameter$getApiCatalogLives;
+            writer.writeLine(`export type ${name}Params = ${paramType};\n`);
+        });
+
+        // --- request‐body 型エイリアス ---
+        endpoints.forEach(({ key, reqWrap, mediaType }) => {
+            if (!reqWrap || !mediaType) return;
+            const name = capitalize(key);
+            writer.writeLine(`export type ${name}Request = NonNullable<${reqWrap}['${mediaType}']>;\n`);
         });
 
         // --- full-response 型エイリアス ---
@@ -510,13 +524,20 @@ async function main() {
             /* ───────── メソッド宣言 ───────── */
             writer.writeLine(`  public ${key}!: (`)
             if (httpVerb === 'get') {
-                writer.writeLine(`    query?: ${paramType ?? 'Record<string, any>'},`)
+                if (paramType) {
+                    const name = capitalize(key);
+                    // use the new alias
+                    writer.writeLine(`    query?: ${name}Params,`);
+                } else {
+                    writer.writeLine(`    query?: Record<string, any>,`);
+                }
             } else {
-                writer.writeLine(
-                    reqProps
-                        ? `    body: ${reqWrap}['${mediaType}'],`
-                        : '    body?: any,',
-                )
+                if (reqWrap && mediaType) {
+                    const name = capitalize(key);
+                    writer.writeLine(`    body: ${name}Request,`);
+                } else {
+                    writer.writeLine(`    body?: any,`);
+                }
             }
             writer.writeLine('    extraHeaders?: Record<string, string>,')
             writer.writeLine('    axiosOpts?: AxiosRequestConfig')
@@ -550,13 +571,19 @@ async function main() {
             /* ───────── “Full” メソッド宣言 ───────── */
             writer.writeLine(`  public ${key}Full!: (`)
             if (httpVerb === 'get') {
-                writer.writeLine(`    query?: ${paramType ?? 'Record<string, any>'},`)
+                if (paramType) {
+                    const name = capitalize(key);
+                    writer.writeLine(`    query?: ${name}Params,`);
+                } else {
+                    writer.writeLine(`    query?: Record<string, any>,`);
+                }
             } else {
-                writer.writeLine(
-                    reqProps
-                        ? `    body: ${reqWrap}['${mediaType}'],`
-                        : '    body?: any,',
-                )
+                if (reqWrap && mediaType) {
+                    const name = capitalize(key);
+                    writer.writeLine(`    body: ${name}Request,`);
+                } else {
+                    writer.writeLine(`    body?: any,`);
+                }
             }
             writer.writeLine('    extraHeaders?: Record<string, string>,')
             writer.writeLine('    axiosOpts?: AxiosRequestConfig')

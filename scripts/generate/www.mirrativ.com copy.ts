@@ -69,10 +69,9 @@ async function main() {
     // ── 元クライアント読み込み
     const src = project.addSourceFileAtPath(IN)
     const clientClass = src.getClassOrThrow('Client')
-    const apiMethods = clientClass.getMethods().filter(m => {
-        const n = m.getName()
-        return n !== 'constructor' && /^(get|post|put|delete|patch)Api/.test(n)
-    })
+    // include every public method (except constructor)
+    const apiMethods = clientClass.getMethods().filter(m => m.getName() !== 'constructor')
+
 
     const preferredTypes = [
         'application/x-www-form-urlencoded',
@@ -88,7 +87,7 @@ async function main() {
         const httpVerb = (methodName.match(/^(get|post|put|delete|patch)/)?.[1] || 'post') as HttpVerb
 
         // rawKey: “postApiFoo”→“foo”
-        const base = methodName.replace(/^[a-z]+Api/, '')
+        const base = methodName.replace(/^[a-z]+(?:Api)?/, '')
         const rawKey = base.charAt(0).toLowerCase() + base.slice(1)
 
         // Response interface

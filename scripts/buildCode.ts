@@ -112,20 +112,26 @@ export const build = async (endpoint: string): Promise<void> => {
   console.log(`🔧 Quoting invalid TS keys in ${params.tsFile}`);
   quoteInvalidTsKeys(params.tsFile);
 
-  const apiEndpoints = ["www.mirrativ.com"];
-  if (apiEndpoints.includes(endpoint)) {
-    console.log(`🔄 ${endpoint} では build:api を先に実行します…`);
-    try {
-      // 必要なファイルが揃っているか確認
-      const apiScript = path.join(__dirname, 'generate-mirrativ-api.ts');
-      if (!fs.existsSync(apiScript)) {
-        console.warn(`⚠️ build:api スクリプトが見つからないためスキップします (${apiScript})`);
-      } else {
-        await shell('npm run build:api');
-      }
-    } catch (err) {
-      console.warn(`⚠️ build:api 実行中にエラーが発生しましたがスキップします: ${err}`);
-    }
+  const commonGen = path.resolve(
+    process.cwd(),
+    "scripts",
+    "generate",
+    `generate-common.ts`);
+  if (fs.existsSync(commonGen)) {
+    console.log("🔄 Running common generator…");
+    await shell(`yarn ts ${commonGen}`);
+  }
+
+  const genScript = path.resolve(
+    process.cwd(),
+    "scripts",
+    "generate",
+    `${endpoint}.ts`
+  );
+  if (fs.existsSync(genScript)) {
+    console.log(`🔄 Found generator for “${endpoint}”: running yarn ts ${genScript}`);
+    // use your package.json “ts” script
+    await shell(`yarn ts ${genScript}`);
   }
 
   // 5) ESLint で自動整形

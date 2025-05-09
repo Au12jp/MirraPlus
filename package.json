@@ -16,7 +16,6 @@
     "build": "run-s clean build:flow build:code build:docs",
     "postbuild": "yarn ts ./src/main.ts",
     "build:flow": "yarn ts ./scripts/buildFlow.ts",
-    "build:api": "yarn ts ./scripts/generate-mirrativ-api.ts",
     "build:code": "yarn ts ./scripts/buildCode.ts",
     "build:docs": "yarn ts ./scripts/buildDocs.ts",
     "clean": "yarn ts ./scripts/clean.ts",
