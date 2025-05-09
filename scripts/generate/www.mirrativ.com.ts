@@ -501,7 +501,7 @@ async function main() {
             if (httpVerb === 'get') {
                 writer.writeLine(`   * @param query - ${queryDoc} URL クエリパラメータ (任意)`)
             } else {
-                writer.writeLine(`   * @param body  ${bodyDoc} リクエストボディ`)
+                writer.writeLine(`   * @param body - ${bodyDoc} リクエストボディ`)
             }
             writer.writeLine('   * @param extraHeaders 追加ヘッダー (任意)')
             writer.writeLine('   * @param axiosOpts   Axios オプション (任意)')
@@ -551,7 +551,7 @@ async function main() {
             if (httpVerb === 'get') {
                 writer.writeLine(`   * @param query - ${queryDoc} URL クエリパラメータ (任意)`)
             } else {
-                writer.writeLine(`   * @param body  ${bodyDoc} リクエストボディ`)
+                writer.writeLine(`   * @param body - ${bodyDoc} リクエストボディ`)
             }
             writer.writeLine('   * @param extraHeaders 追加ヘッダー (任意)')
             writer.writeLine('   * @param axiosOpts   Axios オプション (任意)')

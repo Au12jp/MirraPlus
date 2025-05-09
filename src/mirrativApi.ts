@@ -2872,7 +2872,7 @@ export class MirrativApi {
    * ### POST /analyticsLog
    * **Content-Type**: `application/json`
    *
-   * @param body  { action_type?: string; target_id?: string; payload?: { target_detail?: { event_type?: string; event_id?: string; }; }; }[] リクエストボディ
+   * @param body - { action_type?: string; target_id?: string; payload?: { target_detail?: { event_type?: string; event_id?: string; }; }; }[] リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<AnalyticsLogStatus> ステータスのみを返します
@@ -2894,7 +2894,7 @@ export class MirrativApi {
    * ### POST /analyticsLog (full response)
    * **Content-Type**: `application/json`
    *
-   * @param body  { action_type?: string; target_id?: string; payload?: { target_detail?: { event_type?: string; event_id?: string; }; }; }[] リクエストボディ
+   * @param body - { action_type?: string; target_id?: string; payload?: { target_detail?: { event_type?: string; event_id?: string; }; }; }[] リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<AnalyticsLogResponse>
@@ -2915,7 +2915,7 @@ export class MirrativApi {
    * ### POST /appAdd_my_app
    * **Content-Type**: `application/json`
    *
-   * @param body  { app_ids?: string[]; } リクエストボディ
+   * @param body - { app_ids?: string[]; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<AppAdd_my_appStatus> ステータスのみを返します
@@ -2937,7 +2937,7 @@ export class MirrativApi {
    * ### POST /appAdd_my_app (full response)
    * **Content-Type**: `application/json`
    *
-   * @param body  { app_ids?: string[]; } リクエストボディ
+   * @param body - { app_ids?: string[]; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<AppAdd_my_appResponse>
@@ -3038,7 +3038,7 @@ export class MirrativApi {
    * ### POST /appDelete_app_user_detail
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { app_id?: string; } リクエストボディ
+   * @param body - { app_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<AppDelete_app_user_detailStatus> ステータスのみを返します
@@ -3060,7 +3060,7 @@ export class MirrativApi {
    * ### POST /appDelete_app_user_detail (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { app_id?: string; } リクエストボディ
+   * @param body - { app_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<AppDelete_app_user_detailResponse>
@@ -3081,7 +3081,7 @@ export class MirrativApi {
    * ### POST /appDelete_my_app
    * **Content-Type**: `application/json`
    *
-   * @param body  { app_ids?: string[]; } リクエストボディ
+   * @param body - { app_ids?: string[]; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<AppDelete_my_appStatus> ステータスのみを返します
@@ -3103,7 +3103,7 @@ export class MirrativApi {
    * ### POST /appDelete_my_app (full response)
    * **Content-Type**: `application/json`
    *
-   * @param body  { app_ids?: string[]; } リクエストボディ
+   * @param body - { app_ids?: string[]; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<AppDelete_my_appResponse>
@@ -3204,7 +3204,7 @@ export class MirrativApi {
    * ### POST /appPost_app_user_detail
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { app_id?: string; confirmed?: string; type?: string; value?: string; } リクエストボディ
+   * @param body - { app_id?: string; confirmed?: string; type?: string; value?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<AppPost_app_user_detailStatus> ステータスのみを返します
@@ -3226,7 +3226,7 @@ export class MirrativApi {
    * ### POST /appPost_app_user_detail (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { app_id?: string; confirmed?: string; type?: string; value?: string; } リクエストボディ
+   * @param body - { app_id?: string; confirmed?: string; type?: string; value?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<AppPost_app_user_detailResponse>
@@ -3647,7 +3647,7 @@ export class MirrativApi {
    * ### POST /chatJoin
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { user_id?: string; } リクエストボディ
+   * @param body - { user_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<ChatJoinStatus> ステータスのみを返します
@@ -3669,7 +3669,7 @@ export class MirrativApi {
    * ### POST /chatJoin (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { user_id?: string; } リクエストボディ
+   * @param body - { user_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<ChatJoinResponse>
@@ -3690,7 +3690,7 @@ export class MirrativApi {
    * ### POST /chatPost_text
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { text?: string; user_id?: string; } リクエストボディ
+   * @param body - { text?: string; user_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<ChatPost_textStatus> ステータスのみを返します
@@ -3712,7 +3712,7 @@ export class MirrativApi {
    * ### POST /chatPost_text (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { text?: string; user_id?: string; } リクエストボディ
+   * @param body - { text?: string; user_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<ChatPost_textResponse>
@@ -3733,7 +3733,7 @@ export class MirrativApi {
    * ### POST /chatRead
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { last_message_id?: string; user_id?: string; } リクエストボディ
+   * @param body - { last_message_id?: string; user_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<ChatReadStatus> ステータスのみを返します
@@ -3755,7 +3755,7 @@ export class MirrativApi {
    * ### POST /chatRead (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { last_message_id?: string; user_id?: string; } リクエストボディ
+   * @param body - { last_message_id?: string; user_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<ChatReadResponse>
@@ -3816,7 +3816,7 @@ export class MirrativApi {
    * ### POST /chatThread_visibility
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { group_id?: string; is_visible?: string; } リクエストボディ
+   * @param body - { group_id?: string; is_visible?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<ChatThread_visibilityStatus> ステータスのみを返します
@@ -3838,7 +3838,7 @@ export class MirrativApi {
    * ### POST /chatThread_visibility (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { group_id?: string; is_visible?: string; } リクエストボディ
+   * @param body - { group_id?: string; is_visible?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<ChatThread_visibilityResponse>
@@ -4019,7 +4019,7 @@ export class MirrativApi {
    * ### POST /closetUpdate_closet_avatar
    * **Content-Type**: `application/json`
    *
-   * @param body  { motion4_id?: string; lip_color_id?: string; beard_color_percentage?: string; eyebrow_color_percentage?: string; pose_id?: string; persona_id?: string; eyeshadow_color_percentage?: string; socks_id?: string; head_id?: string; cheek_color_percentage?: string; machine_id?: string; eyebrow_color_id?: string; body_id?: string; lip_color_percentage?: string; proportion_id?: string; skin_color_id?: string; cheek_color_id?: string; cheek_id?: string; eye_id?: string; eyebrow_id?: string; bottoms_id?: string; hair_color_id?: string; mouth_id?: string; eye_color_percentage?: string; beard_color_id?: string; nose_id?: string; background_id?: string; eyeshadow_color_id?: string; hair_color_percentage?: string; hair_id?: string; eye_color_id?: string; tops_id?: string; setup_clothes_id?: string; eyeshadow_id?: string; motion3_id?: string; motion1_id?: string; motion2_id?: string; closet_id?: string; shoes_id?: string; } リクエストボディ
+   * @param body - { motion4_id?: string; lip_color_id?: string; beard_color_percentage?: string; eyebrow_color_percentage?: string; pose_id?: string; persona_id?: string; eyeshadow_color_percentage?: string; socks_id?: string; head_id?: string; cheek_color_percentage?: string; machine_id?: string; eyebrow_color_id?: string; body_id?: string; lip_color_percentage?: string; proportion_id?: string; skin_color_id?: string; cheek_color_id?: string; cheek_id?: string; eye_id?: string; eyebrow_id?: string; bottoms_id?: string; hair_color_id?: string; mouth_id?: string; eye_color_percentage?: string; beard_color_id?: string; nose_id?: string; background_id?: string; eyeshadow_color_id?: string; hair_color_percentage?: string; hair_id?: string; eye_color_id?: string; tops_id?: string; setup_clothes_id?: string; eyeshadow_id?: string; motion3_id?: string; motion1_id?: string; motion2_id?: string; closet_id?: string; shoes_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<ClosetUpdate_closet_avatarStatus> ステータスのみを返します
@@ -4041,7 +4041,7 @@ export class MirrativApi {
    * ### POST /closetUpdate_closet_avatar (full response)
    * **Content-Type**: `application/json`
    *
-   * @param body  { motion4_id?: string; lip_color_id?: string; beard_color_percentage?: string; eyebrow_color_percentage?: string; pose_id?: string; persona_id?: string; eyeshadow_color_percentage?: string; socks_id?: string; head_id?: string; cheek_color_percentage?: string; machine_id?: string; eyebrow_color_id?: string; body_id?: string; lip_color_percentage?: string; proportion_id?: string; skin_color_id?: string; cheek_color_id?: string; cheek_id?: string; eye_id?: string; eyebrow_id?: string; bottoms_id?: string; hair_color_id?: string; mouth_id?: string; eye_color_percentage?: string; beard_color_id?: string; nose_id?: string; background_id?: string; eyeshadow_color_id?: string; hair_color_percentage?: string; hair_id?: string; eye_color_id?: string; tops_id?: string; setup_clothes_id?: string; eyeshadow_id?: string; motion3_id?: string; motion1_id?: string; motion2_id?: string; closet_id?: string; shoes_id?: string; } リクエストボディ
+   * @param body - { motion4_id?: string; lip_color_id?: string; beard_color_percentage?: string; eyebrow_color_percentage?: string; pose_id?: string; persona_id?: string; eyeshadow_color_percentage?: string; socks_id?: string; head_id?: string; cheek_color_percentage?: string; machine_id?: string; eyebrow_color_id?: string; body_id?: string; lip_color_percentage?: string; proportion_id?: string; skin_color_id?: string; cheek_color_id?: string; cheek_id?: string; eye_id?: string; eyebrow_id?: string; bottoms_id?: string; hair_color_id?: string; mouth_id?: string; eye_color_percentage?: string; beard_color_id?: string; nose_id?: string; background_id?: string; eyeshadow_color_id?: string; hair_color_percentage?: string; hair_id?: string; eye_color_id?: string; tops_id?: string; setup_clothes_id?: string; eyeshadow_id?: string; motion3_id?: string; motion1_id?: string; motion2_id?: string; closet_id?: string; shoes_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<ClosetUpdate_closet_avatarResponse>
@@ -4062,7 +4062,7 @@ export class MirrativApi {
    * ### POST /closetUpdate_closet_images
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { i?: string; C?: string; k?: string; Tu?: string; } リクエストボディ
+   * @param body - { i?: string; C?: string; k?: string; Tu?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<ClosetUpdate_closet_imagesStatus> ステータスのみを返します
@@ -4084,7 +4084,7 @@ export class MirrativApi {
    * ### POST /closetUpdate_closet_images (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { i?: string; C?: string; k?: string; Tu?: string; } リクエストボディ
+   * @param body - { i?: string; C?: string; k?: string; Tu?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<ClosetUpdate_closet_imagesResponse>
@@ -4265,7 +4265,7 @@ export class MirrativApi {
    * ### POST /featureRegister_device_token
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { device_token?: string; } リクエストボディ
+   * @param body - { device_token?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<FeatureRegister_device_tokenStatus> ステータスのみを返します
@@ -4287,7 +4287,7 @@ export class MirrativApi {
    * ### POST /featureRegister_device_token (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { device_token?: string; } リクエストボディ
+   * @param body - { device_token?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<FeatureRegister_device_tokenResponse>
@@ -4428,7 +4428,7 @@ export class MirrativApi {
    * ### POST /giftSend
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { count?: string; gift_id?: string; live_id?: string; message?: string; panel_reason_id?: string; panel_type?: string; } リクエストボディ
+   * @param body - { count?: string; gift_id?: string; live_id?: string; message?: string; panel_reason_id?: string; panel_type?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<GiftSendStatus> ステータスのみを返します
@@ -4450,7 +4450,7 @@ export class MirrativApi {
    * ### POST /giftSend (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { count?: string; gift_id?: string; live_id?: string; message?: string; panel_reason_id?: string; panel_type?: string; } リクエストボディ
+   * @param body - { count?: string; gift_id?: string; live_id?: string; message?: string; panel_reason_id?: string; panel_type?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<GiftSendResponse>
@@ -4551,7 +4551,7 @@ export class MirrativApi {
    * ### POST /giftUpdate_simple_unique_emomo_gift
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { [key: string]: string; } リクエストボディ
+   * @param body - { [key: string]: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<GiftUpdate_simple_unique_emomo_giftStatus> ステータスのみを返します
@@ -4573,7 +4573,7 @@ export class MirrativApi {
    * ### POST /giftUpdate_simple_unique_emomo_gift (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { [key: string]: string; } リクエストボディ
+   * @param body - { [key: string]: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<GiftUpdate_simple_unique_emomo_giftResponse>
@@ -4594,7 +4594,7 @@ export class MirrativApi {
    * ### POST /gift_appeal_popupRead
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { gift_appeal_popup_id?: string; } リクエストボディ
+   * @param body - { gift_appeal_popup_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<Gift_appeal_popupReadStatus> ステータスのみを返します
@@ -4616,7 +4616,7 @@ export class MirrativApi {
    * ### POST /gift_appeal_popupRead (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { gift_appeal_popup_id?: string; } リクエストボディ
+   * @param body - { gift_appeal_popup_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<Gift_appeal_popupReadResponse>
@@ -4637,7 +4637,7 @@ export class MirrativApi {
    * ### POST /googleConnect
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { id_token?: string; } リクエストボディ
+   * @param body - { id_token?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<GoogleConnectStatus> ステータスのみを返します
@@ -4659,7 +4659,7 @@ export class MirrativApi {
    * ### POST /googleConnect (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { id_token?: string; } リクエストボディ
+   * @param body - { id_token?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<GoogleConnectResponse & { mrid?: string }>
@@ -4679,7 +4679,7 @@ export class MirrativApi {
   /**
    * ### POST /googleDisconnect
    *
-   * @param body  Record<string, any> リクエストボディ
+   * @param body - Record<string, any> リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<GoogleDisconnectStatus> ステータスのみを返します
@@ -4700,7 +4700,7 @@ export class MirrativApi {
   /**
    * ### POST /googleDisconnect (full response)
    *
-   * @param body  Record<string, any> リクエストボディ
+   * @param body - Record<string, any> リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<GoogleDisconnectResponse>
@@ -4721,7 +4721,7 @@ export class MirrativApi {
    * ### POST /graphBlock
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { user_id?: string; } リクエストボディ
+   * @param body - { user_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<GraphBlockStatus> ステータスのみを返します
@@ -4743,7 +4743,7 @@ export class MirrativApi {
    * ### POST /graphBlock (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { user_id?: string; } リクエストボディ
+   * @param body - { user_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<GraphBlockResponse>
@@ -4804,7 +4804,7 @@ export class MirrativApi {
    * ### POST /graphFollow
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { user_id?: string; } リクエストボディ
+   * @param body - { user_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<GraphFollowStatus> ステータスのみを返します
@@ -4826,7 +4826,7 @@ export class MirrativApi {
    * ### POST /graphFollow (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { user_id?: string; } リクエストボディ
+   * @param body - { user_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<GraphFollowResponse>
@@ -5007,7 +5007,7 @@ export class MirrativApi {
    * ### POST /graphUnblock
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { user_id?: string; } リクエストボディ
+   * @param body - { user_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<GraphUnblockStatus> ステータスのみを返します
@@ -5029,7 +5029,7 @@ export class MirrativApi {
    * ### POST /graphUnblock (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { user_id?: string; } リクエストボディ
+   * @param body - { user_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<GraphUnblockResponse>
@@ -5050,7 +5050,7 @@ export class MirrativApi {
    * ### POST /graphUnfollow
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { user_id?: string; } リクエストボディ
+   * @param body - { user_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<GraphUnfollowStatus> ステータスのみを返します
@@ -5072,7 +5072,7 @@ export class MirrativApi {
    * ### POST /graphUnfollow (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { user_id?: string; } リクエストボディ
+   * @param body - { user_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<GraphUnfollowResponse>
@@ -5093,7 +5093,7 @@ export class MirrativApi {
    * ### POST /groupEdit
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { [key: string]: string; } リクエストボディ
+   * @param body - { [key: string]: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<GroupEditStatus> ステータスのみを返します
@@ -5115,7 +5115,7 @@ export class MirrativApi {
    * ### POST /groupEdit (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { [key: string]: string; } リクエストボディ
+   * @param body - { [key: string]: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<GroupEditResponse>
@@ -5136,7 +5136,7 @@ export class MirrativApi {
    * ### POST /groupInvite_users
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { user_ids?: string; } リクエストボディ
+   * @param body - { user_ids?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<GroupInvite_usersStatus> ステータスのみを返します
@@ -5158,7 +5158,7 @@ export class MirrativApi {
    * ### POST /groupInvite_users (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { user_ids?: string; } リクエストボディ
+   * @param body - { user_ids?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<GroupInvite_usersResponse>
@@ -5179,7 +5179,7 @@ export class MirrativApi {
    * ### POST /groupLeave
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { group_id?: string; } リクエストボディ
+   * @param body - { group_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<GroupLeaveStatus> ステータスのみを返します
@@ -5201,7 +5201,7 @@ export class MirrativApi {
    * ### POST /groupLeave (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { group_id?: string; } リクエストボディ
+   * @param body - { group_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<GroupLeaveResponse>
@@ -5382,7 +5382,7 @@ export class MirrativApi {
    * ### POST /liveLeave
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { live_id?: string; } リクエストボディ
+   * @param body - { live_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveLeaveStatus> ステータスのみを返します
@@ -5404,7 +5404,7 @@ export class MirrativApi {
    * ### POST /liveLeave (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { live_id?: string; } リクエストボディ
+   * @param body - { live_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveLeaveResponse>
@@ -5465,7 +5465,7 @@ export class MirrativApi {
    * ### POST /liveLive_comment
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { comment?: string; live_id?: string; type?: string; } リクエストボディ
+   * @param body - { comment?: string; live_id?: string; type?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveLive_commentStatus> ステータスのみを返します
@@ -5487,7 +5487,7 @@ export class MirrativApi {
    * ### POST /liveLive_comment (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { comment?: string; live_id?: string; type?: string; } リクエストボディ
+   * @param body - { comment?: string; live_id?: string; type?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveLive_commentResponse>
@@ -5547,7 +5547,7 @@ export class MirrativApi {
   /**
    * ### POST /liveLive_create
    *
-   * @param body  Record<string, any> リクエストボディ
+   * @param body - Record<string, any> リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveLive_createStatus> ステータスのみを返します
@@ -5568,7 +5568,7 @@ export class MirrativApi {
   /**
    * ### POST /liveLive_create (full response)
    *
-   * @param body  Record<string, any> リクエストボディ
+   * @param body - Record<string, any> リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveLive_createResponse>
@@ -5589,7 +5589,7 @@ export class MirrativApi {
    * ### POST /liveLive_edit
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { collab_enabled?: string; description?: string; is_catalog_emomo_enabled?: string; live_id?: string; max_collab_user_num?: string; orientation?: string; orientation_v2?: string; sets_as_default?: string; sticker_display_type?: string; title?: string; } リクエストボディ
+   * @param body - { collab_enabled?: string; description?: string; is_catalog_emomo_enabled?: string; live_id?: string; max_collab_user_num?: string; orientation?: string; orientation_v2?: string; sets_as_default?: string; sticker_display_type?: string; title?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveLive_editStatus> ステータスのみを返します
@@ -5611,7 +5611,7 @@ export class MirrativApi {
    * ### POST /liveLive_edit (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { collab_enabled?: string; description?: string; is_catalog_emomo_enabled?: string; live_id?: string; max_collab_user_num?: string; orientation?: string; orientation_v2?: string; sets_as_default?: string; sticker_display_type?: string; title?: string; } リクエストボディ
+   * @param body - { collab_enabled?: string; description?: string; is_catalog_emomo_enabled?: string; live_id?: string; max_collab_user_num?: string; orientation?: string; orientation_v2?: string; sets_as_default?: string; sticker_display_type?: string; title?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveLive_editResponse>
@@ -5712,7 +5712,7 @@ export class MirrativApi {
    * ### POST /liveLive_polling
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { error_count?: string; is_ui_hidden?: string; live_id?: string; live_user_key?: string; viewer_receive_push_notification?: string; } リクエストボディ
+   * @param body - { error_count?: string; is_ui_hidden?: string; live_id?: string; live_user_key?: string; viewer_receive_push_notification?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveLive_pollingStatus> ステータスのみを返します
@@ -5734,7 +5734,7 @@ export class MirrativApi {
    * ### POST /liveLive_polling (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { error_count?: string; is_ui_hidden?: string; live_id?: string; live_user_key?: string; viewer_receive_push_notification?: string; } リクエストボディ
+   * @param body - { error_count?: string; is_ui_hidden?: string; live_id?: string; live_user_key?: string; viewer_receive_push_notification?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveLive_pollingResponse>
@@ -5795,7 +5795,7 @@ export class MirrativApi {
    * ### POST /livePreview_end
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { live_id?: string; } リクエストボディ
+   * @param body - { live_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LivePreview_endStatus> ステータスのみを返します
@@ -5817,7 +5817,7 @@ export class MirrativApi {
    * ### POST /livePreview_end (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { live_id?: string; } リクエストボディ
+   * @param body - { live_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LivePreview_endResponse>
@@ -5838,7 +5838,7 @@ export class MirrativApi {
    * ### POST /livePreview_polling
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { live_id?: string; } リクエストボディ
+   * @param body - { live_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LivePreview_pollingStatus> ステータスのみを返します
@@ -5860,7 +5860,7 @@ export class MirrativApi {
    * ### POST /livePreview_polling (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { live_id?: string; } リクエストボディ
+   * @param body - { live_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LivePreview_pollingResponse>
@@ -5881,7 +5881,7 @@ export class MirrativApi {
    * ### POST /livePreview_start
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { live_id?: string; } リクエストボディ
+   * @param body - { live_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LivePreview_startStatus> ステータスのみを返します
@@ -5903,7 +5903,7 @@ export class MirrativApi {
    * ### POST /livePreview_start (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { live_id?: string; } リクエストボディ
+   * @param body - { live_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LivePreview_startResponse>
@@ -5924,7 +5924,7 @@ export class MirrativApi {
    * ### POST /liveSanitize_text
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { text?: string; } リクエストボディ
+   * @param body - { text?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveSanitize_textStatus> ステータスのみを返します
@@ -5946,7 +5946,7 @@ export class MirrativApi {
    * ### POST /liveSanitize_text (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { text?: string; } リクエストボディ
+   * @param body - { text?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveSanitize_textResponse>
@@ -6007,7 +6007,7 @@ export class MirrativApi {
    * ### POST /liveUpdate_archive_settings
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { archive_hidden?: string; live_id?: string; } リクエストボディ
+   * @param body - { archive_hidden?: string; live_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveUpdate_archive_settingsStatus> ステータスのみを返します
@@ -6029,7 +6029,7 @@ export class MirrativApi {
    * ### POST /liveUpdate_archive_settings (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { archive_hidden?: string; live_id?: string; } リクエストボディ
+   * @param body - { archive_hidden?: string; live_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveUpdate_archive_settingsResponse>
@@ -6090,7 +6090,7 @@ export class MirrativApi {
    * ### POST /live_gameEnd
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { play_id?: string; } リクエストボディ
+   * @param body - { play_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<Live_gameEndStatus> ステータスのみを返します
@@ -6112,7 +6112,7 @@ export class MirrativApi {
    * ### POST /live_gameEnd (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { play_id?: string; } リクエストボディ
+   * @param body - { play_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<Live_gameEndResponse>
@@ -6213,7 +6213,7 @@ export class MirrativApi {
    * ### POST /live_gameStart
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { id?: string; is_viewer_self_start?: string; source?: string; } リクエストボディ
+   * @param body - { id?: string; is_viewer_self_start?: string; source?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<Live_gameStartStatus> ステータスのみを返します
@@ -6235,7 +6235,7 @@ export class MirrativApi {
    * ### POST /live_gameStart (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { id?: string; is_viewer_self_start?: string; source?: string; } リクエストボディ
+   * @param body - { id?: string; is_viewer_self_start?: string; source?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<Live_gameStartResponse>
@@ -6736,7 +6736,7 @@ export class MirrativApi {
    * ### POST /notificationPush_settings_v3
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { is_enabled_campaigns?: string; is_enabled_chats?: string; is_enabled_lives?: string; is_enabled_news?: string; is_enabled_present_boxes?: string; is_enabled_yours?: string; } リクエストボディ
+   * @param body - { is_enabled_campaigns?: string; is_enabled_chats?: string; is_enabled_lives?: string; is_enabled_news?: string; is_enabled_present_boxes?: string; is_enabled_yours?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<PostNotificationPush_settings_v3Status> ステータスのみを返します
@@ -6758,7 +6758,7 @@ export class MirrativApi {
    * ### POST /notificationPush_settings_v3 (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { is_enabled_campaigns?: string; is_enabled_chats?: string; is_enabled_lives?: string; is_enabled_news?: string; is_enabled_present_boxes?: string; is_enabled_yours?: string; } リクエストボディ
+   * @param body - { is_enabled_campaigns?: string; is_enabled_chats?: string; is_enabled_lives?: string; is_enabled_news?: string; is_enabled_present_boxes?: string; is_enabled_yours?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<PostNotificationPush_settings_v3Response>
@@ -6939,7 +6939,7 @@ export class MirrativApi {
    * ### POST /reward_adComplete
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { reward_id?: string; } リクエストボディ
+   * @param body - { reward_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<Reward_adCompleteStatus> ステータスのみを返します
@@ -6961,7 +6961,7 @@ export class MirrativApi {
    * ### POST /reward_adComplete (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { reward_id?: string; } リクエストボディ
+   * @param body - { reward_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<Reward_adCompleteResponse>
@@ -7142,7 +7142,7 @@ export class MirrativApi {
    * ### POST /userBad_report
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { category_id?: string; message?: string; user_id?: string; } リクエストボディ
+   * @param body - { category_id?: string; message?: string; user_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<UserBad_reportStatus> ステータスのみを返します
@@ -7164,7 +7164,7 @@ export class MirrativApi {
    * ### POST /userBad_report (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { category_id?: string; message?: string; user_id?: string; } リクエストボディ
+   * @param body - { category_id?: string; message?: string; user_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<UserBad_reportResponse>
@@ -7225,7 +7225,7 @@ export class MirrativApi {
    * ### POST /userCheck_minor
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { birthday?: string; generation?: string; } リクエストボディ
+   * @param body - { birthday?: string; generation?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<UserCheck_minorStatus> ステータスのみを返します
@@ -7247,7 +7247,7 @@ export class MirrativApi {
    * ### POST /userCheck_minor (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { birthday?: string; generation?: string; } リクエストボディ
+   * @param body - { birthday?: string; generation?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<UserCheck_minorResponse>
@@ -7308,7 +7308,7 @@ export class MirrativApi {
    * ### POST /userDate_of_birth
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { birthday?: string; generation?: string; } リクエストボディ
+   * @param body - { birthday?: string; generation?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<UserDate_of_birthStatus> ステータスのみを返します
@@ -7330,7 +7330,7 @@ export class MirrativApi {
    * ### POST /userDate_of_birth (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { birthday?: string; generation?: string; } リクエストボディ
+   * @param body - { birthday?: string; generation?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<UserDate_of_birthResponse>
@@ -7350,7 +7350,7 @@ export class MirrativApi {
   /**
    * ### POST /userDelete_live_announcement
    *
-   * @param body  Record<string, any> リクエストボディ
+   * @param body - Record<string, any> リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<UserDelete_live_announcementStatus> ステータスのみを返します
@@ -7371,7 +7371,7 @@ export class MirrativApi {
   /**
    * ### POST /userDelete_live_announcement (full response)
    *
-   * @param body  Record<string, any> リクエストボディ
+   * @param body - Record<string, any> リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<UserDelete_live_announcementResponse>
@@ -7431,7 +7431,7 @@ export class MirrativApi {
   /**
    * ### POST /userLogout
    *
-   * @param body  Record<string, any> リクエストボディ
+   * @param body - Record<string, any> リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<UserLogoutStatus> ステータスのみを返します
@@ -7452,7 +7452,7 @@ export class MirrativApi {
   /**
    * ### POST /userLogout (full response)
    *
-   * @param body  Record<string, any> リクエストボディ
+   * @param body - Record<string, any> リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<UserLogoutResponse>
@@ -7513,7 +7513,7 @@ export class MirrativApi {
    * ### POST /userPost_live_announcement
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { body?: string; is_notified_to_follower?: string; start_at?: string; } リクエストボディ
+   * @param body - { body?: string; is_notified_to_follower?: string; start_at?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<UserPost_live_announcementStatus> ステータスのみを返します
@@ -7535,7 +7535,7 @@ export class MirrativApi {
    * ### POST /userPost_live_announcement (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { body?: string; is_notified_to_follower?: string; start_at?: string; } リクエストボディ
+   * @param body - { body?: string; is_notified_to_follower?: string; start_at?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<UserPost_live_announcementResponse>
@@ -7556,7 +7556,7 @@ export class MirrativApi {
    * ### POST /userPost_live_request
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { count?: string; user_id?: string; where?: string; } リクエストボディ
+   * @param body - { count?: string; user_id?: string; where?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<UserPost_live_requestStatus> ステータスのみを返します
@@ -7578,7 +7578,7 @@ export class MirrativApi {
    * ### POST /userPost_live_request (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { count?: string; user_id?: string; where?: string; } リクエストボディ
+   * @param body - { count?: string; user_id?: string; where?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<UserPost_live_requestResponse>
@@ -7599,7 +7599,7 @@ export class MirrativApi {
    * ### POST /userPost_review_confirmation
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { status?: string; } リクエストボディ
+   * @param body - { status?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<UserPost_review_confirmationStatus> ステータスのみを返します
@@ -7621,7 +7621,7 @@ export class MirrativApi {
    * ### POST /userPost_review_confirmation (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { status?: string; } リクエストボディ
+   * @param body - { status?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<UserPost_review_confirmationResponse>
@@ -7682,7 +7682,7 @@ export class MirrativApi {
    * ### POST /userProfile_edit
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { [key: string]: string; } リクエストボディ
+   * @param body - { [key: string]: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<UserProfile_editStatus> ステータスのみを返します
@@ -7704,7 +7704,7 @@ export class MirrativApi {
    * ### POST /userProfile_edit (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { [key: string]: string; } リクエストボディ
+   * @param body - { [key: string]: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<UserProfile_editResponse>
@@ -7845,7 +7845,7 @@ export class MirrativApi {
    * ### POST /userUpdate_favorite_live_setting
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { app_id?: string; id?: string; live_thumbnail_image_url?: string; memo?: string; title?: string; } リクエストボディ
+   * @param body - { app_id?: string; id?: string; live_thumbnail_image_url?: string; memo?: string; title?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<UserUpdate_favorite_live_settingStatus> ステータスのみを返します
@@ -7867,7 +7867,7 @@ export class MirrativApi {
    * ### POST /userUpdate_favorite_live_setting (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { app_id?: string; id?: string; live_thumbnail_image_url?: string; memo?: string; title?: string; } リクエストボディ
+   * @param body - { app_id?: string; id?: string; live_thumbnail_image_url?: string; memo?: string; title?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<UserUpdate_favorite_live_settingResponse>
@@ -7888,7 +7888,7 @@ export class MirrativApi {
    * ### POST /userUpdate_recording_settings
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { enabled?: string; } リクエストボディ
+   * @param body - { enabled?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<UserUpdate_recording_settingsStatus> ステータスのみを返します
@@ -7910,7 +7910,7 @@ export class MirrativApi {
    * ### POST /userUpdate_recording_settings (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { enabled?: string; } リクエストボディ
+   * @param body - { enabled?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<UserUpdate_recording_settingsResponse>
@@ -7931,7 +7931,7 @@ export class MirrativApi {
    * ### POST /userUse_favorite_live_setting
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { id?: string; live_id?: string; } リクエストボディ
+   * @param body - { id?: string; live_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<UserUse_favorite_live_settingStatus> ステータスのみを返します
@@ -7953,7 +7953,7 @@ export class MirrativApi {
    * ### POST /userUse_favorite_live_setting (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { id?: string; live_id?: string; } リクエストボディ
+   * @param body - { id?: string; live_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<UserUse_favorite_live_settingResponse>
@@ -8094,7 +8094,7 @@ export class MirrativApi {
    * ### POST /chatAgree
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { is_agreed?: string; } リクエストボディ
+   * @param body - { is_agreed?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<ChatAgreeStatus> ステータスのみを返します
@@ -8116,7 +8116,7 @@ export class MirrativApi {
    * ### POST /chatAgree (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { is_agreed?: string; } リクエストボディ
+   * @param body - { is_agreed?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<ChatAgreeResponse>
@@ -8137,7 +8137,7 @@ export class MirrativApi {
    * ### POST /chatPost_thanks
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { live_id?: string; user_id?: string; } リクエストボディ
+   * @param body - { live_id?: string; user_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<ChatPost_thanksStatus> ステータスのみを返します
@@ -8159,7 +8159,7 @@ export class MirrativApi {
    * ### POST /chatPost_thanks (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { live_id?: string; user_id?: string; } リクエストボディ
+   * @param body - { live_id?: string; user_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<ChatPost_thanksResponse>
@@ -8180,7 +8180,7 @@ export class MirrativApi {
    * ### POST /chatPost_thanks_to_live_watched_users
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { custom_thanks_message?: string; live_id?: string; target_type?: string; } リクエストボディ
+   * @param body - { custom_thanks_message?: string; live_id?: string; target_type?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<ChatPost_thanks_to_live_watched_usersStatus> ステータスのみを返します
@@ -8202,7 +8202,7 @@ export class MirrativApi {
    * ### POST /chatPost_thanks_to_live_watched_users (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { custom_thanks_message?: string; live_id?: string; target_type?: string; } リクエストボディ
+   * @param body - { custom_thanks_message?: string; live_id?: string; target_type?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<ChatPost_thanks_to_live_watched_usersResponse>
@@ -8223,7 +8223,7 @@ export class MirrativApi {
    * ### POST /collabClose
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { [key: string]: string; } リクエストボディ
+   * @param body - { [key: string]: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<CollabCloseStatus> ステータスのみを返します
@@ -8245,7 +8245,7 @@ export class MirrativApi {
    * ### POST /collabClose (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { [key: string]: string; } リクエストボディ
+   * @param body - { [key: string]: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<CollabCloseResponse>
@@ -8346,7 +8346,7 @@ export class MirrativApi {
    * ### POST /collabInvite
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { collab_type?: string; invite_user_id?: string; live_id?: string; } リクエストボディ
+   * @param body - { collab_type?: string; invite_user_id?: string; live_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<CollabInviteStatus> ステータスのみを返します
@@ -8368,7 +8368,7 @@ export class MirrativApi {
    * ### POST /collabInvite (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { collab_type?: string; invite_user_id?: string; live_id?: string; } リクエストボディ
+   * @param body - { collab_type?: string; invite_user_id?: string; live_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<CollabInviteResponse>
@@ -8389,7 +8389,7 @@ export class MirrativApi {
    * ### POST /collabSend_to_peer
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { [key: string]: string; } リクエストボディ
+   * @param body - { [key: string]: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<CollabSend_to_peerStatus> ステータスのみを返します
@@ -8411,7 +8411,7 @@ export class MirrativApi {
    * ### POST /collabSend_to_peer (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { [key: string]: string; } リクエストボディ
+   * @param body - { [key: string]: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<CollabSend_to_peerResponse>
@@ -8432,7 +8432,7 @@ export class MirrativApi {
    * ### POST /collabStart
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { [key: string]: string; } リクエストボディ
+   * @param body - { [key: string]: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<CollabStartStatus> ステータスのみを返します
@@ -8454,7 +8454,7 @@ export class MirrativApi {
    * ### POST /collabStart (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { [key: string]: string; } リクエストボディ
+   * @param body - { [key: string]: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<CollabStartResponse>
@@ -8475,7 +8475,7 @@ export class MirrativApi {
    * ### POST /giftUpdate_rich_unique_emomo_gift
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { [key: string]: string; } リクエストボディ
+   * @param body - { [key: string]: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<GiftUpdate_rich_unique_emomo_giftStatus> ステータスのみを返します
@@ -8497,7 +8497,7 @@ export class MirrativApi {
    * ### POST /giftUpdate_rich_unique_emomo_gift (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { [key: string]: string; } リクエストボディ
+   * @param body - { [key: string]: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<GiftUpdate_rich_unique_emomo_giftResponse>
@@ -8558,7 +8558,7 @@ export class MirrativApi {
    * ### POST /graphFollow_live_watched_users
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { live_id?: string; } リクエストボディ
+   * @param body - { live_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<GraphFollow_live_watched_usersStatus> ステータスのみを返します
@@ -8580,7 +8580,7 @@ export class MirrativApi {
    * ### POST /graphFollow_live_watched_users (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { live_id?: string; } リクエストボディ
+   * @param body - { live_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<GraphFollow_live_watched_usersResponse>
@@ -8881,7 +8881,7 @@ export class MirrativApi {
    * ### POST /liveDelete_live_history
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { live_id?: string; } リクエストボディ
+   * @param body - { live_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveDelete_live_historyStatus> ステータスのみを返します
@@ -8903,7 +8903,7 @@ export class MirrativApi {
    * ### POST /liveDelete_live_history (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { live_id?: string; } リクエストボディ
+   * @param body - { live_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveDelete_live_historyResponse>
@@ -8924,7 +8924,7 @@ export class MirrativApi {
    * ### POST /liveKick_out
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { live_id?: string; user_id?: string; } リクエストボディ
+   * @param body - { live_id?: string; user_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveKick_outStatus> ステータスのみを返します
@@ -8946,7 +8946,7 @@ export class MirrativApi {
    * ### POST /liveKick_out (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { live_id?: string; user_id?: string; } リクエストボディ
+   * @param body - { live_id?: string; user_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveKick_outResponse>
@@ -8967,7 +8967,7 @@ export class MirrativApi {
    * ### POST /liveLive_app_identifier_changed
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { app_identifier?: string; live_id?: string; } リクエストボディ
+   * @param body - { app_identifier?: string; live_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveLive_app_identifier_changedStatus> ステータスのみを返します
@@ -8989,7 +8989,7 @@ export class MirrativApi {
    * ### POST /liveLive_app_identifier_changed (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { app_identifier?: string; live_id?: string; } リクエストボディ
+   * @param body - { app_identifier?: string; live_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveLive_app_identifier_changedResponse>
@@ -9010,7 +9010,7 @@ export class MirrativApi {
    * ### POST /liveLive_capture_image
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { [key: string]: string; } リクエストボディ
+   * @param body - { [key: string]: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveLive_capture_imageStatus> ステータスのみを返します
@@ -9032,7 +9032,7 @@ export class MirrativApi {
    * ### POST /liveLive_capture_image (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { [key: string]: string; } リクエストボディ
+   * @param body - { [key: string]: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveLive_capture_imageResponse>
@@ -9053,7 +9053,7 @@ export class MirrativApi {
    * ### POST /liveLive_end
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { is_available_app_audio?: string; live_id?: string; mix_with_app_audio?: string; process_id?: string; process_memory?: string; } リクエストボディ
+   * @param body - { is_available_app_audio?: string; live_id?: string; mix_with_app_audio?: string; process_id?: string; process_memory?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveLive_endStatus> ステータスのみを返します
@@ -9075,7 +9075,7 @@ export class MirrativApi {
    * ### POST /liveLive_end (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { is_available_app_audio?: string; live_id?: string; mix_with_app_audio?: string; process_id?: string; process_memory?: string; } リクエストボディ
+   * @param body - { is_available_app_audio?: string; live_id?: string; mix_with_app_audio?: string; process_id?: string; process_memory?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveLive_endResponse>
@@ -9096,7 +9096,7 @@ export class MirrativApi {
    * ### POST /liveLive_heartbeat
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { buffering_size?: string; comment_push_enabled?: string; encoder_bitrate?: string; is_app_foreground?: string; is_available_app_audio?: string; is_cast_mirroring?: string; is_emomo_visible?: string; is_muted?: string; is_share_screen?: string; live_id?: string; mix_with_app_audio?: string; network_bitrate?: string; process_id?: string; process_memory?: string; speech_synthesizer_enabled?: string; thermal_state?: string; } リクエストボディ
+   * @param body - { buffering_size?: string; comment_push_enabled?: string; encoder_bitrate?: string; is_app_foreground?: string; is_available_app_audio?: string; is_cast_mirroring?: string; is_emomo_visible?: string; is_muted?: string; is_share_screen?: string; live_id?: string; mix_with_app_audio?: string; network_bitrate?: string; process_id?: string; process_memory?: string; speech_synthesizer_enabled?: string; thermal_state?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveLive_heartbeatStatus> ステータスのみを返します
@@ -9118,7 +9118,7 @@ export class MirrativApi {
    * ### POST /liveLive_heartbeat (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { buffering_size?: string; comment_push_enabled?: string; encoder_bitrate?: string; is_app_foreground?: string; is_available_app_audio?: string; is_cast_mirroring?: string; is_emomo_visible?: string; is_muted?: string; is_share_screen?: string; live_id?: string; mix_with_app_audio?: string; network_bitrate?: string; process_id?: string; process_memory?: string; speech_synthesizer_enabled?: string; thermal_state?: string; } リクエストボディ
+   * @param body - { buffering_size?: string; comment_push_enabled?: string; encoder_bitrate?: string; is_app_foreground?: string; is_available_app_audio?: string; is_cast_mirroring?: string; is_emomo_visible?: string; is_muted?: string; is_share_screen?: string; live_id?: string; mix_with_app_audio?: string; network_bitrate?: string; process_id?: string; process_memory?: string; speech_synthesizer_enabled?: string; thermal_state?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveLive_heartbeatResponse>
@@ -9139,7 +9139,7 @@ export class MirrativApi {
    * ### POST /liveLive_start
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { comment_push_enabled?: string; enabled_customize_hash_tags?: string; input_source?: string; is_available_app_audio?: string; is_muted?: string; is_omotenashi?: string; live_id?: string; mix_with_app_audio?: string; output_source?: string; process_boottime?: string; process_id?: string; process_memory?: string; quality_level?: string; speech_synthesizer_enabled?: string; thermal_state?: string; } リクエストボディ
+   * @param body - { comment_push_enabled?: string; enabled_customize_hash_tags?: string; input_source?: string; is_available_app_audio?: string; is_muted?: string; is_omotenashi?: string; live_id?: string; mix_with_app_audio?: string; output_source?: string; process_boottime?: string; process_id?: string; process_memory?: string; quality_level?: string; speech_synthesizer_enabled?: string; thermal_state?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveLive_startStatus> ステータスのみを返します
@@ -9161,7 +9161,7 @@ export class MirrativApi {
    * ### POST /liveLive_start (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { comment_push_enabled?: string; enabled_customize_hash_tags?: string; input_source?: string; is_available_app_audio?: string; is_muted?: string; is_omotenashi?: string; live_id?: string; mix_with_app_audio?: string; output_source?: string; process_boottime?: string; process_id?: string; process_memory?: string; quality_level?: string; speech_synthesizer_enabled?: string; thermal_state?: string; } リクエストボディ
+   * @param body - { comment_push_enabled?: string; enabled_customize_hash_tags?: string; input_source?: string; is_available_app_audio?: string; is_muted?: string; is_omotenashi?: string; live_id?: string; mix_with_app_audio?: string; output_source?: string; process_boottime?: string; process_id?: string; process_memory?: string; quality_level?: string; speech_synthesizer_enabled?: string; thermal_state?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveLive_startResponse>
@@ -9182,7 +9182,7 @@ export class MirrativApi {
    * ### POST /liveUpdate_emomo_visible
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { is_visible?: string; live_id?: string; } リクエストボディ
+   * @param body - { is_visible?: string; live_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveUpdate_emomo_visibleStatus> ステータスのみを返します
@@ -9204,7 +9204,7 @@ export class MirrativApi {
    * ### POST /liveUpdate_emomo_visible (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { is_visible?: string; live_id?: string; } リクエストボディ
+   * @param body - { is_visible?: string; live_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveUpdate_emomo_visibleResponse>
@@ -9225,7 +9225,7 @@ export class MirrativApi {
    * ### POST /liveUpdate_wipe_enabled
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { is_emomo_wipe_enabled?: string; live_id?: string; } リクエストボディ
+   * @param body - { is_emomo_wipe_enabled?: string; live_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveUpdate_wipe_enabledStatus> ステータスのみを返します
@@ -9247,7 +9247,7 @@ export class MirrativApi {
    * ### POST /liveUpdate_wipe_enabled (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { is_emomo_wipe_enabled?: string; live_id?: string; } リクエストボディ
+   * @param body - { is_emomo_wipe_enabled?: string; live_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<LiveUpdate_wipe_enabledResponse>
@@ -9308,7 +9308,7 @@ export class MirrativApi {
    * ### POST /live_gamePing
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { live_id?: string; play_id?: string; } リクエストボディ
+   * @param body - { live_id?: string; play_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<Live_gamePingStatus> ステータスのみを返します
@@ -9330,7 +9330,7 @@ export class MirrativApi {
    * ### POST /live_gamePing (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { live_id?: string; play_id?: string; } リクエストボディ
+   * @param body - { live_id?: string; play_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<Live_gamePingResponse>
@@ -9351,7 +9351,7 @@ export class MirrativApi {
    * ### POST /missionReceive_login_bonus_reward
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { login_bonus_id?: string; } リクエストボディ
+   * @param body - { login_bonus_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<MissionReceive_login_bonus_rewardStatus> ステータスのみを返します
@@ -9373,7 +9373,7 @@ export class MirrativApi {
    * ### POST /missionReceive_login_bonus_reward (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { login_bonus_id?: string; } リクエストボディ
+   * @param body - { login_bonus_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<MissionReceive_login_bonus_rewardResponse>
@@ -9394,7 +9394,7 @@ export class MirrativApi {
    * ### POST /moderatorAdd
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { live_id?: string; user_id?: string; } リクエストボディ
+   * @param body - { live_id?: string; user_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<ModeratorAddStatus> ステータスのみを返します
@@ -9416,7 +9416,7 @@ export class MirrativApi {
    * ### POST /moderatorAdd (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { live_id?: string; user_id?: string; } リクエストボディ
+   * @param body - { live_id?: string; user_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<ModeratorAddResponse>
@@ -9437,7 +9437,7 @@ export class MirrativApi {
    * ### POST /moderatorDelete
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { live_id?: string; user_id?: string; } リクエストボディ
+   * @param body - { live_id?: string; user_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<ModeratorDeleteStatus> ステータスのみを返します
@@ -9459,7 +9459,7 @@ export class MirrativApi {
    * ### POST /moderatorDelete (full response)
    * **Content-Type**: `application/x-www-form-urlencoded`
    *
-   * @param body  { live_id?: string; user_id?: string; } リクエストボディ
+   * @param body - { live_id?: string; user_id?: string; } リクエストボディ
    * @param extraHeaders 追加ヘッダー (任意)
    * @param axiosOpts   Axios オプション (任意)
    * @returns Promise<ModeratorDeleteResponse>
