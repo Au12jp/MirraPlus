@@ -22,15 +22,15 @@ const API_CLIENT = path.join(ROOT, 'src', 'mirrativApi.ts')
 const SPEC_FILE = path.join(ROOT, 'src', 'www.mirrativ.com.ts')
 const OUT_DIR = path.join(ROOT, 'src', 'managers')
 
-// 1) ts-morph project
+// ── 1) Initialize ts-morph and load files
 const project = new Project({ tsConfigFilePath: path.join(ROOT, 'tsconfig.json') })
-
-// 2) load both source files
 const apiSF = project.addSourceFileAtPath(API_CLIENT)
 const specSF = project.addSourceFileAtPath(SPEC_FILE)
 
-// 3) build a map of every type-alias in both files
+// ── 2) Build a map of every alias (type & interface) so we can inline query types
 const aliasMap = new Map<string, string>()
+
+    // a) type aliases
     ;[apiSF, specSF].forEach(sf =>
         sf.getTypeAliases().forEach((ta: TypeAliasDeclaration) => {
             const name = ta.getName()
@@ -39,35 +39,38 @@ const aliasMap = new Map<string, string>()
         })
     )
 
+// b) Parameter$… interfaces from the spec file
 specSF.getInterfaces().forEach(iface => {
     const name = iface.getName()
     if (!name.startsWith('Parameter$')) return
-    // build a literal out of its members
     const members = iface.getMembers().map(m => m.getText()).join(' ')
     aliasMap.set(name, `{ ${members} }`)
 })
 
-// helper: extract JSDoc text
+// ── 3) Helpers
+
 function extractJsDoc(node: Node): string | undefined {
     const docs = node.getChildrenOfKind(SyntaxKind.JSDoc)
     if (!docs.length) return undefined
     return docs[0].getInnerText().trim() || undefined
 }
 
-// helper: inline any alias (dropping "| undefined")
-function inlineAlias(t: string): string {
-    const bare = t.split('|')[0].trim()
-    return aliasMap.get(bare) ?? t
+/** inline an alias (dropping any “| undefined” suffix) */
+function inlineAlias(typeText: string): string {
+    const bare = typeText.split('|')[0].trim()
+    return aliasMap.get(bare) ?? typeText
 }
 
-// 4) load the MirrativApi class
+// ── 4) Pull out our MirrativApi class
 const apiClass = apiSF.getClassOrThrow('MirrativApi')
 
-// 5) collect every “callable” member (methods + function-typed props)
-const methods: MethodInfo[] = apiClass
+// ── 5) Collect everything “callable” but only keep ones that have JSDoc
+const methods = apiClass
     .getMembers()
     .filter(member =>
+        // either a real method …
         Node.isMethodDeclaration(member)
+        // … or a function-typed property
         || (Node.isPropertyDeclaration(member)
             && member.getType().getCallSignatures().length > 0)
     )
@@ -81,7 +84,6 @@ const methods: MethodInfo[] = apiClass
         let returnType: string
 
         if (Node.isMethodDeclaration(member)) {
-            // real class method
             params = member.getParameters().map(p => ({
                 name: p.getName(),
                 type: inlineAlias(p.getType().getText(p)),
@@ -90,7 +92,6 @@ const methods: MethodInfo[] = apiClass
             }))
             returnType = member.getReturnType().getText()
         } else {
-            // property with a call signature
             const sig = member.getType().getCallSignatures()[0]
             returnType = sig.getReturnType().getText()
             params = sig.getParameters().map(sym => {
@@ -109,20 +110,24 @@ const methods: MethodInfo[] = apiClass
 
         return { name, jsdoc, params, returnType }
     })
+    // **filter out anything lacking JSDoc on the method itself**
+    .filter(mi => typeof mi.jsdoc === 'string')
 
-// 6) group by “segment” (leading lowercase before first Upper or underscore)
+// ── 6) Group by the “segment” prefix
 const groups = new Map<string, MethodInfo[]>()
 methods.forEach(mi => {
     const seg = mi.name.match(/^([a-z]+?)(?=[A-Z]|_)/)?.[1] ?? mi.name
     if (!groups.has(seg)) groups.set(seg, [])
-    groups.get(seg)?.push(mi)
+    groups.get(seg)!.push(mi)
 })
 
-// 7) ensure output dir
+// ── 7) Ensure output dir
 fs.mkdirSync(OUT_DIR, { recursive: true })
 
-// 8) emit one Manager per group
+// ── 8) Emit one Manager file **only** for non-empty groups
 for (const [seg, mlist] of groups.entries()) {
+    if (!mlist.length) continue
+
     const className = seg[0].toUpperCase() + seg.slice(1) + 'Manager'
     const lines: string[] = []
 
@@ -136,13 +141,13 @@ for (const [seg, mlist] of groups.entries()) {
 
     for (const mi of mlist) {
         lines.push(``)
-        if (mi.jsdoc) {
-            lines.push(`  /**`)
-            mi.jsdoc.split(/\r?\n/).forEach(l => {
-                lines.push(`   * ${l.replace(/^\s*\*?/, '')}`)
-            })
-            lines.push(`   */`)
-        }
+        // method‐level JSDoc
+        lines.push(`  /**`)
+        mi.jsdoc!.split(/\r?\n/).forEach(l => {
+            lines.push(`   * ${l.replace(/^\s*\*?/, '')}`)
+        })
+        lines.push(`   */`)
+
         lines.push(`  async ${mi.name}(`)
         mi.params.forEach(p => {
             if (p.jsdoc) lines.push(`    /** ${p.jsdoc} */`)

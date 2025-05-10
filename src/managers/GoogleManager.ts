@@ -5,7 +5,7 @@ import { MirrativApi } from '../mirrativApi'
  * google 関連 API をまとめたマネージャー（4 件）
  */
 export class GoogleManager {
-  constructor(private api: MirrativApi) { }
+  constructor(private api: MirrativApi) {}
 
   /**
    * ### POST /googleConnect
