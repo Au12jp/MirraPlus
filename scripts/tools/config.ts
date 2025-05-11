@@ -19,6 +19,10 @@ export const distDir = path.resolve(pkgRoot, "dist");
 
 export const sourceDir = path.resolve(pkgRoot, "src");
 
+export const coreDir = path.resolve(sourceDir, "@core");
+
+export const modulesDir = path.resolve(sourceDir, "@modules");
+
 export const endpointsOutputDir = path.join(docsDir, "endpoints");
 
 export const libDir = path.resolve(pkgRoot, "lib");

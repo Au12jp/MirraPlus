@@ -40,8 +40,8 @@ interface Endpoint {
 
 async function main() {
     const ROOT = process.cwd()
-    const IN = path.join(ROOT, 'src/www.mirrativ.com.ts')
-    const OUT = path.join(ROOT, 'src/mirrativApi.ts')
+    const IN = path.join(ROOT, 'src/@modules/www.mirrativ.com.ts')
+    const OUT = path.join(ROOT, 'src/@core/mirrativApi.ts')
 
     const args = process.argv.slice(2)
     const dryRun = args.includes('--dry')
@@ -208,7 +208,7 @@ async function main() {
             writer.writeLine(`  ${e.respWrap},`)
             if (e.paramType) writer.writeLine(`  ${e.paramType},`)
         })
-        writer.writeLine(`} from './www.mirrativ.com';\n`)
+        writer.writeLine(`} from '../@modules/www.mirrativ.com';\n`)
 
         // ── imports の直後あたりに挿入
         writer.writeLine(`// MRID を取得したい full-response メソッドの key (rawKey) を列挙`);
@@ -493,9 +493,14 @@ async function main() {
             const queryDoc = toDocShape(paramProps)
             const bodyDoc = toDocShape(reqProps, mediaType)
 
+            const endpoint = rawKey
+                // a→A の間だけスラッシュを入れる
+                .replace(/([a-z0-9])([A-Z])/g, '$1/$2')
+                .toLowerCase();
+
             /* ──────────────── JSDoc ──────────────── */
             writer.writeLine('  /**')
-            writer.writeLine(`   * ### ${httpVerb.toUpperCase()} /${rawKey}`)
+            writer.writeLine(`   * ### ${httpVerb.toUpperCase()} /${endpoint}`)
             if (mediaType) writer.writeLine(`   * **Content-Type**: \`${mediaType}\``)
             writer.writeLine('   *')
             if (httpVerb === 'get') {
@@ -545,7 +550,7 @@ async function main() {
 
             /* ────────── Full 用 JSDoc ───────── */
             writer.writeLine('  /**')
-            writer.writeLine(`   * ### ${httpVerb.toUpperCase()} /${rawKey} (full response)`)
+            writer.writeLine(`   * ### ${httpVerb.toUpperCase()} /${endpoint} (full response)`)
             if (mediaType) writer.writeLine(`   * **Content-Type**: \`${mediaType}\``)
             writer.writeLine('   *')
             if (httpVerb === 'get') {

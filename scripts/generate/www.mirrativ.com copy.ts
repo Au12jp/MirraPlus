@@ -240,6 +240,21 @@ async function main() {
             );
         });
 
+        // --- query-param 型エイリアス ---
+        endpoints.forEach(({ key, paramType }) => {
+            if (!paramType) return;
+            const name = capitalize(key);
+            // e.g. export type CatalogLivesParams = Parameter$getApiCatalogLives;
+            writer.writeLine(`export type ${name}Params = ${paramType};\n`);
+        });
+
+        // --- request‐body 型エイリアス ---
+        endpoints.forEach(({ key, reqWrap, mediaType }) => {
+            if (!reqWrap || !mediaType) return;
+            const name = capitalize(key);
+            writer.writeLine(`export type ${name}Request = NonNullable<${reqWrap}['${mediaType}']>;\n`);
+        });
+
         // --- full-response 型エイリアス ---
         endpoints.forEach(({ key, respWrap }) => {
             const name = capitalize(key)
@@ -478,15 +493,20 @@ async function main() {
             const queryDoc = toDocShape(paramProps)
             const bodyDoc = toDocShape(reqProps, mediaType)
 
+            const endpoint = rawKey
+                // a→A の間だけスラッシュを入れる
+                .replace(/([a-z0-9])([A-Z])/g, '$1/$2')
+                .toLowerCase();
+
             /* ──────────────── JSDoc ──────────────── */
             writer.writeLine('  /**')
-            writer.writeLine(`   * ### ${httpVerb.toUpperCase()} /${rawKey}`)
+            writer.writeLine(`   * ### ${httpVerb.toUpperCase()} /${endpoint}`)
             if (mediaType) writer.writeLine(`   * **Content-Type**: \`${mediaType}\``)
             writer.writeLine('   *')
             if (httpVerb === 'get') {
                 writer.writeLine(`   * @param query - ${queryDoc} URL クエリパラメータ (任意)`)
             } else {
-                writer.writeLine(`   * @param body  ${bodyDoc} リクエストボディ`)
+                writer.writeLine(`   * @param body - ${bodyDoc} リクエストボディ`)
             }
             writer.writeLine('   * @param extraHeaders 追加ヘッダー (任意)')
             writer.writeLine('   * @param axiosOpts   Axios オプション (任意)')
@@ -509,13 +529,20 @@ async function main() {
             /* ───────── メソッド宣言 ───────── */
             writer.writeLine(`  public ${key}!: (`)
             if (httpVerb === 'get') {
-                writer.writeLine(`    query?: ${paramType ?? 'Record<string, any>'},`)
+                if (paramType) {
+                    const name = capitalize(key);
+                    // use the new alias
+                    writer.writeLine(`    query?: ${name}Params,`);
+                } else {
+                    writer.writeLine(`    query?: Record<string, any>,`);
+                }
             } else {
-                writer.writeLine(
-                    reqProps
-                        ? `    body: ${reqWrap}['${mediaType}'],`
-                        : '    body?: any,',
-                )
+                if (reqWrap && mediaType) {
+                    const name = capitalize(key);
+                    writer.writeLine(`    body: ${name}Request,`);
+                } else {
+                    writer.writeLine(`    body?: any,`);
+                }
             }
             writer.writeLine('    extraHeaders?: Record<string, string>,')
             writer.writeLine('    axiosOpts?: AxiosRequestConfig')
@@ -523,13 +550,13 @@ async function main() {
 
             /* ────────── Full 用 JSDoc ───────── */
             writer.writeLine('  /**')
-            writer.writeLine(`   * ### ${httpVerb.toUpperCase()} /${rawKey} (full response)`)
+            writer.writeLine(`   * ### ${httpVerb.toUpperCase()} /${endpoint} (full response)`)
             if (mediaType) writer.writeLine(`   * **Content-Type**: \`${mediaType}\``)
             writer.writeLine('   *')
             if (httpVerb === 'get') {
                 writer.writeLine(`   * @param query - ${queryDoc} URL クエリパラメータ (任意)`)
             } else {
-                writer.writeLine(`   * @param body  ${bodyDoc} リクエストボディ`)
+                writer.writeLine(`   * @param body - ${bodyDoc} リクエストボディ`)
             }
             writer.writeLine('   * @param extraHeaders 追加ヘッダー (任意)')
             writer.writeLine('   * @param axiosOpts   Axios オプション (任意)')
@@ -549,13 +576,19 @@ async function main() {
             /* ───────── “Full” メソッド宣言 ───────── */
             writer.writeLine(`  public ${key}Full!: (`)
             if (httpVerb === 'get') {
-                writer.writeLine(`    query?: ${paramType ?? 'Record<string, any>'},`)
+                if (paramType) {
+                    const name = capitalize(key);
+                    writer.writeLine(`    query?: ${name}Params,`);
+                } else {
+                    writer.writeLine(`    query?: Record<string, any>,`);
+                }
             } else {
-                writer.writeLine(
-                    reqProps
-                        ? `    body: ${reqWrap}['${mediaType}'],`
-                        : '    body?: any,',
-                )
+                if (reqWrap && mediaType) {
+                    const name = capitalize(key);
+                    writer.writeLine(`    body: ${name}Request,`);
+                } else {
+                    writer.writeLine(`    body?: any,`);
+                }
             }
             writer.writeLine('    extraHeaders?: Record<string, string>,')
             writer.writeLine('    axiosOpts?: AxiosRequestConfig')

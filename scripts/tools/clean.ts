@@ -13,7 +13,7 @@ export const clean = (endpoint: string) => {
     Config.endpointsOutputDir,
     endpoint + ".json"
   );
-  const tsFile = path.join(Config.sourceDir, endpoint + ".ts");
+  const tsFile = path.join(Config.modulesDir, endpoint + ".ts");
   const libDir = path.join(Config.libDir, endpoint);
   remove(endpointJsonFile);
   remove(tsFile);
