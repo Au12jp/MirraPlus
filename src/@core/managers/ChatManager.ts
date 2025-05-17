@@ -1,426 +1,316 @@
-import type { AxiosRequestConfig } from 'axios'
-import { MirrativApi } from '../mirrativApi'
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import type { AxiosRequestConfig } from "axios";
+import { MirrativApi } from "../mirrativApi";
+
+/** チャットスレッド情報 */
+export interface ChatThread {
+  threadId: string;
+  title?: string;
+  unreadCount: number;
+  isVisible: boolean;
+  lastPostedAt?: string;
+}
+
+/** チャットメッセージ */
+export interface ChatMessage {
+  messageId: string;
+  threadId: string;
+  userId?: string;
+  text: string;
+  createdAt: string;
+  avatarUrl?: string;
+  userName?: string;
+}
+
+/** バッチ処理結果 */
+export interface BatchResult {
+  succeeded: string[];
+  failed: string[];
+}
 
 /**
- * chat 関連 API をまとめたマネージャー（18 件）
+ * chat 関連のあらゆるバッチ／キャッシュ／ポーリング機能を統合したマネージャークラス
  */
 export class ChatManager {
-  constructor(private api: MirrativApi) { }
+  private threadCache = new Map<string, ChatThread>();
+  private messagesCache = new Map<string, ChatMessage[]>();
+  private lastMessageIdCache = new Map<string, string>();
+
+  constructor(private api: MirrativApi) {}
+
+  // ── 共通ユーティリティ ────────────────────────────
+
+  private async withRetry<T>(fn: () => Promise<T>, retries = 3): Promise<T> {
+    let last: unknown;
+    for (let i = 0; i < retries; i++) {
+      try {
+        return await fn();
+      } catch (e) {
+        last = e;
+      }
+    }
+    throw last;
+  }
+
+  private arraysEqual(a: any[], b: any[]): boolean {
+    if (a.length !== b.length) return false;
+    const sa = [...a].sort(),
+      sb = [...b].sort();
+    return sa.every((v, i) => v === sb[i]);
+  }
+
+  // ── ジョイン／同意／サンキュー（一括） ──────────────────
+
+  /** 複数ユーザーを一括で join */
+  public async batchJoin(userIds: string[]): Promise<BatchResult> {
+    const results = await Promise.all(
+      userIds.map((id) =>
+        this.withRetry(() => this.api.chatJoin({ user_id: id }))
+          .then(() => ({ id, ok: true }))
+          .catch(() => ({ id, ok: false }))
+      )
+    );
+    return {
+      succeeded: results.filter((r) => r.ok).map((r) => r.id),
+      failed: results.filter((r) => !r.ok).map((r) => r.id),
+    };
+  }
+
+  /** チャット利用規約への同意を一括 */
+  public async batchAgree(flags: string[]): Promise<BatchResult> {
+    const results = await Promise.all(
+      flags.map((flag) =>
+        this.withRetry(() => this.api.chatAgree({ is_agreed: flag }))
+          .then(() => ({ flag, ok: true }))
+          .catch(() => ({ flag, ok: false }))
+      )
+    );
+    return {
+      succeeded: results.filter((r) => r.ok).map((r) => r.flag),
+      failed: results.filter((r) => !r.ok).map((r) => r.flag),
+    };
+  }
+
+  /** 複数ユーザーにサンクスを一括送信 */
+  public async batchPostThanks(
+    entries: Array<{ live_id: string; user_id: string }>
+  ): Promise<BatchResult> {
+    const results = await Promise.all(
+      entries.map(({ live_id, user_id }) =>
+        this.withRetry(() => this.api.chatPost_thanks({ live_id, user_id }))
+          .then(() => ({ key: `${live_id}:${user_id}`, ok: true }))
+          .catch(() => ({ key: `${live_id}:${user_id}`, ok: false }))
+      )
+    );
+    return {
+      succeeded: results.filter((r) => r.ok).map((r) => r.key),
+      failed: results.filter((r) => !r.ok).map((r) => r.key),
+    };
+  }
+
+  // ── スレッド一覧・詳細取得 ────────────────────────────
+
+  /** 全ページのスレッド一覧を取得 */
+  public async fetchAllThreads(
+    maxPages = 5,
+    opts?: AxiosRequestConfig
+  ): Promise<ChatThread[]> {
+    const all: ChatThread[] = [];
+    for (let page = 1; page <= maxPages; page++) {
+      const resp = await this.withRetry(() =>
+        this.api.chatThreadsFull({ page }, undefined, opts)
+      );
+      if (!resp.threads || resp.threads.length === 0) break;
+      all.push(...resp.threads.map(this.toChatThread));
+    }
+    return all;
+  }
+
+  /** スレッド詳細（メタ情報）をキャッシュ付きで取得 */
+  public async fetchThread(
+    threadId: string,
+    opts?: AxiosRequestConfig
+  ): Promise<ChatThread> {
+    if (this.threadCache.has(threadId)) {
+      return this.threadCache.get(threadId)!;
+    }
+    const resp = await this.withRetry(() =>
+      this.api.chatThreadFull({ user_id: Number(threadId) }, undefined, opts)
+    );
+    const model = this.toChatThread({
+      ...resp.thread,
+      last_posted_at: resp.messages?.[0]?.created_at,
+    });
+    this.threadCache.set(threadId, model);
+    return model;
+  }
+
+  /** 複数スレッド詳細を並列取得 */
+  public async batchFetchThreads(
+    threadIds: string[],
+    opts?: AxiosRequestConfig
+  ): Promise<Record<string, ChatThread | null>> {
+    const entries = await Promise.all(
+      threadIds.map((id) =>
+        this.fetchThread(id, opts)
+          .then((t) => [id, t] as const)
+          .catch(() => [id, null] as const)
+      )
+    );
+    return Object.fromEntries(entries);
+  }
+
+  // ── メッセージ取得・送信・既読 ────────────────────────────
+
+  /** スレッド内のすべてのメッセージを取得（キャッシュ付き） */
+  public async fetchAllMessages(
+    threadId: string,
+    opts?: AxiosRequestConfig
+  ): Promise<ChatMessage[]> {
+    if (this.messagesCache.has(threadId)) {
+      return this.messagesCache.get(threadId)!;
+    }
+    const resp = await this.withRetry(() =>
+      this.api.chatThreadFull({ user_id: Number(threadId) }, undefined, opts)
+    );
+    const messages = (resp.messages ?? []).map(this.toChatMessage);
+    this.messagesCache.set(threadId, messages);
+    this.lastMessageIdCache.set(
+      threadId,
+      messages[messages.length - 1]?.messageId ?? ""
+    );
+    return messages;
+  }
+
+  /** 新着だけ取得してキャッシュ更新 */
+  public async fetchNewMessages(
+    threadId: string,
+    opts?: AxiosRequestConfig
+  ): Promise<ChatMessage[]> {
+    const sinceId = this.lastMessageIdCache.get(threadId);
+    // まずキャッシュ済みの全メッセージを取得
+    const all = await this.fetchAllMessages(threadId, opts);
+
+    // ① chatReadFull → chatThreadFull に変更
+    const resp = await this.withRetry(() =>
+      this.api.chatThreadFull(
+        { user_id: Number(threadId) },
+        /* extraHeaders */ undefined,
+        opts
+      )
+    );
+
+    // ② sinceId より後のものだけフィルタリング
+    const msgs: ChatMessage[] = (resp.messages ?? []).map(this.toChatMessage);
+    const newMsgs = sinceId
+      ? msgs.filter((m) => Number(m.messageId) > Number(sinceId))
+      : msgs;
+
+    // キャッシュを更新
+    const updated = [...all, ...newMsgs];
+    this.messagesCache.set(threadId, updated);
+    this.lastMessageIdCache.set(
+      threadId,
+      newMsgs.length ? newMsgs[newMsgs.length - 1].messageId : sinceId!
+    );
+
+    return newMsgs;
+  }
+
+  /** テキストを送信 */
+  public async postText(
+    threadId: string,
+    text: string,
+    opts?: AxiosRequestConfig
+  ): Promise<void> {
+    await this.withRetry(() =>
+      this.api.chatPost_text({ text, user_id: threadId }, undefined, opts)
+    );
+  }
+
+  /** バッチ既読：複数スレッドで既読起票 */
+  public async batchMarkRead(
+    entries: Array<{ threadId: string; lastMessageId: string }>
+  ): Promise<BatchResult> {
+    const results = await Promise.all(
+      entries.map(({ threadId, lastMessageId }) =>
+        this.withRetry(() =>
+          this.api.chatRead({
+            last_message_id: lastMessageId,
+            user_id: threadId,
+          })
+        )
+          .then(() => ({ key: threadId, ok: true }))
+          .catch(() => ({ key: threadId, ok: false }))
+      )
+    );
+    return {
+      succeeded: results.filter((r) => r.ok).map((r) => r.key),
+      failed: results.filter((r) => !r.ok).map((r) => r.key),
+    };
+  }
+
+  // ── ポーリング ────────────────────────────────────────
 
   /**
-   * ### POST /chat/join
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { user_id?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<ChatJoinStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @throws Error Mirrativ API が `ok = 0` を返した場合
-   * @example
-   * ```ts
-   * const res = await api.chatJoin({ user_id?: string; });
-   * console.log(res);
-   * ```
+   * 新着メッセージを定期ポーリングし、コールバックで通知
    */
-  async chatJoin(
-    body: { user_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.chatJoin(body, extraHeaders, axiosOpts);
+  public startMessagePolling(
+    threadId: string,
+    intervalMs: number,
+    onNew: (msgs: ChatMessage[]) => void
+  ): { stop: () => void } {
+    let lastId = this.lastMessageIdCache.get(threadId) ?? "";
+    const timer = setInterval(async () => {
+      const newMsgs = await this.fetchNewMessages(threadId);
+      if (newMsgs.length) {
+        lastId = newMsgs[newMsgs.length - 1].messageId;
+        onNew(newMsgs);
+      }
+    }, intervalMs);
+    return { stop: () => clearInterval(timer) };
   }
 
   /**
-   * ### POST /chat/join (full response)
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { user_id?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<ChatJoinResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.chatJoinFull({ user_id?: string; });
-   * console.log(res);
-   * ```
+   * スレッド一覧を定期ポーリングし、変化時にコールバック
    */
-  async chatJoinFull(
-    body: { user_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ broadcast_key?: string | undefined; last_read_messages?: { last_read_message_id?: string | undefined; invited_message_id?: string | undefined; user_id?: string | undefined; }[] | undefined; broadcast_port?: number | undefined; status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; is_kicked_by?: string | undefined; broadcast_secret?: string | undefined; broadcast_host?: string | undefined; }> {
-    return this.api.chatJoinFull(body, extraHeaders, axiosOpts);
+  public startThreadsPolling(
+    intervalMs: number,
+    onChange: (threads: ChatThread[]) => void
+  ): { stop: () => void } {
+    let prev: ChatThread[] = [];
+    const timer = setInterval(async () => {
+      const current = await this.fetchAllThreads();
+      if (!this.arraysEqual(prev, current)) {
+        prev = current;
+        onChange(current);
+      }
+    }, intervalMs);
+    return { stop: () => clearInterval(timer) };
   }
 
-  /**
-   * ### POST /chat/post_text
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { text?: string; user_id?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<ChatPost_textStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @throws Error Mirrativ API が `ok = 0` を返した場合
-   * @example
-   * ```ts
-   * const res = await api.chatPost_text({ text?: string; user_id?: string; });
-   * console.log(res);
-   * ```
-   */
-  async chatPost_text(
-    body: { text?: string; user_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.chatPost_text(body, extraHeaders, axiosOpts);
+  // ── 変換ユーティリティ ─────────────────────────────────
+
+  private toChatThread(raw: any): ChatThread {
+    return {
+      threadId: raw.user_id?.toString() ?? "",
+      title: raw.title,
+      unreadCount: Number(raw.unread_num ?? 0),
+      isVisible: raw.is_visible === 1,
+      lastPostedAt: raw.last_posted_at,
+    };
   }
 
-  /**
-   * ### POST /chat/post_text (full response)
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { text?: string; user_id?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<ChatPost_textResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.chatPost_textFull({ text?: string; user_id?: string; });
-   * console.log(res);
-   * ```
-   */
-  async chatPost_textFull(
-    body: { text?: string; user_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; }> {
-    return this.api.chatPost_textFull(body, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### POST /chat/read
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { last_message_id?: string; user_id?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<ChatReadStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @throws Error Mirrativ API が `ok = 0` を返した場合
-   * @example
-   * ```ts
-   * const res = await api.chatRead({ last_message_id?: string; user_id?: string; });
-   * console.log(res);
-   * ```
-   */
-  async chatRead(
-    body: { last_message_id?: string; user_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.chatRead(body, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### POST /chat/read (full response)
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { last_message_id?: string; user_id?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<ChatReadResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.chatReadFull({ last_message_id?: string; user_id?: string; });
-   * console.log(res);
-   * ```
-   */
-  async chatReadFull(
-    body: { last_message_id?: string; user_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; }> {
-    return this.api.chatReadFull(body, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### GET /chat/thread
-   * 
-   * @param query - { user_id?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<ChatThreadStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.chatThread({ user_id?: number | undefined });
-   * console.log(res);
-   * ```
-   */
-  async chatThread(
-    query?: { user_id?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.chatThread(query, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### GET /chat/thread (full response)
-   * 
-   * @param query - { user_id?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<ChatThreadResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.chatThreadFull({ user_id?: number | undefined });
-   * console.log(res);
-   * ```
-   */
-  async chatThreadFull(
-    query?: { user_id?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ messages?: { created_at?: string | undefined; text?: { body?: string | undefined; avatar_image_url?: string | undefined; user_name?: string | undefined; } | undefined; user_id?: string | undefined; type?: string | undefined; id?: string | undefined; }[] | undefined; thread?: { is_visible?: number | undefined; image_urls?: string[] | undefined; user_id?: string | undefined; title?: string | undefined; push_enabled?: string | undefined; } | undefined; has_old?: number | undefined; chat_entire_push_enabled?: string | undefined; status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; is_kicked_by?: string | undefined; has_new?: number | undefined; }> {
-    return this.api.chatThreadFull(query, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### POST /chat/thread_visibility
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { group_id?: string; is_visible?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<ChatThread_visibilityStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @throws Error Mirrativ API が `ok = 0` を返した場合
-   * @example
-   * ```ts
-   * const res = await api.chatThread_visibility({ group_id?: string; is_visible?: string; });
-   * console.log(res);
-   * ```
-   */
-  async chatThread_visibility(
-    body: { group_id?: string; is_visible?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.chatThread_visibility(body, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### POST /chat/thread_visibility (full response)
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { group_id?: string; is_visible?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<ChatThread_visibilityResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.chatThread_visibilityFull({ group_id?: string; is_visible?: string; });
-   * console.log(res);
-   * ```
-   */
-  async chatThread_visibilityFull(
-    body: { group_id?: string; is_visible?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; }> {
-    return this.api.chatThread_visibilityFull(body, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### GET /chat/threads
-   * 
-   * @param query - { page?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<ChatThreadsStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.chatThreads({ page?: number | undefined });
-   * console.log(res);
-   * ```
-   */
-  async chatThreads(
-    query?: { page?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.chatThreads(query, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### GET /chat/threads (full response)
-   * 
-   * @param query - { page?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<ChatThreadsResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.chatThreadsFull({ page?: number | undefined });
-   * console.log(res);
-   * ```
-   */
-  async chatThreadsFull(
-    query?: { page?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ chat_status?: { is_enabled?: boolean | undefined; require_generation?: boolean | undefined; require_birthday?: boolean | undefined; is_cheer_club_enabled?: boolean | undefined; require_cheer_chat_confirmation_agreement?: boolean | undefined; require_chat_confirmation_agreement?: boolean | undefined; } | undefined; next_page?: Record<string, unknown> | null | undefined; chat_entire_push_enabled?: string | undefined; previous_page?: Record<string, unknown> | null | undefined; status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; current_page?: number | undefined; threads?: { last_posted_at?: string | undefined; last_message?: string | undefined; unread_num?: string | undefined; is_visible?: number | undefined; is_new?: number | undefined; image_urls?: string[] | undefined; user_id?: string | undefined; title?: string | undefined; push_enabled?: string | undefined; }[] | undefined; }> {
-    return this.api.chatThreadsFull(query, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### POST /chat/agree
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { is_agreed?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<ChatAgreeStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @throws Error Mirrativ API が `ok = 0` を返した場合
-   * @example
-   * ```ts
-   * const res = await api.chatAgree({ is_agreed?: string; });
-   * console.log(res);
-   * ```
-   */
-  async chatAgree(
-    body: { is_agreed?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; }> {
-    return this.api.chatAgree(body, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### POST /chat/agree (full response)
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { is_agreed?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<ChatAgreeResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.chatAgreeFull({ is_agreed?: string; });
-   * console.log(res);
-   * ```
-   */
-  async chatAgreeFull(
-    body: { is_agreed?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ chat_status?: { is_cheer_club_enabled?: boolean | undefined; is_enabled?: boolean | undefined; require_birthday?: boolean | undefined; require_chat_confirmation_agreement?: boolean | undefined; require_cheer_chat_confirmation_agreement?: boolean | undefined; require_generation?: boolean | undefined; } | undefined; status?: { ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; } | undefined; }> {
-    return this.api.chatAgreeFull(body, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### POST /chat/post_thanks
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { live_id?: string; user_id?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<ChatPost_thanksStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @throws Error Mirrativ API が `ok = 0` を返した場合
-   * @example
-   * ```ts
-   * const res = await api.chatPost_thanks({ live_id?: string; user_id?: string; });
-   * console.log(res);
-   * ```
-   */
-  async chatPost_thanks(
-    body: { live_id?: string; user_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.chatPost_thanks(body, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### POST /chat/post_thanks (full response)
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { live_id?: string; user_id?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<ChatPost_thanksResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.chatPost_thanksFull({ live_id?: string; user_id?: string; });
-   * console.log(res);
-   * ```
-   */
-  async chatPost_thanksFull(
-    body: { live_id?: string; user_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; remaining_present_ticket?: number | undefined; }> {
-    return this.api.chatPost_thanksFull(body, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### POST /chat/post_thanks_to_live_watched_users
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { custom_thanks_message?: string; live_id?: string; target_type?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<ChatPost_thanks_to_live_watched_usersStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @throws Error Mirrativ API が `ok = 0` を返した場合
-   * @example
-   * ```ts
-   * const res = await api.chatPost_thanks_to_live_watched_users({ custom_thanks_message?: string; live_id?: string; target_type?: string; });
-   * console.log(res);
-   * ```
-   */
-  async chatPost_thanks_to_live_watched_users(
-    body: { custom_thanks_message?: string; live_id?: string; target_type?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.chatPost_thanks_to_live_watched_users(body, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### POST /chat/post_thanks_to_live_watched_users (full response)
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { custom_thanks_message?: string; live_id?: string; target_type?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<ChatPost_thanks_to_live_watched_usersResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.chatPost_thanks_to_live_watched_usersFull({ custom_thanks_message?: string; live_id?: string; target_type?: string; });
-   * console.log(res);
-   * ```
-   */
-  async chatPost_thanks_to_live_watched_usersFull(
-    body: { custom_thanks_message?: string; live_id?: string; target_type?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; remaining_present_ticket?: number | undefined; }> {
-    return this.api.chatPost_thanks_to_live_watched_usersFull(body, extraHeaders, axiosOpts);
+  private toChatMessage(raw: any): ChatMessage {
+    return {
+      messageId: raw.id ?? "",
+      threadId: raw.user_id?.toString() ?? "",
+      userId: raw.user_id,
+      text: raw.text?.body ?? "",
+      createdAt: raw.created_at ?? "",
+      avatarUrl: raw.text?.avatar_image_url,
+      userName: raw.text?.user_name,
+    };
   }
 }

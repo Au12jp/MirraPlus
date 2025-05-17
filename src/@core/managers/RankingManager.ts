@@ -1,97 +1,134 @@
-import type { AxiosRequestConfig } from 'axios'
-import { MirrativApi } from '../mirrativApi'
+/* eslint-disable no-constant-condition */
+import type { AxiosRequestConfig } from "axios";
+import { MirrativApi } from "../mirrativApi";
 
-/**
- * ranking 関連 API をまとめたマネージャー（4 件）
- */
+/** 焦点可能なイベント情報 */
+interface FocusableEvent {
+  eventId: string;
+  title?: string;
+  period?: string;
+  imageUrl?: string;
+  isFocus: boolean;
+}
+
+/** ユーザーランキング詳細 */
+interface UserRanking {
+  eventId: number;
+  totalPoint?: number;
+  rank?: number;
+  rankText?: string;
+}
+
+/** 共通ステータス */
+interface ApiStatus {
+  ok?: number;
+  error?: string;
+}
+
+/** リトライヘルパー */
+async function withRetry<T>(fn: () => Promise<T>, retries = 3): Promise<T> {
+  let lastErr: unknown;
+  for (let i = 0; i < retries; i++) {
+    try {
+      return await fn();
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+  throw lastErr;
+}
+
 export class RankingManager {
-  constructor(private api: MirrativApi) { }
+  constructor(private api: MirrativApi) {}
 
   /**
-   * ### GET /ranking/focusable
-   * 
-   * @param query - Record<string, any> URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<RankingFocusableStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.rankingFocusable({});
-   * console.log(res);
-   * ```
+   * 現在フォーカス可能なイベントをすべて取得
    */
-  async rankingFocusable(
-    query?: Record<string, any> | undefined,
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; }> {
-    return this.api.rankingFocusable(query, extraHeaders, axiosOpts);
+  public async fetchAllFocusable(
+    opts?: AxiosRequestConfig
+  ): Promise<FocusableEvent[]> {
+    const res = await withRetry(() =>
+      this.api.rankingFocusableFull({}, undefined, opts)
+    );
+    const st = res.status as ApiStatus | undefined;
+    if (st?.ok !== 1) throw new Error(st?.error || "Failed to fetch focusable");
+    return (res.rankings ?? []).map((r) => ({
+      eventId: String(r.event_id),
+      title: r.title,
+      period: r.period,
+      imageUrl: r.image_url,
+      isFocus: Boolean(r.is_focus),
+    }));
   }
 
   /**
-   * ### GET /ranking/focusable (full response)
-   * 
-   * @param query - Record<string, any> URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<RankingFocusableResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.rankingFocusableFull({});
-   * console.log(res);
-   * ```
+   * 指定イベントがフォーカス可能リストに現れるまでポーリング
    */
-  async rankingFocusableFull(
-    query?: Record<string, any> | undefined,
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ rankings?: { event_id?: string | undefined; event_type?: number | undefined; image_url?: string | undefined; is_focus?: boolean | undefined; period?: string | undefined; title?: string | undefined; }[] | undefined; status?: { ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; } | undefined; }> {
-    return this.api.rankingFocusableFull(query, extraHeaders, axiosOpts);
+  public async waitForEventFocusable(
+    eventId: string,
+    intervalMs = 3000,
+    timeoutMs = 60000,
+    opts?: AxiosRequestConfig
+  ): Promise<void> {
+    const start = Date.now();
+    while (true) {
+      const list = await this.fetchAllFocusable(opts);
+      if (list.some((e) => e.eventId === eventId)) return;
+      if (Date.now() - start > timeoutMs) {
+        throw new Error(`Event ${eventId} did not become focusable in time`);
+      }
+      await new Promise((r) => setTimeout(r, intervalMs));
+    }
   }
 
   /**
-   * ### GET /ranking/user_detail
-   * 
-   * @param query - { live_id?: string | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<RankingUser_detailStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.rankingUser_detail({ live_id?: string | undefined });
-   * console.log(res);
-   * ```
+   * 指定ライブID のユーザーランキング一覧を取得
    */
-  async rankingUser_detail(
-    query?: { live_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; }> {
-    return this.api.rankingUser_detail(query, extraHeaders, axiosOpts);
+  public async fetchUserRankings(
+    liveId: string,
+    opts?: AxiosRequestConfig
+  ): Promise<UserRanking[]> {
+    const res = await withRetry(() =>
+      this.api.rankingUser_detailFull({ live_id: liveId }, undefined, opts)
+    );
+    const st = res.status as ApiStatus | undefined;
+    if (st?.ok !== 1)
+      throw new Error(st?.error || "Failed to fetch user detail");
+    return (res.rankings ?? []).map((r) => ({
+      eventId: r.event_id ?? NaN,
+      totalPoint: r.total_point,
+      rank: r.rank,
+      rankText: r.rank_text,
+    }));
   }
 
   /**
-   * ### GET /ranking/user_detail (full response)
-   * 
-   * @param query - { live_id?: string | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<RankingUser_detailResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.rankingUser_detailFull({ live_id?: string | undefined });
-   * console.log(res);
-   * ```
+   * 複数ライブID のユーザーランキングを並列取得
    */
-  async rankingUser_detailFull(
-    query?: { live_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ rankings?: { is_app_event?: boolean | undefined; event_id?: number | undefined; event_title?: string | undefined; event_icon_url?: string | undefined; total_point?: number | undefined; rank?: number | undefined; rank_text?: string | undefined; ranking_point?: number | undefined; banner_icon_image_url?: string | undefined; banner_icon_link_url?: string | undefined; reward_icon_url?: string | undefined; reward_achieved_point?: number | undefined; reward_need_point?: number | undefined; is_focus?: boolean | undefined; nano_time?: number | undefined; }[] | undefined; status?: { ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; } | undefined; }> {
-    return this.api.rankingUser_detailFull(query, extraHeaders, axiosOpts);
+  public async batchFetchUserRankings(
+    liveIds: string[],
+    opts?: AxiosRequestConfig
+  ): Promise<Record<string, UserRanking[]>> {
+    const entries = await Promise.all(
+      liveIds.map((id) =>
+        withRetry(() => this.fetchUserRankings(id, opts))
+          .then((list) => [id, list] as const)
+          .catch(() => [id, []] as const)
+      )
+    );
+    return Object.fromEntries(entries);
+  }
+
+  /**
+   * 指定イベントのユーザー内順位を返す
+   */
+  public async getEventRankForLive(
+    liveId: string,
+    eventId: number,
+    opts?: AxiosRequestConfig
+  ): Promise<{ rank?: number; totalPoint?: number }> {
+    const rankings = await this.fetchUserRankings(liveId, opts);
+    const ev = rankings.find((r) => r.eventId === eventId);
+    return { rank: ev?.rank, totalPoint: ev?.totalPoint };
   }
 }

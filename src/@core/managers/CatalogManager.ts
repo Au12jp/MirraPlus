@@ -1,229 +1,278 @@
-import type { AxiosRequestConfig } from 'axios'
-import { MirrativApi } from '../mirrativApi'
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import type { AxiosRequestConfig } from "axios";
+import { MirrativApi } from "../mirrativApi";
+
+/** カタログバナーのドメインモデル */
+export interface Banner {
+  adContentUrl?: string;
+  imageUrl?: string;
+  description?: string;
+  linkUrl?: string;
+  subtitle?: string;
+  title?: string;
+}
+
+/** フォロー中のライブのドメインモデル */
+export interface FollowItem {
+  liveId: string;
+  title?: string;
+  ownerName?: string;
+  thumbnailUrl?: string;
+  startedAt?: number;
+}
+
+/** ライブ一覧のドメインモデル */
+export interface CatalogLive {
+  liveId: string;
+  title?: string;
+  ownerName?: string;
+  thumbnailUrl?: string;
+  isLive?: boolean;
+}
+
+/** タブ情報のドメインモデル */
+export interface Tab {
+  tabId: string;
+  name: string;
+  pageId: string;
+}
 
 /**
- * catalog 関連 API をまとめたマネージャー（10 件）
+ * CatalogManager: catalog 系 API のバッチ／キャッシュ／ページング／ポーリング処理
  */
 export class CatalogManager {
-  constructor(private api: MirrativApi) { }
+  private bannersCache = new Map<number, Banner[]>();
+  private followCache: FollowItem[] | null = null;
+  private livesCache = new Map<number, CatalogLive[]>();
+  private tabsCache: Tab[] | null = null;
 
-  /**
-   * ### GET /catalog/banners
-   * 
-   * @param query - { tab_id?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<CatalogBannersStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.catalogBanners({ tab_id?: number | undefined });
-   * console.log(res);
-   * ```
-   */
-  async catalogBanners(
-    query?: { tab_id?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; }> {
-    return this.api.catalogBanners(query, extraHeaders, axiosOpts);
+  constructor(private api: MirrativApi) {}
+
+  // ── 共通ユーティリティ ─────────────────────────────────
+
+  private async withRetry<T>(fn: () => Promise<T>, retries = 3): Promise<T> {
+    let lastErr: unknown;
+    for (let i = 0; i < retries; i++) {
+      try {
+        return await fn();
+      } catch (e) {
+        lastErr = e;
+      }
+    }
+    throw lastErr;
   }
 
-  /**
-   * ### GET /catalog/banners (full response)
-   * 
-   * @param query - { tab_id?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<CatalogBannersResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.catalogBannersFull({ tab_id?: number | undefined });
-   * console.log(res);
-   * ```
-   */
-  async catalogBannersFull(
-    query?: { tab_id?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ banners?: { ad_content_url?: string | undefined; banner_image_url?: string | undefined; description?: string | undefined; link_url?: string | undefined; subtitle?: string | undefined; title?: string | undefined; }[] | undefined; status?: { ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; } | undefined; }> {
-    return this.api.catalogBannersFull(query, extraHeaders, axiosOpts);
+  private arraysEqual<T>(a: T[], b: T[]): boolean {
+    if (a.length !== b.length) return false;
+    const sa = [...a].sort(),
+      sb = [...b].sort();
+    return sa.every((v, i) => v === sb[i]);
   }
 
-  /**
-   * ### GET /catalog/follow
-   * 
-   * @param query - Record<string, any> URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<CatalogFollowStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.catalogFollow({});
-   * console.log(res);
-   * ```
-   */
-  async catalogFollow(
-    query?: Record<string, any> | undefined,
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; }> {
-    return this.api.catalogFollow(query, extraHeaders, axiosOpts);
+  // ── Banners ─────────────────────────────────────────────
+
+  /** 指定 tab_id のバナー一覧をキャッシュ付きで取得 */
+  public async fetchBanners(
+    tabId: number,
+    opts?: AxiosRequestConfig
+  ): Promise<Banner[]> {
+    if (this.bannersCache.has(tabId)) {
+      return this.bannersCache.get(tabId)!;
+    }
+    const resp = await this.withRetry(() =>
+      this.api.catalogBannersFull({ tab_id: tabId }, undefined, opts)
+    );
+    const list = (resp.banners ?? []).map(this.toBanner);
+    this.bannersCache.set(tabId, list);
+    return list;
   }
 
-  /**
-   * ### GET /catalog/follow (full response)
-   * 
-   * @param query - Record<string, any> URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<CatalogFollowResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.catalogFollowFull({});
-   * console.log(res);
-   * ```
-   */
-  async catalogFollowFull(
-    query?: Record<string, any> | undefined,
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ current_cursor?: string | undefined; list?: { archive?: { app_icon_urls?: string[] | undefined; app_id?: string | undefined; archive_status?: number | undefined; avatar_body_image_url?: string | undefined; blur_image_url?: string | undefined; collab_user_profile_image_urls?: Record<string, unknown>[] | undefined; ended_at?: number | undefined; following_viewer_image_urls?: Record<string, unknown>[] | undefined; following_viewer_num?: number | undefined; has_recording?: boolean | undefined; image_url?: string | undefined; is_collab?: boolean | undefined; is_live?: boolean | undefined; is_nuu_welcome?: boolean | undefined; is_omotenashi?: boolean | undefined; is_private?: boolean | undefined; joined_live_thumbnail_image_url?: string | undefined; live_id?: string | undefined; orientation_v2?: number | undefined; owner?: { badges?: { image_url?: string | undefined; small_image_url?: string | undefined; }[] | undefined; is_new?: boolean | undefined; name?: string | undefined; profile_frame_image_url?: string | undefined; profile_image_url?: string | undefined; season_rating?: { class_name?: string | undefined; icon_url?: string | undefined; } | undefined; user_id?: string | undefined; yell_level?: number | undefined; yell_rank?: number | undefined; } | undefined; preview?: Record<string, unknown> | null | undefined; private_invited_user_image_urls?: Record<string, unknown>[] | undefined; private_invited_user_num?: number | undefined; private_viewer_image_urls?: Record<string, unknown>[] | undefined; private_viewer_num?: number | undefined; recommend?: Record<string, unknown> | null | undefined; started_at?: number | undefined; thumbnail_frame?: { icon_url?: string | undefined; id?: number | undefined; left_thumbnail_image_url?: string | undefined; right_thumbnail_animation_url?: string | undefined; right_thumbnail_image_url?: string | undefined; } | undefined; title?: string | undefined; total_viewer_num?: number | undefined; user_app_status?: Record<string, unknown>[] | undefined; user_label_image_url?: string | undefined; } | undefined; log_id?: string | undefined; type?: string | undefined; }[] | undefined; next_cursor?: string | undefined; status?: { ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; } | undefined; }> {
-    return this.api.catalogFollowFull(query, extraHeaders, axiosOpts);
+  /** 複数 tab_id のバナーをまとめて取得 */
+  public async fetchBannersForTabs(
+    tabIds: number[],
+    opts?: AxiosRequestConfig
+  ): Promise<Record<number, Banner[]>> {
+    const entries = await Promise.all(
+      tabIds.map((id) =>
+        this.fetchBanners(id, opts)
+          .then((b) => [id, b] as const)
+          .catch(() => [id, []] as const)
+      )
+    );
+    return Object.fromEntries(entries);
   }
 
-  /**
-   * ### GET /catalog/lives
-   * 
-   * @param query - { tab_id?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<CatalogLivesStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.catalogLives({ tab_id?: number | undefined });
-   * console.log(res);
-   * ```
-   */
-  async catalogLives(
-    query?: { tab_id?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; }> {
-    return this.api.catalogLives(query, extraHeaders, axiosOpts);
+  /** バナーキャッシュクリア */
+  public invalidateBanners(tabId?: number): void {
+    if (tabId != null) this.bannersCache.delete(tabId);
+    else this.bannersCache.clear();
   }
 
-  /**
-   * ### GET /catalog/lives (full response)
-   * 
-   * @param query - { tab_id?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<CatalogLivesResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.catalogLivesFull({ tab_id?: number | undefined });
-   * console.log(res);
-   * ```
-   */
-  async catalogLivesFull(
-    query?: { tab_id?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ current_cursor?: string | undefined; lives?: { app_icon_urls?: string[] | undefined; app_id?: string | undefined; archive_status?: number | undefined; avatar_body_image_url?: string | undefined; blur_image_url?: string | undefined; collab_user_profile_image_urls?: Record<string, unknown>[] | undefined; ended_at?: number | undefined; following_viewer_image_urls?: Record<string, unknown>[] | undefined; following_viewer_num?: number | undefined; has_recording?: boolean | undefined; image_url?: string | undefined; is_collab?: boolean | undefined; is_following?: boolean | undefined; is_live?: boolean | undefined; is_lucky_coin_box_available?: boolean | undefined; is_nuu_welcome?: boolean | undefined; is_omotenashi?: boolean | undefined; is_private?: boolean | undefined; joined_live_thumbnail_image_url?: string | undefined; live_id?: string | undefined; live_tags?: Record<string, unknown>[] | undefined; log_id?: string | undefined; orientation_v2?: number | undefined; owner?: { badges?: { image_url?: string | undefined; small_image_url?: string | undefined; }[] | undefined; is_new?: boolean | undefined; name?: string | undefined; profile_frame_image_url?: string | undefined; profile_image_url?: string | undefined; season_rating?: { class_name?: string | undefined; icon_url?: string | undefined; } | undefined; user_id?: string | undefined; yell_level?: number | undefined; yell_rank?: number | undefined; } | undefined; preview?: { streaming_url_edge?: string | undefined; streaming_url_hls?: string | undefined; } | undefined; recommend?: Record<string, unknown> | null | undefined; relation?: string | undefined; started_at?: number | undefined; thumbnail_frame?: Record<string, unknown> | null | undefined; title?: string | undefined; total_viewer_num?: number | undefined; user_app_status?: Record<string, unknown>[] | undefined; user_label_image_url?: string | undefined; }[] | undefined; next_cursor?: string | undefined; status?: { ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; } | undefined; }> {
-    return this.api.catalogLivesFull(query, extraHeaders, axiosOpts);
+  /** バナーの変化をポーリングで監視 */
+  public watchBanners(
+    tabId: number,
+    intervalMs: number,
+    onChange: (banners: Banner[]) => void
+  ): { stop: () => void } {
+    let prev: Banner[] = [];
+    const timer = setInterval(async () => {
+      const current = await this.fetchBanners(tabId);
+      if (!this.arraysEqual(prev, current)) {
+        prev = current;
+        onChange(current);
+      }
+    }, intervalMs);
+    return { stop: () => clearInterval(timer) };
   }
 
-  /**
-   * ### GET /catalog/myapp_recommend_lives
-   * 
-   * @param query - Record<string, any> URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<CatalogMyapp_recommend_livesStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.catalogMyapp_recommend_lives({});
-   * console.log(res);
-   * ```
-   */
-  async catalogMyapp_recommend_lives(
-    query?: Record<string, any> | undefined,
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; }> {
-    return this.api.catalogMyapp_recommend_lives(query, extraHeaders, axiosOpts);
+  // ── Follow ──────────────────────────────────────────────
+
+  /** フォロー中のライブ一覧をキャッシュ付きで取得（カーソル不要） */
+  public async fetchFollowItems(
+    opts?: AxiosRequestConfig
+  ): Promise<FollowItem[]> {
+    if (this.followCache) return this.followCache;
+    const resp = await this.withRetry(() =>
+      this.api.catalogFollowFull({}, undefined, opts)
+    );
+    const list = (resp.list ?? []).map(this.toFollowItem);
+    this.followCache = list;
+    return list;
   }
 
-  /**
-   * ### GET /catalog/myapp_recommend_lives (full response)
-   * 
-   * @param query - Record<string, any> URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<CatalogMyapp_recommend_livesResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.catalogMyapp_recommend_livesFull({});
-   * console.log(res);
-   * ```
-   */
-  async catalogMyapp_recommend_livesFull(
-    query?: Record<string, any> | undefined,
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ current_cursor?: string | undefined; lives?: Record<string, unknown>[] | undefined; next_cursor?: string | undefined; status?: { ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; } | undefined; }> {
-    return this.api.catalogMyapp_recommend_livesFull(query, extraHeaders, axiosOpts);
+  /** フォローキャッシュクリア */
+  public invalidateFollowCache(): void {
+    this.followCache = null;
   }
 
-  /**
-   * ### GET /catalog/tabs
-   * 
-   * @param query - Record<string, any> URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<CatalogTabsStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.catalogTabs({});
-   * console.log(res);
-   * ```
-   */
-  async catalogTabs(
-    query?: Record<string, any> | undefined,
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; }> {
-    return this.api.catalogTabs(query, extraHeaders, axiosOpts);
+  /** 複数ライブに対して一括フォロー／アンフォロー */
+  public async batchFollow(
+    liveIds: string[],
+    opts?: AxiosRequestConfig
+  ): Promise<string[]> {
+    const results = await Promise.all(
+      liveIds.map((id) =>
+        this.withRetry(() =>
+          this.api.catalogFollow({ live_id: id }, undefined, opts)
+        )
+          .then(() => id)
+          .catch(() => null)
+      )
+    );
+    return results.filter((id): id is string => id !== null);
   }
 
-  /**
-   * ### GET /catalog/tabs (full response)
-   * 
-   * @param query - Record<string, any> URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<CatalogTabsResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.catalogTabsFull({});
-   * console.log(res);
-   * ```
-   */
-  async catalogTabsFull(
-    query?: Record<string, any> | undefined,
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ default_tab_id?: string | undefined; is_visible_tab?: boolean | undefined; status?: { ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; } | undefined; tabs?: { tab_id?: string | undefined; tab_name?: string | undefined; tab_page_id?: string | undefined; }[] | undefined; }> {
-    return this.api.catalogTabsFull(query, extraHeaders, axiosOpts);
+  // ── Lives ──────────────────────────────────────────────
+
+  /** 指定 tab_id のライブ一覧をページング取得 */
+  public async fetchLivesByTab(
+    tabId: number,
+    maxPages = 5,
+    opts?: AxiosRequestConfig
+  ): Promise<CatalogLive[]> {
+    const result: CatalogLive[] = [];
+    let cursor: string | null | undefined = undefined;
+
+    for (let i = 0; i < maxPages; i++) {
+      const resp = await this.withRetry(() =>
+        this.api.catalogLivesFull({ tab_id: tabId, cursor }, undefined, opts)
+      );
+      if (!resp.lives || resp.lives.length === 0) break;
+      result.push(...resp.lives.map(this.toCatalogLive));
+      cursor = resp.next_cursor ?? null;
+      if (!cursor) break;
+    }
+    return result;
+  }
+
+  /** 複数 tab_id のライブをまとめて取得 */
+  public async fetchLivesForTabs(
+    tabIds: number[],
+    opts?: AxiosRequestConfig
+  ): Promise<Record<number, CatalogLive[]>> {
+    const entries = await Promise.all(
+      tabIds.map((id) =>
+        this.fetchLivesByTab(id, 3, opts)
+          .then((l) => [id, l] as const)
+          .catch(() => [id, []] as const)
+      )
+    );
+    return Object.fromEntries(entries);
+  }
+
+  /** ライブ一覧をポーリングで監視 */
+  public watchLives(
+    tabId: number,
+    intervalMs: number,
+    onChange: (lives: CatalogLive[]) => void
+  ): { stop: () => void } {
+    let prev: CatalogLive[] = [];
+    const timer = setInterval(async () => {
+      const current = await this.fetchLivesByTab(tabId);
+      if (!this.arraysEqual(prev, current)) {
+        prev = current;
+        onChange(current);
+      }
+    }, intervalMs);
+    return { stop: () => clearInterval(timer) };
+  }
+
+  // ── Tabs ───────────────────────────────────────────────
+
+  /** タブ一覧をキャッシュ付きで取得 */
+  public async fetchTabs(opts?: AxiosRequestConfig): Promise<Tab[]> {
+    if (this.tabsCache) return this.tabsCache;
+    const resp = await this.withRetry(() =>
+      this.api.catalogTabsFull({}, undefined, opts)
+    );
+    const list = (resp.tabs ?? []).map(this.toTab);
+    this.tabsCache = list;
+    return list;
+  }
+
+  /** タブキャッシュクリア */
+  public invalidateTabs(): void {
+    this.tabsCache = null;
+  }
+
+  // ── 変換ユーティリティ ─────────────────────────────────
+
+  private toBanner(raw: any): Banner {
+    return {
+      adContentUrl: raw.ad_content_url,
+      imageUrl: raw.banner_image_url,
+      description: raw.description,
+      linkUrl: raw.link_url,
+      subtitle: raw.subtitle,
+      title: raw.title,
+    };
+  }
+
+  private toFollowItem(raw: any): FollowItem {
+    return {
+      liveId: raw.live_id ?? "",
+      title: raw.title,
+      ownerName: raw.owner?.name,
+      thumbnailUrl: raw.image_url,
+      startedAt: raw.started_at,
+    };
+  }
+
+  private toCatalogLive(raw: any): CatalogLive {
+    return {
+      liveId: raw.live_id ?? "",
+      title: raw.title,
+      ownerName: raw.owner?.name,
+      thumbnailUrl: raw.image_url,
+      isLive: raw.is_live === true,
+    };
+  }
+
+  private toTab(raw: any): Tab {
+    return {
+      tabId: raw.tab_id ?? "",
+      name: raw.tab_name ?? "",
+      pageId: raw.tab_page_id ?? "",
+    };
   }
 }

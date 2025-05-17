@@ -1,53 +1,85 @@
-import type { AxiosRequestConfig } from 'axios'
-import { MirrativApi } from '../mirrativApi'
+import type { AxiosRequestConfig } from "axios";
+import { MirrativApi } from "../mirrativApi";
 
-/**
- * get 関連 API をまとめたマネージャー（2 件）
- */
+/** プッシュ通知設定 */
+export interface PushSettings {
+  isEnabledCampaigns: boolean;
+  isEnabledChats: boolean;
+  isEnabledLives: boolean;
+  isEnabledNews: boolean;
+  isEnabledPresentBoxes: boolean;
+  isEnabledYours: boolean;
+}
+
+/** API ステータス */
+interface ApiStatus {
+  ok?: number;
+  error?: string;
+  error_code?: number;
+}
+
+/** 全レスポンス型（MirrativApi が返すまま） */
+type RawPushSettingsResponse = Awaited<
+  ReturnType<MirrativApi["getNotificationPush_settings_v3Full"]>
+>;
+
+/** GET 系 API をまとめたマネージャー */
 export class GetManager {
-  constructor(private api: MirrativApi) { }
+  constructor(private api: MirrativApi) {}
 
-  /**
-   * ### GET /notification/push_settings_v3
-   * 
-   * @param query - Record<string, any> URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<GetNotificationPush_settings_v3Status> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.getNotificationPush_settings_v3({});
-   * console.log(res);
-   * ```
-   */
-  async getNotificationPush_settings_v3(
-    query?: Record<string, any> | undefined,
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; }> {
-    return this.api.getNotificationPush_settings_v3(query, extraHeaders, axiosOpts);
+  /** 最大 3 回までリトライ＋指数バックオフ */
+  private async withRetry<T>(
+    fn: () => Promise<T>,
+    retries = 3,
+    baseDelayMs = 200
+  ): Promise<T> {
+    let lastErr: unknown;
+    for (let i = 0; i < retries; i++) {
+      try {
+        return await fn();
+      } catch (e) {
+        lastErr = e;
+        await new Promise((r) => setTimeout(r, baseDelayMs * (i + 1)));
+      }
+    }
+    throw lastErr;
   }
 
   /**
-   * ### GET /notification/push_settings_v3 (full response)
-   * 
-   * @param query - Record<string, any> URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<GetNotificationPush_settings_v3Response>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.getNotificationPush_settings_v3Full({});
-   * console.log(res);
-   * ```
+   * プッシュ通知設定を取得します
+   * - 内部ではフルレスポンス API を呼び出し
+   * - `ok !== 1` のときは例外を投げます
    */
-  async getNotificationPush_settings_v3Full(
-    query?: Record<string, any> | undefined,
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ is_enabled_campaigns?: number | undefined; is_enabled_chats?: number | undefined; is_enabled_lives?: number | undefined; is_enabled_news?: number | undefined; is_enabled_present_boxes?: number | undefined; is_enabled_yours?: number | undefined; status?: { ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; } | undefined; }> {
-    return this.api.getNotificationPush_settings_v3Full(query, extraHeaders, axiosOpts);
+  public async fetchPushSettings(
+    opts?: AxiosRequestConfig
+  ): Promise<PushSettings> {
+    const raw = await this.withRetry(() =>
+      this.api.getNotificationPush_settings_v3Full({}, undefined, opts)
+    );
+
+    const status: ApiStatus | undefined = raw.status;
+    if (!status || status.ok !== 1) {
+      throw new Error(status?.error ?? "Failed to fetch push settings");
+    }
+
+    return {
+      isEnabledCampaigns: !!raw.is_enabled_campaigns,
+      isEnabledChats: !!raw.is_enabled_chats,
+      isEnabledLives: !!raw.is_enabled_lives,
+      isEnabledNews: !!raw.is_enabled_news,
+      isEnabledPresentBoxes: !!raw.is_enabled_present_boxes,
+      isEnabledYours: !!raw.is_enabled_yours,
+    };
+  }
+
+  /**
+   * フルレスポンスをそのまま取得したいときに
+   */
+  public async fetchPushSettingsFull(
+    opts?: AxiosRequestConfig
+  ): Promise<RawPushSettingsResponse> {
+    return this.withRetry(() =>
+      this.api.getNotificationPush_settings_v3Full({}, undefined, opts)
+    );
   }
 }

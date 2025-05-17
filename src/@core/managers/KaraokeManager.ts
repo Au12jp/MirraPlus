@@ -1,273 +1,281 @@
-import type { AxiosRequestConfig } from 'axios'
-import { MirrativApi } from '../mirrativApi'
+import type { AxiosRequestConfig } from "axios";
+import { MirrativApi } from "../mirrativApi";
+
+/** 共通 API ステータス */
+interface ApiStatus {
+  ok?: number;
+  error?: string;
+}
+
+/** カラオケ曲情報 */
+export interface KaraokeItem {
+  id: string;
+  title?: string;
+  singerName?: string;
+  playingTime?: number;
+  composer?: string;
+  lyricist?: string;
+  genreIds?: number[];
+}
+
+/** ページネーション付きカラオケ一覧 */
+export interface PaginatedKaraokes {
+  currentPage: number;
+  nextPage: number | null;
+  items: KaraokeItem[];
+}
+
+/** バッチ結果 */
+export interface BatchResult {
+  succeeded: string[];
+  failed: string[];
+}
+
+/** リトライヘルパー */
+async function withRetry<T>(fn: () => Promise<T>, retries = 3): Promise<T> {
+  let lastErr: unknown;
+  for (let i = 0; i < retries; i++) {
+    try {
+      return await fn();
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+  throw lastErr;
+}
 
 /**
- * karaoke 関連 API をまとめたマネージャー（12 件）
+ * karaoke 関連 API をまとめたマネージャー
  */
 export class KaraokeManager {
-  constructor(private api: MirrativApi) { }
+  constructor(private api: MirrativApi) {}
+
+  // ── ユーティリティ／複雑処理メソッド ────────────────────────────────
 
   /**
-   * ### GET /karaoke
-   * 
-   * @param query - { page?: number | undefined; live_id?: string | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<KaraokeStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.karaoke({ page?: number | undefined; live_id?: string | undefined });
-   * console.log(res);
-   * ```
+   * 単一ページのカラオケ曲を取得（ページネーション付き）
    */
-  async karaoke(
-    query?: { page?: number; live_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; }> {
-    return this.api.karaoke(query, extraHeaders, axiosOpts);
+  public async fetchKaraokePage(
+    page = 1,
+    liveId?: string,
+    opts?: AxiosRequestConfig
+  ): Promise<PaginatedKaraokes> {
+    const resp = await withRetry(() =>
+      this.api.karaokeFull({ live_id: liveId }, undefined, {
+        ...opts,
+        params: { page, live_id: liveId },
+      })
+    );
+    const status = resp.status as ApiStatus | undefined;
+    if (status?.ok !== 1) {
+      throw new Error(status?.error || "Failed to fetch karaoke list");
+    }
+    const items = (resp.karaokes ?? []).map((k) => ({
+      id: String(k.id),
+      title: k.title,
+      singerName: k.singer_name,
+      playingTime: k.playing_time,
+      composer: k.composer,
+      lyricist: k.lyricist,
+      genreIds: k.genre_ids,
+    }));
+    return {
+      currentPage: page,
+      nextPage: resp.next_page && resp.next_page > page ? resp.next_page : null,
+      items,
+    };
   }
 
   /**
-   * ### GET /karaoke (full response)
-   * 
-   * @param query - { page?: number | undefined; live_id?: string | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<KaraokeResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.karaokeFull({ page?: number | undefined; live_id?: string | undefined });
-   * console.log(res);
-   * ```
+   * 全ページからカラオケ曲を取得（一括フェッチ）
    */
-  async karaokeFull(
-    query?: { page?: number; live_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ current_page?: number | undefined; karaokes?: { composer?: string | undefined; genre_ids?: number[] | undefined; id?: string | undefined; lyricist?: string | undefined; playing_time?: number | undefined; singer_id?: string | undefined; singer_name?: string | undefined; title?: string | undefined; }[] | undefined; next_page?: number | undefined; status?: { ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; } | undefined; }> {
-    return this.api.karaokeFull(query, extraHeaders, axiosOpts);
+  public async fetchAllKaraokes(
+    liveId?: string,
+    opts?: AxiosRequestConfig
+  ): Promise<KaraokeItem[]> {
+    const all: KaraokeItem[] = [];
+    let page = 1,
+      next: number | null = null;
+
+    do {
+      const paged = await this.fetchKaraokePage(page, liveId, opts);
+      all.push(...paged.items);
+      next = paged.nextPage;
+      if (next) page = next;
+    } while (next !== null);
+
+    return all;
   }
 
   /**
-   * ### GET /karaoke/by_genre
-   * 
-   * @param query - { page?: number | undefined; genre_id?: number | undefined; where?: string | undefined; live_id?: string | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<KaraokeBy_genreStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.karaokeBy_genre({ page?: number | undefined; genre_id?: number | undefined; where?: string | undefined; live_id?: string | undefined });
-   * console.log(res);
-   * ```
+   * ジャンル単位の単一ページ取得
    */
-  async karaokeBy_genre(
-    query?: { page?: number; genre_id?: number; where?: string; live_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.karaokeBy_genre(query, extraHeaders, axiosOpts);
+  public async fetchByGenrePage(
+    genreId: number,
+    page = 1,
+    liveId?: string,
+    opts?: AxiosRequestConfig
+  ): Promise<PaginatedKaraokes> {
+    const resp = await withRetry(() =>
+      this.api.karaokeBy_genreFull({ genre_id: genreId }, undefined, {
+        ...opts,
+        params: { page, genre_id: genreId, live_id: liveId },
+      })
+    );
+    const status = resp.status as ApiStatus | undefined;
+    if (status?.ok !== 1) {
+      throw new Error(status?.error || "Failed to fetch karaoke by genre");
+    }
+    const items = (resp.karaokes ?? []).map((k) => ({
+      id: String(k.id),
+      title: k.title,
+      singerName: k.singer_name,
+      playingTime:
+        typeof k.playing_time === "string" ? Number(k.playing_time) : undefined,
+      composer: k.composer,
+      lyricist: k.lyricist,
+      genreIds: k.genre_ids?.map((id) => Number(id)),
+    }));
+    return {
+      currentPage: page,
+      nextPage: ((resp.next_page as unknown) as number) ?? null,
+      items,
+    };
   }
 
   /**
-   * ### GET /karaoke/by_genre (full response)
-   * 
-   * @param query - { page?: number | undefined; genre_id?: number | undefined; where?: string | undefined; live_id?: string | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<KaraokeBy_genreResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.karaokeBy_genreFull({ page?: number | undefined; genre_id?: number | undefined; where?: string | undefined; live_id?: string | undefined });
-   * console.log(res);
-   * ```
+   * 全ジャンルページ一括取得
    */
-  async karaokeBy_genreFull(
-    query?: { page?: number; genre_id?: number; where?: string; live_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ next_page?: Record<string, unknown> | null | undefined; previous_page?: Record<string, unknown> | null | undefined; status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; current_page?: number | undefined; karaokes?: { playing_time?: string | undefined; genre_ids?: string[] | undefined; lyricist?: string | undefined; singer_name?: string | undefined; id?: string | undefined; title?: string | undefined; composer?: string | undefined; singer_id?: string | undefined; }[] | undefined; }> {
-    return this.api.karaokeBy_genreFull(query, extraHeaders, axiosOpts);
+  public async fetchAllByGenre(
+    genreId: number,
+    liveId?: string,
+    opts?: AxiosRequestConfig
+  ): Promise<KaraokeItem[]> {
+    const all: KaraokeItem[] = [];
+    let page = 1,
+      next: number | null = null;
+    do {
+      const p = await this.fetchByGenrePage(genreId, page, liveId, opts);
+      all.push(...p.items);
+      next = p.nextPage;
+      if (next) page = next;
+    } while (next !== null);
+    return all;
   }
 
   /**
-   * ### GET /karaoke/genres
-   * 
-   * @param query - Record<string, any> URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<KaraokeGenresStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.karaokeGenres({});
-   * console.log(res);
-   * ```
+   * キーワード検索＋全ページ取得
    */
-  async karaokeGenres(
-    query?: Record<string, any> | undefined,
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.karaokeGenres(query, extraHeaders, axiosOpts);
+  public async searchAllKaraokes(
+    q: string,
+    liveId?: string,
+    opts?: AxiosRequestConfig
+  ): Promise<KaraokeItem[]> {
+    const all: KaraokeItem[] = [];
+    let page = 1,
+      hasNext = true;
+
+    while (hasNext) {
+      const resp = await withRetry(() =>
+        this.api.karaokeSearchFull({ q, live_id: liveId }, undefined, {
+          ...opts,
+          params: { q, live_id: liveId, page },
+        })
+      );
+      const status = resp.status as ApiStatus | undefined;
+      if (status?.ok !== 1) throw new Error(status?.error || "Search failed");
+      const items = (resp.karaokes ?? []).map((k) => ({
+        id: String(k.id),
+        title: k.title,
+        singerName: k.singer_name,
+        playingTime: k.playing_time,
+        composer: k.composer,
+        lyricist: k.lyricist,
+        genreIds: k.genre_ids,
+      }));
+      all.push(...items);
+      hasNext = !!resp.karaokes && items.length > 0;
+      page++;
+    }
+
+    return all;
   }
 
   /**
-   * ### GET /karaoke/genres (full response)
-   * 
-   * @param query - Record<string, any> URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<KaraokeGenresResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.karaokeGenresFull({});
-   * console.log(res);
-   * ```
+   * おすすめ歌手一覧を取得
    */
-  async karaokeGenresFull(
-    query?: Record<string, any> | undefined,
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; genres?: { banner_big_image_url?: string | undefined; name?: string | undefined; id?: string | undefined; banner_small_image_url?: string | undefined; text_image_url?: string | undefined; }[] | undefined; }> {
-    return this.api.karaokeGenresFull(query, extraHeaders, axiosOpts);
+  public async getRecommendedSingers(
+    liveId?: string,
+    opts?: AxiosRequestConfig
+  ): Promise<Array<{ id: string; name?: string }>> {
+    const resp = await withRetry(() =>
+      this.api.karaokeRecommend_singersFull(
+        { live_id: liveId },
+        undefined,
+        opts
+      )
+    );
+    const status = resp.status as ApiStatus | undefined;
+    if (status?.ok !== 1) {
+      throw new Error(status?.error || "Failed to fetch recommended singers");
+    }
+    return (resp.recommend_singers ?? []).map((s) => ({
+      id: String((s as any).id),
+      name: (s as any).name,
+    }));
   }
 
   /**
-   * ### GET /karaoke/recommend_singers
-   * 
-   * @param query - { live_id?: string | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<KaraokeRecommend_singersStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.karaokeRecommend_singers({ live_id?: string | undefined });
-   * console.log(res);
-   * ```
+   * 歌手一覧を全ページ取得
    */
-  async karaokeRecommend_singers(
-    query?: { live_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; }> {
-    return this.api.karaokeRecommend_singers(query, extraHeaders, axiosOpts);
+  public async fetchAllSingers(
+    opts?: AxiosRequestConfig
+  ): Promise<Array<{ id: string; name?: string; kana?: string }>> {
+    const all: Array<{ id: string; name?: string; kana?: string }> = [];
+    let page = 1,
+      hasNext = true;
+
+    while (hasNext) {
+      const resp = await withRetry(() =>
+        this.api.karaokeSingersFull({}, undefined, {
+          ...opts,
+          params: { page },
+        })
+      );
+      const status = resp.status as ApiStatus | undefined;
+      if (status?.ok !== 1)
+        throw new Error(status?.error || "Failed to fetch singers");
+      const singers = (resp.singers ?? []).map((s) => ({
+        id: String(s.id),
+        name: s.name,
+        kana: s.kana,
+      }));
+      all.push(...singers);
+      hasNext = !!resp.next_page && singers.length > 0;
+      page++;
+    }
+
+    return all;
   }
 
   /**
-   * ### GET /karaoke/recommend_singers (full response)
-   * 
-   * @param query - { live_id?: string | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<KaraokeRecommend_singersResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.karaokeRecommend_singersFull({ live_id?: string | undefined });
-   * console.log(res);
-   * ```
+   * 複数ジャンルのカラオケ曲を一括フェッチし、マージして返す
    */
-  async karaokeRecommend_singersFull(
-    query?: { live_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ recommend_singers?: Record<string, unknown>[] | undefined; status?: { ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; } | undefined; }> {
-    return this.api.karaokeRecommend_singersFull(query, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### GET /karaoke/search
-   * 
-   * @param query - { q?: string | undefined; live_id?: string | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<KaraokeSearchStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.karaokeSearch({ q?: string | undefined; live_id?: string | undefined });
-   * console.log(res);
-   * ```
-   */
-  async karaokeSearch(
-    query?: { q?: string; live_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; }> {
-    return this.api.karaokeSearch(query, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### GET /karaoke/search (full response)
-   * 
-   * @param query - { q?: string | undefined; live_id?: string | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<KaraokeSearchResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.karaokeSearchFull({ q?: string | undefined; live_id?: string | undefined });
-   * console.log(res);
-   * ```
-   */
-  async karaokeSearchFull(
-    query?: { q?: string; live_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ karaokes?: { composer?: string | undefined; genre_ids?: number[] | undefined; id?: string | undefined; lyricist?: string | undefined; playing_time?: number | undefined; singer_id?: string | undefined; singer_name?: string | undefined; title?: string | undefined; }[] | undefined; singers?: { id?: string | undefined; kana?: string | undefined; name?: string | undefined; }[] | undefined; status?: { ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; } | undefined; }> {
-    return this.api.karaokeSearchFull(query, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### GET /karaoke/singers
-   * 
-   * @param query - { page?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<KaraokeSingersStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.karaokeSingers({ page?: number | undefined });
-   * console.log(res);
-   * ```
-   */
-  async karaokeSingers(
-    query?: { page?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; }> {
-    return this.api.karaokeSingers(query, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### GET /karaoke/singers (full response)
-   * 
-   * @param query - { page?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<KaraokeSingersResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.karaokeSingersFull({ page?: number | undefined });
-   * console.log(res);
-   * ```
-   */
-  async karaokeSingersFull(
-    query?: { page?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ current_page?: number | undefined; next_page?: number | undefined; singers?: { id?: string | undefined; kana?: string | undefined; name?: string | undefined; }[] | undefined; status?: { ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; } | undefined; }> {
-    return this.api.karaokeSingersFull(query, extraHeaders, axiosOpts);
+  public async batchFetchMultipleGenres(
+    genreIds: number[],
+    liveId?: string,
+    opts?: AxiosRequestConfig
+  ): Promise<KaraokeItem[]> {
+    const results = await Promise.all(
+      genreIds.map((id) => this.fetchAllByGenre(id, liveId, opts))
+    );
+    // 重複除去してフラット化
+    const map = new Map<string, KaraokeItem>();
+    for (const list of results) {
+      for (const item of list) {
+        map.set(item.id, item);
+      }
+    }
+    return Array.from(map.values());
   }
 }

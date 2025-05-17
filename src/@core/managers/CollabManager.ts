@@ -1,329 +1,205 @@
-import type { AxiosRequestConfig } from 'axios'
-import { MirrativApi } from '../mirrativApi'
+/* eslint-disable no-constant-condition */
+import type { AxiosRequestConfig } from "axios";
+import { MirrativApi } from "../mirrativApi";
 
-/**
- * collab 関連 API をまとめたマネージャー（14 件）
- */
+/** コラボユーザー */
+export interface CollabUser {
+  userId: string;
+  userName: string;
+  avatar?: string;
+}
+
+/** バッチ結果 */
+export interface BatchResult {
+  succeeded: string[];
+  failed: string[];
+}
+
 export class CollabManager {
-  constructor(private api: MirrativApi) { }
+  private collabUsersCache = new Map<
+    string,
+    { ts: number; users: CollabUser[] }
+  >();
+  private invitableCache = new Map<
+    string,
+    { ts: number; users: CollabUser[]; nextPage?: number }
+  >();
 
-  /**
-   * ### GET /collab/collaborating_users
-   * 
-   * @param query - { live_id?: string | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<CollabCollaborating_usersStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.collabCollaborating_users({ live_id?: string | undefined });
-   * console.log(res);
-   * ```
-   */
-  async collabCollaborating_users(
-    query?: { live_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.collabCollaborating_users(query, extraHeaders, axiosOpts);
+  constructor(private api: MirrativApi) {}
+
+  /** 最大3回リトライ＋簡易バックオフ */
+  private async withRetry<T>(
+    fn: () => Promise<T>,
+    retries = 3,
+    delayMs = 500
+  ): Promise<T> {
+    let lastErr: unknown;
+    for (let i = 0; i < retries; i++) {
+      try {
+        return await fn();
+      } catch (e) {
+        lastErr = e;
+        await new Promise((r) => setTimeout(r, delayMs * (i + 1)));
+      }
+    }
+    throw lastErr;
   }
 
-  /**
-   * ### GET /collab/collaborating_users (full response)
-   * 
-   * @param query - { live_id?: string | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<CollabCollaborating_usersResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.collabCollaborating_usersFull({ live_id?: string | undefined });
-   * console.log(res);
-   * ```
-   */
-  async collabCollaborating_usersFull(
-    query?: { live_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; users?: Record<string, unknown>[] | undefined; }> {
-    return this.api.collabCollaborating_usersFull(query, extraHeaders, axiosOpts);
+  // ── コラボ中ユーザー取得（キャッシュ付き） ──────────────────────────
+
+  /** キャッシュ有効時間: 5秒 */
+  public async fetchCollaborators(
+    liveId: string,
+    opts?: AxiosRequestConfig
+  ): Promise<CollabUser[]> {
+    const key = liveId;
+    const cached = this.collabUsersCache.get(key);
+    if (cached && Date.now() - cached.ts < 5000) {
+      return cached.users;
+    }
+
+    const resp = await this.withRetry(() =>
+      this.api.collabCollaborating_usersFull(
+        { live_id: liveId },
+        undefined,
+        opts
+      )
+    );
+
+    const users: CollabUser[] = (resp.users ?? []).map((u: any) => ({
+      userId: String(u.user_id),
+      userName: String(u.user_name),
+      avatar: u.avatar_url,
+    }));
+
+    this.collabUsersCache.set(key, { ts: Date.now(), users });
+    return users;
   }
 
-  /**
-   * ### POST /collab/close
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { [key: string]: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<CollabCloseStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @throws Error Mirrativ API が `ok = 0` を返した場合
-   * @example
-   * ```ts
-   * const res = await api.collabClose({ [key: string]: string; });
-   * console.log(res);
-   * ```
-   */
-  async collabClose(
-    body: { [key: string]: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.collabClose(body, extraHeaders, axiosOpts);
+  public clearCollaboratorsCache(liveId?: string): void {
+    if (liveId) this.collabUsersCache.delete(liveId);
+    else this.collabUsersCache.clear();
   }
 
-  /**
-   * ### POST /collab/close (full response)
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { [key: string]: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<CollabCloseResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.collabCloseFull({ [key: string]: string; });
-   * console.log(res);
-   * ```
-   */
-  async collabCloseFull(
-    body: { [key: string]: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; }> {
-    return this.api.collabCloseFull(body, extraHeaders, axiosOpts);
+  // ── 招待可能ユーザー全取得（ページング＋キャッシュ） ────────────────────
+
+  /** すべてのページをフェッチしてマージ */
+  public async fetchAllInvitable(
+    liveId: string,
+    opts?: AxiosRequestConfig
+  ): Promise<CollabUser[]> {
+    let page = 1;
+    const all: CollabUser[] = [];
+
+    while (true) {
+      const key = `${liveId}:${page}`;
+      const cached = this.invitableCache.get(key);
+      let users: CollabUser[];
+      let nextPage: number | undefined;
+
+      if (cached && Date.now() - cached.ts < 5000) {
+        users = cached.users;
+        nextPage = cached.nextPage;
+      } else {
+        const resp = await this.withRetry(() =>
+          this.api.collabInvitable_usersFull(
+            { live_id: liveId, page },
+            undefined,
+            opts
+          )
+        );
+        users = (resp.users ?? []).map((u: any) => ({
+          userId: String(u.user_id),
+          userName: String(u.user_name),
+          avatar: u.avatar_url,
+        }));
+        nextPage =
+          resp.paging?.current_page !== page || (resp.users?.length ?? 0) > 0
+            ? page + 1
+            : undefined;
+
+        this.invitableCache.set(key, { ts: Date.now(), users, nextPage });
+      }
+
+      if (users.length === 0) break;
+      all.push(...users);
+
+      if (!nextPage) break;
+      page = nextPage;
+    }
+
+    return all;
   }
 
-  /**
-   * ### GET /collab/connected_streaming_collab_lives
-   * 
-   * @param query - { live_id?: string | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<CollabConnected_streaming_collab_livesStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.collabConnected_streaming_collab_lives({ live_id?: string | undefined });
-   * console.log(res);
-   * ```
-   */
-  async collabConnected_streaming_collab_lives(
-    query?: { live_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.collabConnected_streaming_collab_lives(query, extraHeaders, axiosOpts);
+  public clearInvitableCache(): void {
+    this.invitableCache.clear();
   }
 
-  /**
-   * ### GET /collab/connected_streaming_collab_lives (full response)
-   * 
-   * @param query - { live_id?: string | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<CollabConnected_streaming_collab_livesResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.collabConnected_streaming_collab_livesFull({ live_id?: string | undefined });
-   * console.log(res);
-   * ```
-   */
-  async collabConnected_streaming_collab_livesFull(
-    query?: { live_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; lives?: Record<string, unknown>[] | undefined; }> {
-    return this.api.collabConnected_streaming_collab_livesFull(query, extraHeaders, axiosOpts);
-  }
+  // ── バッチ招待 ────────────────────────────────────────────────
 
   /**
-   * ### GET /collab/invitable_users
-   * 
-   * @param query - { live_id?: string | undefined; page?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<CollabInvitable_usersStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.collabInvitable_users({ live_id?: string | undefined; page?: number | undefined });
-   * console.log(res);
-   * ```
+   * 複数ユーザーをまとめて招待し、成功／失敗を返す
    */
-  async collabInvitable_users(
-    query?: { live_id?: string; page?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.collabInvitable_users(query, extraHeaders, axiosOpts);
+  public async batchInvite(
+    liveId: string,
+    userIds: string[],
+    opts?: AxiosRequestConfig
+  ): Promise<BatchResult> {
+    const results = await Promise.all(
+      userIds.map((uid) =>
+        this.withRetry(() =>
+          this.api.collabInvite(
+            { live_id: liveId, invite_user_id: uid },
+            undefined,
+            opts
+          )
+        )
+          .then(() => ({ id: uid, ok: true }))
+          .catch(() => ({ id: uid, ok: false }))
+      )
+    );
+    return {
+      succeeded: results.filter((r) => r.ok).map((r) => r.id),
+      failed: results.filter((r) => !r.ok).map((r) => r.id),
+    };
   }
 
-  /**
-   * ### GET /collab/invitable_users (full response)
-   * 
-   * @param query - { live_id?: string | undefined; page?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<CollabInvitable_usersResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.collabInvitable_usersFull({ live_id?: string | undefined; page?: number | undefined });
-   * console.log(res);
-   * ```
-   */
-  async collabInvitable_usersFull(
-    query?: { live_id?: string; page?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ paging?: { current_page?: number | undefined; } | undefined; status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; users?: Record<string, unknown>[] | undefined; }> {
-    return this.api.collabInvitable_usersFull(query, extraHeaders, axiosOpts);
+  // ── コラボ開始／終了 ──────────────────────────────────────────
+
+  /** コラボ開始 */
+  public async startCollab(
+    params: Record<string, string>,
+    opts?: AxiosRequestConfig
+  ): Promise<void> {
+    await this.withRetry(() => this.api.collabStart(params, undefined, opts));
   }
 
-  /**
-   * ### POST /collab/invite
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { collab_type?: string; invite_user_id?: string; live_id?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<CollabInviteStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @throws Error Mirrativ API が `ok = 0` を返した場合
-   * @example
-   * ```ts
-   * const res = await api.collabInvite({ collab_type?: string; invite_user_id?: string; live_id?: string; });
-   * console.log(res);
-   * ```
-   */
-  async collabInvite(
-    body: { collab_type?: string; invite_user_id?: string; live_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.collabInvite(body, extraHeaders, axiosOpts);
+  /** コラボ終了 */
+  public async closeCollab(
+    params: Record<string, string>,
+    opts?: AxiosRequestConfig
+  ): Promise<void> {
+    await this.withRetry(() => this.api.collabClose(params, undefined, opts));
+    // 終了後はキャッシュクリア
+    if (params.live_id) this.clearCollaboratorsCache(params.live_id);
   }
 
-  /**
-   * ### POST /collab/invite (full response)
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { collab_type?: string; invite_user_id?: string; live_id?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<CollabInviteResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.collabInviteFull({ collab_type?: string; invite_user_id?: string; live_id?: string; });
-   * console.log(res);
-   * ```
-   */
-  async collabInviteFull(
-    body: { collab_type?: string; invite_user_id?: string; live_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; }> {
-    return this.api.collabInviteFull(body, extraHeaders, axiosOpts);
-  }
+  // ── ピア送信バッチ ──────────────────────────────────────────
 
-  /**
-   * ### POST /collab/send_to_peer
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { [key: string]: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<CollabSend_to_peerStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @throws Error Mirrativ API が `ok = 0` を返した場合
-   * @example
-   * ```ts
-   * const res = await api.collabSend_to_peer({ [key: string]: string; });
-   * console.log(res);
-   * ```
-   */
-  async collabSend_to_peer(
-    body: { [key: string]: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.collabSend_to_peer(body, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### POST /collab/send_to_peer (full response)
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { [key: string]: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<CollabSend_to_peerResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.collabSend_to_peerFull({ [key: string]: string; });
-   * console.log(res);
-   * ```
-   */
-  async collabSend_to_peerFull(
-    body: { [key: string]: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; }> {
-    return this.api.collabSend_to_peerFull(body, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### POST /collab/start
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { [key: string]: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<CollabStartStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @throws Error Mirrativ API が `ok = 0` を返した場合
-   * @example
-   * ```ts
-   * const res = await api.collabStart({ [key: string]: string; });
-   * console.log(res);
-   * ```
-   */
-  async collabStart(
-    body: { [key: string]: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.collabStart(body, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### POST /collab/start (full response)
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { [key: string]: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<CollabStartResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.collabStartFull({ [key: string]: string; });
-   * console.log(res);
-   * ```
-   */
-  async collabStartFull(
-    body: { [key: string]: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; }> {
-    return this.api.collabStartFull(body, extraHeaders, axiosOpts);
+  public async batchSendToPeer(
+    messages: Array<Record<string, string>>,
+    opts?: AxiosRequestConfig
+  ): Promise<BatchResult> {
+    const results = await Promise.all(
+      messages.map((body, idx) =>
+        this.withRetry(() => this.api.collabSend_to_peer(body, undefined, opts))
+          .then(() => ({ id: String(idx), ok: true }))
+          .catch(() => ({ id: String(idx), ok: false }))
+      )
+    );
+    return {
+      succeeded: results.filter((r) => r.ok).map((r) => r.id),
+      failed: results.filter((r) => !r.ok).map((r) => r.id),
+    };
   }
 }

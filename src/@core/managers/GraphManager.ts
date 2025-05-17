@@ -1,464 +1,351 @@
-import type { AxiosRequestConfig } from 'axios'
-import { MirrativApi } from '../mirrativApi'
+/* eslint-disable no-constant-condition */
+import type { AxiosRequestConfig } from "axios";
+import { MirrativApi } from "../mirrativApi";
 
-/**
- * graph 関連 API をまとめたマネージャー（20 件）
- */
+/** 共通 API ステータス */
+interface ApiStatus {
+  ok?: number;
+  error?: string;
+}
+
+/** ページネーション付きユーザー情報 */
+export interface PaginatedUsers {
+  currentPage: number;
+  nextPage: number | null;
+  previousPage: number | null;
+  users: Array<{
+    userId: string;
+    name?: string;
+    profileImageUrl?: string;
+    isFollowing?: boolean;
+    isFollower?: boolean;
+    badges?: Array<{ imageUrl?: string; smallImageUrl?: string }>;
+    description?: string;
+    shareUrl?: string;
+    seasonRating?: { className?: string; iconUrl?: string };
+    onLive?: { liveId?: string; title?: string; duration?: number };
+  }>;
+}
+
+/** バッチ結果 */
+export interface BatchResult {
+  succeeded: number[];
+  failed: number[];
+}
+
+/** リトライヘルパー */
+async function withRetry<T>(fn: () => Promise<T>, retries = 3): Promise<T> {
+  let lastErr: unknown;
+  for (let i = 0; i < retries; i++) {
+    try {
+      return await fn();
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+  throw lastErr;
+}
+
 export class GraphManager {
-  constructor(private api: MirrativApi) { }
+  constructor(private api: MirrativApi) {}
 
   /**
-   * ### POST /graph/block
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { user_id?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<GraphBlockStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @throws Error Mirrativ API が `ok = 0` を返した場合
-   * @example
-   * ```ts
-   * const res = await api.graphBlock({ user_id?: string; });
-   * console.log(res);
-   * ```
+   * ブロック中ユーザー一覧をページネーション付きで取得
    */
-  async graphBlock(
-    body: { user_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; }> {
-    return this.api.graphBlock(body, extraHeaders, axiosOpts);
+  public async fetchBlockedUsers(
+    page = 1,
+    opts?: AxiosRequestConfig
+  ): Promise<PaginatedUsers> {
+    const resp = await withRetry(() =>
+      this.api.graphBlocked_usersFull({ page }, undefined, opts)
+    );
+    const status = resp.status as ApiStatus | undefined;
+    if (status?.ok !== 1)
+      throw new Error(status?.error || "Failed to fetch blocked users");
+
+    return {
+      currentPage: page,
+      nextPage: resp.next_page ? page + 1 : null,
+      previousPage: resp.previous_page ? page - 1 : null,
+      users: (resp.blocked_users ?? []).map((u) => ({
+        userId: String(u.user_id),
+        name: u.name,
+        profileImageUrl: u.profile_image_url,
+        isFollowing: u.is_following === 1,
+        isFollower: u.is_follower === 1,
+        badges: (u.badges ?? []).map((b) => ({
+          imageUrl: b.image_url,
+          smallImageUrl: b.small_image_url,
+        })),
+        description: u.description,
+        shareUrl: u.share_url,
+        seasonRating: u.season_rating && {
+          className: u.season_rating.class_name,
+          iconUrl: u.season_rating.icon_url,
+        },
+        onLive: u.onlive
+          ? {
+              liveId: String((u.onlive as any).live_id),
+              title: String((u.onlive as any).title),
+              duration: Number((u.onlive as any).duration),
+            }
+          : undefined,
+      })),
+    };
   }
 
   /**
-   * ### POST /graph/block (full response)
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { user_id?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<GraphBlockResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.graphBlockFull({ user_id?: string; });
-   * console.log(res);
-   * ```
+   * フォロワー一覧をページネーション付きで取得
    */
-  async graphBlockFull(
-    body: { user_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ status?: { ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; } | undefined; }> {
-    return this.api.graphBlockFull(body, extraHeaders, axiosOpts);
+  public async fetchFollowers(
+    userId: number,
+    page = 1,
+    opts?: AxiosRequestConfig
+  ): Promise<PaginatedUsers> {
+    const resp = await withRetry(() =>
+      this.api.graphFollowersFull({ user_id: userId, page }, undefined, opts)
+    );
+    const status = resp.status as ApiStatus | undefined;
+    if (status?.ok !== 1)
+      throw new Error(status?.error || "Failed to fetch followers");
+
+    return {
+      currentPage: page,
+      nextPage: resp.next_page ? page + 1 : null,
+      previousPage: resp.previous_page ? page - 1 : null,
+      users: (resp.followers ?? []).map((u) => ({
+        userId: String(u.user_id),
+        name: u.name,
+        profileImageUrl: u.profile_image_url,
+        isFollowing: u.is_following === 1,
+        isFollower: u.is_follower === 1,
+        badges: (u.badges ?? []).map((b) => ({
+          imageUrl: b.image_url,
+          smallImageUrl: b.small_image_url,
+        })),
+        description: u.description,
+        shareUrl: u.share_url,
+        seasonRating: u.season_rating && {
+          className: u.season_rating.class_name,
+          iconUrl: u.season_rating.icon_url,
+        },
+        onLive: u.onlive
+          ? {
+              liveId: String((u.onlive as any).live_id),
+              title: String((u.onlive as any).title),
+              duration: Number((u.onlive as any).duration),
+            }
+          : undefined,
+      })),
+    };
   }
 
   /**
-   * ### GET /graph/blocked_users
-   * 
-   * @param query - { page?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<GraphBlocked_usersStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.graphBlocked_users({ page?: number | undefined });
-   * console.log(res);
-   * ```
+   * フォロー中ユーザー一覧をページネーション付きで取得
    */
-  async graphBlocked_users(
-    query?: { page?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; }> {
-    return this.api.graphBlocked_users(query, extraHeaders, axiosOpts);
+  public async fetchFollowings(
+    userId: number,
+    page = 1,
+    opts?: AxiosRequestConfig
+  ): Promise<PaginatedUsers> {
+    const resp = await withRetry(() =>
+      this.api.graphFollowingsFull({ user_id: userId, page }, undefined, opts)
+    );
+    const status = resp.status as ApiStatus | undefined;
+    if (status?.ok !== 1)
+      throw new Error(status?.error || "Failed to fetch followings");
+
+    return {
+      currentPage: page,
+      nextPage: resp.next_page ? page + 1 : null,
+      previousPage: resp.previous_page ? page - 1 : null,
+      users: (resp.followings ?? []).map((u) => ({
+        userId: String(u.user_id),
+        name: u.name,
+        profileImageUrl: u.profile_image_url,
+        isFollowing: u.is_following === 1,
+        isFollower: u.is_follower === 1,
+        badges: (u.badges ?? []).map((b) => ({
+          imageUrl: b.image_url,
+          smallImageUrl: b.small_image_url,
+        })),
+        description: u.description,
+        shareUrl: u.share_url,
+        seasonRating: u.season_rating && {
+          className: u.season_rating.class_name,
+          iconUrl: u.season_rating.icon_url,
+        },
+        onLive: u.onlive
+          ? {
+              liveId: String((u.onlive as any).live_id),
+              title: String((u.onlive as any).title),
+              duration: Number((u.onlive as any).duration),
+            }
+          : undefined,
+      })),
+    };
   }
 
   /**
-   * ### GET /graph/blocked_users (full response)
-   * 
-   * @param query - { page?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<GraphBlocked_usersResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.graphBlocked_usersFull({ page?: number | undefined });
-   * console.log(res);
-   * ```
+   * オススメユーザー一覧を取得
    */
-  async graphBlocked_usersFull(
-    query?: { page?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ blocked_users?: { badges?: { image_url?: string | undefined; small_image_url?: string | undefined; }[] | undefined; catalog_label_image_url?: string | undefined; description?: string | undefined; is_able_continuous_stream_holiday?: number | undefined; is_blocking?: number | undefined; is_cheerleader?: number | undefined; is_continuous_streamer?: number | undefined; is_follower?: number | undefined; is_following?: number | undefined; is_moderator?: number | undefined; is_new?: number | undefined; name?: string | undefined; onlive?: { duration?: number | undefined; live_id?: string | undefined; title?: string | undefined; } | undefined; profile_image_url?: string | undefined; properties?: Record<string, unknown>[] | undefined; season_rating?: { class_name?: string | undefined; icon_url?: string | undefined; } | undefined; share_url?: string | undefined; user_id?: string | undefined; }[] | undefined; current_page?: number | undefined; next_page?: Record<string, unknown> | null | undefined; previous_page?: Record<string, unknown> | null | undefined; status?: { ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; } | undefined; }> {
-    return this.api.graphBlocked_usersFull(query, extraHeaders, axiosOpts);
+  public async fetchRecommendedUsers(
+    page = 1,
+    opts?: AxiosRequestConfig
+  ): Promise<PaginatedUsers> {
+    const resp = await withRetry(() =>
+      this.api.graphRecommend_usersFull({ page }, undefined, opts)
+    );
+    const status = resp.status as ApiStatus | undefined;
+    if (status?.ok !== 1)
+      throw new Error(status?.error || "Failed to fetch recommended users");
+
+    return {
+      currentPage: page,
+      nextPage: resp.users && resp.users.length > 0 ? page + 1 : null,
+      previousPage: page > 1 ? page - 1 : null,
+      users: (resp.users ?? []).map((u) => ({
+        userId: String(u.user_id),
+        name: u.name,
+        profileImageUrl: u.profile_image_url,
+        isFollowing: u.is_following === 1,
+        isFollower: u.is_follower === 1,
+        badges: [],
+        description: u.description,
+        shareUrl: u.share_url,
+        seasonRating: u.season_rating && {
+          className: u.season_rating.class_name,
+          iconUrl: u.season_rating.icon_url,
+        },
+        onLive: u.onlive
+          ? {
+              liveId: String((u.onlive as any).live_id),
+              title: String((u.onlive as any).title),
+              duration: Number((u.onlive as any).duration),
+            }
+          : undefined,
+      })),
+    };
   }
 
   /**
-   * ### POST /graph/follow
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { user_id?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<GraphFollowStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @throws Error Mirrativ API が `ok = 0` を返した場合
-   * @example
-   * ```ts
-   * const res = await api.graphFollow({ user_id?: string; });
-   * console.log(res);
-   * ```
+   * ユーザー検索（ページネーション＋リトライ＋整形）
    */
-  async graphFollow(
-    body: { user_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; }> {
-    return this.api.graphFollow(body, extraHeaders, axiosOpts);
+  public async searchUsers(
+    query: string,
+    page = 1,
+    opts?: AxiosRequestConfig
+  ): Promise<PaginatedUsers> {
+    const resp = await withRetry(() =>
+      this.api.graphSearchFull({ page }, { "X-Search-Query": query }, opts)
+    );
+    const status = resp.status as ApiStatus | undefined;
+    if (status?.ok !== 1) throw new Error(status?.error || "Search failed");
+
+    return {
+      currentPage: page,
+      nextPage: resp.users && resp.users.length > 0 ? page + 1 : null,
+      previousPage: page > 1 ? page - 1 : null,
+      users: (resp.users ?? []).map((u) => ({
+        userId: String(u.user_id),
+        name: u.name,
+        profileImageUrl: u.profile_image_url,
+        isFollowing: u.is_following === 1,
+        isFollower: u.is_follower === 1,
+        badges: [],
+        description: u.description,
+        shareUrl: u.share_url,
+        seasonRating: u.season_rating && {
+          className: u.season_rating.class_name,
+          iconUrl: u.season_rating.icon_url,
+        },
+        onLive: u.onlive
+          ? {
+              liveId: String((u.onlive as any).live_id),
+              title: String((u.onlive as any).title),
+              duration: Number((u.onlive as any).duration),
+            }
+          : undefined,
+      })),
+    };
   }
 
   /**
-   * ### POST /graph/follow (full response)
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { user_id?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<GraphFollowResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.graphFollowFull({ user_id?: string; });
-   * console.log(res);
-   * ```
+   * 複数ライブの視聴者を一括フォローするバッチ処理
    */
-  async graphFollowFull(
-    body: { user_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ status?: { ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; } | undefined; }> {
-    return this.api.graphFollowFull(body, extraHeaders, axiosOpts);
+  public async batchFollowLiveWatchers(
+    liveIds: string[],
+    opts?: AxiosRequestConfig
+  ): Promise<BatchResult> {
+    const results = await Promise.all(
+      liveIds.map((id) =>
+        this.api
+          .graphFollow_live_watched_usersFull({ live_id: id }, undefined, opts)
+          .then((r) => ({ id: Number(id), ok: r.status?.ok === 1 }))
+          .catch(() => ({ id: Number(id), ok: false }))
+      )
+    );
+    return {
+      succeeded: results.filter((r) => r.ok).map((r) => r.id),
+      failed: results.filter((r) => !r.ok).map((r) => r.id),
+    };
   }
 
   /**
-   * ### GET /graph/followers
-   * 
-   * @param query - { user_id?: number | undefined; page?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<GraphFollowersStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.graphFollowers({ user_id?: number | undefined; page?: number | undefined });
-   * console.log(res);
-   * ```
+   * フォロー＆フォロワーの相互ユーザーを返す（mutuals）
    */
-  async graphFollowers(
-    query?: { user_id?: number; page?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; }> {
-    return this.api.graphFollowers(query, extraHeaders, axiosOpts);
+  public async fetchMutualFollowers(
+    userId: number,
+    opts?: AxiosRequestConfig
+  ): Promise<string[]> {
+    // 全ページ取得してセット intersection
+    const fetchAll = async (
+      fetcher: (p: number) => Promise<PaginatedUsers>
+    ) => {
+      let page = 1;
+      let all: string[] = [];
+      while (true) {
+        const { users, nextPage } = await fetcher(page);
+        all = all.concat(users.map((u) => u.userId));
+        if (!nextPage) break;
+        page = nextPage;
+      }
+      return new Set(all);
+    };
+
+    const [followers, followings] = await Promise.all([
+      fetchAll((p) => this.fetchFollowers(userId, p, opts)),
+      fetchAll((p) => this.fetchFollowings(userId, p, opts)),
+    ]);
+    return Array.from(
+      new Set([...followers].filter((id) => followings.has(id)))
+    );
   }
 
   /**
-   * ### GET /graph/followers (full response)
-   * 
-   * @param query - { user_id?: number | undefined; page?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<GraphFollowersResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.graphFollowersFull({ user_id?: number | undefined; page?: number | undefined });
-   * console.log(res);
-   * ```
+   * 推奨ユーザーを条件付きで一括フォロー
    */
-  async graphFollowersFull(
-    query?: { user_id?: number; page?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ current_page?: number | undefined; followers?: { badges?: { image_url?: string | undefined; small_image_url?: string | undefined; }[] | undefined; catalog_label_image_url?: string | undefined; description?: string | undefined; is_blocking?: number | undefined; is_cheerleader?: number | undefined; is_continuous_streamer?: number | undefined; is_follower?: number | undefined; is_following?: number | undefined; is_moderator?: number | undefined; is_new?: number | undefined; name?: string | undefined; onlive?: Record<string, unknown> | null | undefined; profile_image_url?: string | undefined; properties?: Record<string, unknown>[] | undefined; push_enabled?: number | undefined; season_rating?: { class_name?: string | undefined; icon_url?: string | undefined; } | undefined; share_url?: string | undefined; user_id?: string | undefined; }[] | undefined; next_page?: Record<string, unknown> | null | undefined; previous_page?: Record<string, unknown> | null | undefined; status?: { ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; } | undefined; }> {
-    return this.api.graphFollowersFull(query, extraHeaders, axiosOpts);
-  }
+  public async batchFollowRecommended(
+    minBadgeCount: number,
+    opts?: AxiosRequestConfig
+  ): Promise<BatchResult> {
+    // 1ページのみ対象、バッジ数 >= minBadgeCount のユーザーをフォロー
+    const recs = await this.fetchRecommendedUsers(1, opts);
+    const toFollow = recs.users
+      .filter((u) => (u.badges?.length ?? 0) >= minBadgeCount)
+      .map((u) => u.userId);
 
-  /**
-   * ### GET /graph/followings
-   * 
-   * @param query - { user_id?: number | undefined; page?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<GraphFollowingsStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.graphFollowings({ user_id?: number | undefined; page?: number | undefined });
-   * console.log(res);
-   * ```
-   */
-  async graphFollowings(
-    query?: { user_id?: number; page?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; }> {
-    return this.api.graphFollowings(query, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### GET /graph/followings (full response)
-   * 
-   * @param query - { user_id?: number | undefined; page?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<GraphFollowingsResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.graphFollowingsFull({ user_id?: number | undefined; page?: number | undefined });
-   * console.log(res);
-   * ```
-   */
-  async graphFollowingsFull(
-    query?: { user_id?: number; page?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ current_page?: number | undefined; followings?: { badges?: { image_url?: string | undefined; small_image_url?: string | undefined; }[] | undefined; description?: string | undefined; is_blocking?: number | undefined; is_cheerleader?: number | undefined; is_continuous_streamer?: number | undefined; is_follower?: number | undefined; is_following?: number | undefined; is_moderator?: number | undefined; is_new?: number | undefined; name?: string | undefined; onlive?: Record<string, unknown> | null | undefined; profile_image_url?: string | undefined; properties?: Record<string, unknown>[] | undefined; push_enabled?: number | undefined; season_rating?: { class_name?: string | undefined; icon_url?: string | undefined; } | undefined; share_url?: string | undefined; user_id?: string | undefined; }[] | undefined; next_page?: Record<string, unknown> | null | undefined; previous_page?: Record<string, unknown> | null | undefined; status?: { ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; } | undefined; }> {
-    return this.api.graphFollowingsFull(query, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### GET /graph/recommend_users
-   * 
-   * @param query - { page?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<GraphRecommend_usersStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.graphRecommend_users({ page?: number | undefined });
-   * console.log(res);
-   * ```
-   */
-  async graphRecommend_users(
-    query?: { page?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.graphRecommend_users(query, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### GET /graph/recommend_users (full response)
-   * 
-   * @param query - { page?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<GraphRecommend_usersResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.graphRecommend_usersFull({ page?: number | undefined });
-   * console.log(res);
-   * ```
-   */
-  async graphRecommend_usersFull(
-    query?: { page?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; users?: { share_url?: string | undefined; profile_image_url?: string | undefined; badges?: Record<string, unknown>[] | undefined; is_new?: number | undefined; is_moderator?: number | undefined; is_follower?: number | undefined; is_cheerleader?: number | undefined; season_rating?: { class_name?: string | undefined; icon_url?: string | undefined; } | undefined; reason?: Record<string, unknown> | null | undefined; name?: string | undefined; description?: string | undefined; properties?: Record<string, unknown>[] | undefined; is_continuous_streamer?: number | undefined; profile_frame_image_url?: string | undefined; is_blocking?: number | undefined; is_following?: number | undefined; user_id?: string | undefined; onlive?: Record<string, unknown> | null | undefined; }[] | undefined; }> {
-    return this.api.graphRecommend_usersFull(query, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### GET /graph/search
-   * 
-   * @param query - { page?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<GraphSearchStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.graphSearch({ page?: number | undefined });
-   * console.log(res);
-   * ```
-   */
-  async graphSearch(
-    query?: { page?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; }> {
-    return this.api.graphSearch(query, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### GET /graph/search (full response)
-   * 
-   * @param query - { page?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<GraphSearchResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.graphSearchFull({ page?: number | undefined });
-   * console.log(res);
-   * ```
-   */
-  async graphSearchFull(
-    query?: { page?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ current_page?: number | undefined; next_page?: Record<string, unknown> | null | undefined; previous_page?: Record<string, unknown> | null | undefined; status?: { ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; } | undefined; users?: { badges?: { image_url?: string | undefined; small_image_url?: string | undefined; }[] | undefined; catalog_label_image_url?: string | undefined; description?: string | undefined; is_able_continuous_stream_holiday?: number | undefined; is_blocking?: number | undefined; is_cheerleader?: number | undefined; is_continuous_streamer?: number | undefined; is_follower?: number | undefined; is_following?: number | undefined; is_moderator?: number | undefined; is_new?: number | undefined; name?: string | undefined; onlive?: Record<string, unknown> | null | undefined; profile_image_url?: string | undefined; properties?: Record<string, unknown>[] | undefined; season_rating?: { class_name?: string | undefined; icon_url?: string | undefined; } | undefined; share_url?: string | undefined; user_id?: string | undefined; }[] | undefined; }> {
-    return this.api.graphSearchFull(query, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### POST /graph/unblock
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { user_id?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<GraphUnblockStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @throws Error Mirrativ API が `ok = 0` を返した場合
-   * @example
-   * ```ts
-   * const res = await api.graphUnblock({ user_id?: string; });
-   * console.log(res);
-   * ```
-   */
-  async graphUnblock(
-    body: { user_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; }> {
-    return this.api.graphUnblock(body, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### POST /graph/unblock (full response)
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { user_id?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<GraphUnblockResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.graphUnblockFull({ user_id?: string; });
-   * console.log(res);
-   * ```
-   */
-  async graphUnblockFull(
-    body: { user_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ status?: { ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; } | undefined; }> {
-    return this.api.graphUnblockFull(body, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### POST /graph/unfollow
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { user_id?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<GraphUnfollowStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @throws Error Mirrativ API が `ok = 0` を返した場合
-   * @example
-   * ```ts
-   * const res = await api.graphUnfollow({ user_id?: string; });
-   * console.log(res);
-   * ```
-   */
-  async graphUnfollow(
-    body: { user_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; }> {
-    return this.api.graphUnfollow(body, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### POST /graph/unfollow (full response)
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { user_id?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<GraphUnfollowResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.graphUnfollowFull({ user_id?: string; });
-   * console.log(res);
-   * ```
-   */
-  async graphUnfollowFull(
-    body: { user_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ status?: { ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; } | undefined; }> {
-    return this.api.graphUnfollowFull(body, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### POST /graph/follow_live_watched_users
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { live_id?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<GraphFollow_live_watched_usersStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @throws Error Mirrativ API が `ok = 0` を返した場合
-   * @example
-   * ```ts
-   * const res = await api.graphFollow_live_watched_users({ live_id?: string; });
-   * console.log(res);
-   * ```
-   */
-  async graphFollow_live_watched_users(
-    body: { live_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.graphFollow_live_watched_users(body, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### POST /graph/follow_live_watched_users (full response)
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { live_id?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<GraphFollow_live_watched_usersResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.graphFollow_live_watched_usersFull({ live_id?: string; });
-   * console.log(res);
-   * ```
-   */
-  async graphFollow_live_watched_usersFull(
-    body: { live_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; }> {
-    return this.api.graphFollow_live_watched_usersFull(body, extraHeaders, axiosOpts);
+    const results = await Promise.all(
+      toFollow.map((id) =>
+        this.api
+          .graphFollow({ user_id: id }, undefined, opts)
+          .then((r) => ({ id: Number(id), ok: r.ok === 1 }))
+          .catch(() => ({ id: Number(id), ok: false }))
+      )
+    );
+    return {
+      succeeded: results.filter((r) => r.ok).map((r) => r.id),
+      failed: results.filter((r) => !r.ok).map((r) => r.id),
+    };
   }
 }

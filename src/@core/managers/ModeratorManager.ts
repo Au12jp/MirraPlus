@@ -1,103 +1,147 @@
-import type { AxiosRequestConfig } from 'axios'
-import { MirrativApi } from '../mirrativApi'
+/* eslint-disable no-constant-condition */
+import type { AxiosRequestConfig } from "axios";
+import { MirrativApi } from "../mirrativApi";
 
-/**
- * moderator 関連 API をまとめたマネージャー（4 件）
- */
+/** 共通ステータス */
+interface ApiStatus {
+  ok?: number;
+  error?: string;
+}
+
+/** バッチ実行結果 */
+interface BatchResult {
+  succeeded: string[];
+  failed: string[];
+}
+
+/** リトライヘルパー */
+async function withRetry<T>(fn: () => Promise<T>, retries = 3): Promise<T> {
+  let lastErr: unknown;
+  for (let i = 0; i < retries; i++) {
+    try {
+      return await fn();
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+  throw lastErr;
+}
+
 export class ModeratorManager {
-  constructor(private api: MirrativApi) { }
+  constructor(private api: MirrativApi) {}
+
+  // --- 既存の単純メソッド は省略 ---
 
   /**
-   * ### POST /moderator/add
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { live_id?: string; user_id?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<ModeratorAddStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @throws Error Mirrativ API が `ok = 0` を返した場合
-   * @example
-   * ```ts
-   * const res = await api.moderatorAdd({ live_id?: string; user_id?: string; });
-   * console.log(res);
-   * ```
+   * 指定ライブの現行モデレーター一覧を取得
    */
-  async moderatorAdd(
-    body: { live_id?: string; user_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.moderatorAdd(body, extraHeaders, axiosOpts);
+  public async fetchLiveModerators(
+    liveId: string,
+    opts?: AxiosRequestConfig
+  ): Promise<string[]> {
+    const moderators: string[] = [];
+    let page = 1;
+    while (true) {
+      const res = await withRetry(() =>
+        this.api.liveOnline_usersFull(
+          { live_id: liveId, page },
+          undefined,
+          opts
+        )
+      );
+      const st = res.status as ApiStatus | undefined;
+      if (st?.ok !== 1) {
+        throw new Error(st?.error || "Failed to fetch online users");
+      }
+      const users = res.users ?? [];
+      // is_moderator===1 の user_id を収集
+      for (const u of users) {
+        if (u.is_moderator === 1 && u.user_id) {
+          moderators.push(String(u.user_id));
+        }
+      }
+      // 次ページがなければ終了
+      if (!res.next_page) break;
+      page = Number((res.next_page as any).page_number) || page + 1;
+    }
+    return moderators;
   }
 
   /**
-   * ### POST /moderator/add (full response)
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { live_id?: string; user_id?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<ModeratorAddResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.moderatorAddFull({ live_id?: string; user_id?: string; });
-   * console.log(res);
-   * ```
+   * 複数ユーザーを一括でモデレーターに追加（並列／リトライ付き）
    */
-  async moderatorAddFull(
-    body: { live_id?: string; user_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ moderator?: { share_url?: string | undefined; profile_image_url?: string | undefined; name?: string | undefined; description?: string | undefined; properties?: Record<string, unknown>[] | undefined; badges?: Record<string, unknown>[] | undefined; profile_frame_image_url?: string | undefined; is_continuous_streamer?: number | undefined; is_new?: number | undefined; is_cheerleader?: number | undefined; user_id?: string | undefined; season_rating?: { class_name?: string | undefined; icon_url?: string | undefined; } | undefined; onlive?: Record<string, unknown> | null | undefined; } | undefined; status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; }> {
-    return this.api.moderatorAddFull(body, extraHeaders, axiosOpts);
+  public async batchAddModerators(
+    liveId: string,
+    userIds: string[],
+    opts?: AxiosRequestConfig
+  ): Promise<BatchResult> {
+    const results = await Promise.all(
+      userIds.map((id) =>
+        withRetry(() =>
+          this.api.moderatorAdd(
+            { live_id: liveId, user_id: id },
+            undefined,
+            opts
+          )
+        )
+          .then((r) => ({ id, ok: r.ok === 1 }))
+          .catch(() => ({ id, ok: false }))
+      )
+    );
+    return {
+      succeeded: results.filter((r) => r.ok).map((r) => r.id),
+      failed: results.filter((r) => !r.ok).map((r) => r.id),
+    };
   }
 
   /**
-   * ### POST /moderator/delete
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { live_id?: string; user_id?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<ModeratorDeleteStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @throws Error Mirrativ API が `ok = 0` を返した場合
-   * @example
-   * ```ts
-   * const res = await api.moderatorDelete({ live_id?: string; user_id?: string; });
-   * console.log(res);
-   * ```
+   * 複数ユーザーのモデレーター権限を一括削除（並列／リトライ付き）
    */
-  async moderatorDelete(
-    body: { live_id?: string; user_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.moderatorDelete(body, extraHeaders, axiosOpts);
+  public async batchRemoveModerators(
+    liveId: string,
+    userIds: string[],
+    opts?: AxiosRequestConfig
+  ): Promise<BatchResult> {
+    const results = await Promise.all(
+      userIds.map((id) =>
+        withRetry(() =>
+          this.api.moderatorDelete(
+            { live_id: liveId, user_id: id },
+            undefined,
+            opts
+          )
+        )
+          .then((r) => ({ id, ok: r.ok === 1 }))
+          .catch(() => ({ id, ok: false }))
+      )
+    );
+    return {
+      succeeded: results.filter((r) => r.ok).map((r) => r.id),
+      failed: results.filter((r) => !r.ok).map((r) => r.id),
+    };
   }
 
   /**
-   * ### POST /moderator/delete (full response)
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { live_id?: string; user_id?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<ModeratorDeleteResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.moderatorDeleteFull({ live_id?: string; user_id?: string; });
-   * console.log(res);
-   * ```
+   * 「現在のモデレーター一覧」を「望ましい一覧」に同期（不足は追加、過剰は削除）
    */
-  async moderatorDeleteFull(
-    body: { live_id?: string; user_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; }> {
-    return this.api.moderatorDeleteFull(body, extraHeaders, axiosOpts);
+  public async syncModerators(
+    liveId: string,
+    desired: string[],
+    opts?: AxiosRequestConfig
+  ): Promise<{ added: BatchResult; removed: BatchResult }> {
+    // 1) 現行取得
+    const current = await this.fetchLiveModerators(liveId, opts);
+
+    // 2) 差分計算
+    const toAdd = desired.filter((id) => !current.includes(id));
+    const toRemove = current.filter((id) => !desired.includes(id));
+
+    // 3) バッチ実行
+    const [added, removed] = await Promise.all([
+      this.batchAddModerators(liveId, toAdd, opts),
+      this.batchRemoveModerators(liveId, toRemove, opts),
+    ]);
+
+    return { added, removed };
   }
 }

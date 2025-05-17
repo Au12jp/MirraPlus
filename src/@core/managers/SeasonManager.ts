@@ -1,185 +1,251 @@
-import type { AxiosRequestConfig } from 'axios'
-import { MirrativApi } from '../mirrativApi'
+/* eslint-disable no-constant-condition */
+import { MirrativApi } from "../mirrativApi";
 
 /**
- * season 関連 API をまとめたマネージャー（8 件）
+ * season 関連 API をまとめたマネージャー（8 件 + 応用メソッド8件）
  */
 export class SeasonManager {
-  constructor(private api: MirrativApi) { }
+  constructor(private api: MirrativApi) {}
+
+  // --- 既存の8メソッド省略 ---
+  // season_ratingStatus, season_ratingStatusFull,
+  // season_yellStatus, season_yellStatusFull,
+  // season_yellViewers, season_yellViewersFull,
+  // season_ratingLive_result, season_ratingLive_resultFull
 
   /**
-   * ### GET /season_rating/status
-   * 
-   * @param query - { user_id?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<Season_ratingStatusStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.season_ratingStatus({ user_id?: number | undefined });
-   * console.log(res);
-   * ```
+   * ユーザーの今シーズン概要を取得
    */
-  async season_ratingStatus(
-    query?: { user_id?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; }> {
-    return this.api.season_ratingStatus(query, extraHeaders, axiosOpts);
+  public async getSeasonOverview(
+    userId?: number
+  ): Promise<{
+    current: number;
+    lastSeason: number;
+    duration?: string;
+    starSummary: Record<string, unknown> | null | undefined;
+  }> {
+    const res = await this.api.season_ratingStatusFull(
+      { user_id: userId },
+      undefined,
+      undefined
+    );
+    if (res.status?.ok !== 1) {
+      throw new Error(res.status?.error || "Failed to fetch season status");
+    }
+    return {
+      current: res.season?.current ?? 0,
+      lastSeason: res.last_season?.current ?? 0,
+      duration: res.season?.season_duration,
+      starSummary: res.star_summary,
+    };
   }
 
   /**
-   * ### GET /season_rating/status (full response)
-   * 
-   * @param query - { user_id?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<Season_ratingStatusResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.season_ratingStatusFull({ user_id?: number | undefined });
-   * console.log(res);
-   * ```
+   * 複数ストリーマーのイエール状況をまとめて取得
    */
-  async season_ratingStatusFull(
-    query?: { user_id?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ coin?: number | undefined; diamond?: number | undefined; last_season?: { class_end?: number | undefined; class_id?: number | undefined; class_start?: number | undefined; current?: number | undefined; month?: number | undefined; season_duration?: string | undefined; } | undefined; season?: { class_end?: number | undefined; class_id?: number | undefined; class_start?: number | undefined; current?: number | undefined; month?: number | undefined; season_duration?: string | undefined; } | undefined; show_popup?: boolean | undefined; star_summary?: Record<string, unknown> | null | undefined; status?: { ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; } | undefined; }> {
-    return this.api.season_ratingStatusFull(query, extraHeaders, axiosOpts);
+  public async getYellStatusForStreamers(
+    userId: number,
+    streamerIds: number[]
+  ): Promise<
+    Array<{
+      streamerId: number;
+      yellLpUrl?: string;
+      yellStatus: Record<string, unknown> | null | undefined;
+    }>
+  > {
+    const tasks = streamerIds.map(async (sid) => {
+      const res = await this.api.season_yellStatusFull(
+        { user_id: userId, streamer_id: sid },
+        undefined,
+        undefined
+      );
+      if (res.status?.ok !== 1) {
+        throw new Error(res.status?.error || `Failed for streamer ${sid}`);
+      }
+      return {
+        streamerId: sid,
+        yellLpUrl: res.yell_lp_url,
+        yellStatus: res.yell_status,
+      };
+    });
+    return Promise.all(tasks);
   }
 
   /**
-   * ### GET /season_yell/status
-   * 
-   * @param query - { user_id?: number | undefined; streamer_id?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<Season_yellStatusStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.season_yellStatus({ user_id?: number | undefined; streamer_id?: number | undefined });
-   * console.log(res);
-   * ```
+   * イエールビューワーから上位N名を取得
    */
-  async season_yellStatus(
-    query?: { user_id?: number; streamer_id?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; }> {
-    return this.api.season_yellStatus(query, extraHeaders, axiosOpts);
+  public async getTopYellers(
+    userId?: number,
+    topN = 5
+  ): Promise<
+    Array<{
+      name: string;
+      userId: string;
+      rank: number;
+      level: number;
+    }>
+  > {
+    const res = await this.api.season_yellViewersFull(
+      { user_id: userId },
+      undefined,
+      undefined
+    );
+    if (res.status?.ok !== 1 || !Array.isArray(res.list)) {
+      throw new Error(res.status?.error || "Failed to fetch yellers");
+    }
+    const all = res.list
+      .flatMap((g) => g.users ?? [])
+      .sort((a, b) => (a.yell_rank ?? Infinity) - (b.yell_rank ?? Infinity))
+      .slice(0, topN);
+    return all.map((u) => ({
+      name: u.name ?? "",
+      userId: u.user_id ?? "",
+      rank: u.yell_rank ?? 0,
+      level: u.yell_level ?? 0,
+    }));
   }
 
   /**
-   * ### GET /season_yell/status (full response)
-   * 
-   * @param query - { user_id?: number | undefined; streamer_id?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<Season_yellStatusResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.season_yellStatusFull({ user_id?: number | undefined; streamer_id?: number | undefined });
-   * console.log(res);
-   * ```
+   * 生放送IDを指定して、シーズン結果公開までポーリング
    */
-  async season_yellStatusFull(
-    query?: { user_id?: number; streamer_id?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ status?: { ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; } | undefined; yell_lp_url?: string | undefined; yell_status?: Record<string, unknown> | null | undefined; }> {
-    return this.api.season_yellStatusFull(query, extraHeaders, axiosOpts);
+  public async waitForSeasonResult(
+    liveId: string,
+    intervalMs = 60_000,
+    timeoutMs = 3_600_000
+  ): Promise<void> {
+    const start = Date.now();
+    while (true) {
+      const res = await this.api.season_ratingLive_resultFull(
+        { live_id: liveId },
+        undefined,
+        undefined
+      );
+      if (res.status?.ok !== 1) {
+        throw new Error(res.status?.error || "Failed to poll live result");
+      }
+      // days_left と hours_left が両方 0 以下なら終了
+      if ((res.days_left ?? 1) <= 0 && (res.hours_left ?? 1) <= 0) {
+        return;
+      }
+      if (Date.now() - start > timeoutMs) {
+        throw new Error(`Timeout waiting for live result of ${liveId}`);
+      }
+      await new Promise((r) => setTimeout(r, intervalMs));
+    }
   }
 
   /**
-   * ### GET /season_yell/viewers
-   * 
-   * @param query - { user_id?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<Season_yellViewersStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.season_yellViewers({ user_id?: number | undefined });
-   * console.log(res);
-   * ```
+   * ライブ結果からカテゴリごとの平均スコアを計算
    */
-  async season_yellViewers(
-    query?: { user_id?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; }> {
-    return this.api.season_yellViewers(query, extraHeaders, axiosOpts);
+  public async calculateAverageScorePerCategory(
+    liveId: string
+  ): Promise<Record<string, number>> {
+    const res = await this.api.season_ratingLive_resultFull(
+      { live_id: liveId },
+      undefined,
+      undefined
+    );
+    if (res.status?.ok !== 1) {
+      throw new Error(res.status?.error || "Failed to fetch live result");
+    }
+    const cats = [
+      "broadcast",
+      "comment",
+      "follow",
+      "gift",
+      "view",
+      "first_look",
+      "yell",
+      "others",
+    ] as const;
+    const avg: Record<string, number> = {};
+    for (const cat of cats) {
+      const obj = (res as any)[cat] as
+        | { count?: number; acquired_score?: number }
+        | undefined;
+      if (obj?.count && obj.acquired_score !== undefined) {
+        avg[cat] = obj.acquired_score / obj.count;
+      } else {
+        avg[cat] = 0;
+      }
+    }
+    return avg;
   }
 
   /**
-   * ### GET /season_yell/viewers (full response)
-   * 
-   * @param query - { user_id?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<Season_yellViewersResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.season_yellViewersFull({ user_id?: number | undefined });
-   * console.log(res);
-   * ```
+   * 今シーズンのイエール参加統計を取得
    */
-  async season_yellViewersFull(
-    query?: { user_id?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ banner_url?: string | undefined; list?: { users?: { badge_image_url?: string | undefined; catalog_label_image_url?: string | undefined; name?: string | undefined; order?: number | undefined; profile_frame_image_url?: string | undefined; profile_image_url?: string | undefined; user_id?: string | undefined; yell_continuations?: { count?: number | undefined; yell_rank?: number | undefined; }[] | undefined; yell_label_type?: number | undefined; yell_level?: number | undefined; yell_rank?: number | undefined; yell_rank_total_count?: number | undefined; }[] | undefined; yell_bonus_description?: string | undefined; yell_rank?: number | undefined; }[] | undefined; month_end_date?: number | undefined; month_start_date?: number | undefined; previous_month?: number | undefined; status?: { ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; } | undefined; yell_lp_url?: string | undefined; }> {
-    return this.api.season_yellViewersFull(query, extraHeaders, axiosOpts);
+  public async getYellParticipationStats(
+    userId?: number
+  ): Promise<{
+    totalUsers: number;
+    avgRank: number;
+  }> {
+    const res = await this.api.season_yellViewersFull(
+      { user_id: userId },
+      undefined,
+      undefined
+    );
+    if (res.status?.ok !== 1 || !Array.isArray(res.list)) {
+      throw new Error(res.status?.error || "Failed to fetch viewers");
+    }
+    const all = res.list.flatMap((g) => g.users ?? []);
+    const ranks = all.map((u) => u.yell_rank ?? 0);
+    const total = ranks.length;
+    const avg = total ? ranks.reduce((a, b) => a + b, 0) / total : 0;
+    return { totalUsers: total, avgRank: avg };
   }
 
   /**
-   * ### GET /season_rating/live_result
-   * 
-   * @param query - { live_id?: string | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<Season_ratingLive_resultStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.season_ratingLive_result({ live_id?: string | undefined });
-   * console.log(res);
-   * ```
+   * 複数ユーザーのレーティングステータスを一括取得
    */
-  async season_ratingLive_result(
-    query?: { live_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; }> {
-    return this.api.season_ratingLive_result(query, extraHeaders, axiosOpts);
+  public async batchFetchRatingStatuses(
+    userIds: number[]
+  ): Promise<
+    Array<{
+      userId: number;
+      ok: boolean;
+      error?: string;
+    }>
+  > {
+    const tasks = userIds.map(async (uid) => {
+      try {
+        const res = await this.api.season_ratingStatus(
+          { user_id: uid },
+          undefined,
+          undefined
+        );
+        return { userId: uid, ok: res.ok === 1, error: res.error };
+      } catch (e: any) {
+        return { userId: uid, ok: false, error: e.message };
+      }
+    });
+    return Promise.all(tasks);
   }
 
   /**
-   * ### GET /season_rating/live_result (full response)
-   * 
-   * @param query - { live_id?: string | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<Season_ratingLive_resultResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.season_ratingLive_resultFull({ live_id?: string | undefined });
-   * console.log(res);
-   * ```
+   * イエールレベルごとにユーザーIDをグルーピング
    */
-  async season_ratingLive_resultFull(
-    query?: { live_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ broadcast?: { count?: number | undefined; score_per_count?: number | undefined; acquired_score?: number | undefined; overflow?: boolean | undefined; is_new?: boolean | undefined; } | undefined; class_list?: { class_end?: number | undefined; class_id?: number | undefined; class_start?: number | undefined; end?: number | undefined; start?: number | undefined; }[] | undefined; comment?: { count?: number | undefined; score_per_count?: number | undefined; acquired_score?: number | undefined; overflow?: boolean | undefined; is_new?: boolean | undefined; } | undefined; days_left?: number | undefined; first_look?: { count?: number | undefined; score_per_count?: number | undefined; acquired_score?: number | undefined; overflow?: boolean | undefined; is_new?: boolean | undefined; } | undefined; follow?: { count?: number | undefined; score_per_count?: number | undefined; acquired_score?: number | undefined; overflow?: boolean | undefined; is_new?: boolean | undefined; } | undefined; gift?: { count?: number | undefined; score_per_count?: number | undefined; acquired_score?: number | undefined; overflow?: boolean | undefined; is_new?: boolean | undefined; } | undefined; hours_left?: number | undefined; is_contract_live_result_enabled?: boolean | undefined; is_star?: boolean | undefined; is_star_started?: boolean | undefined; live_duration?: number | undefined; live_id?: string | undefined; others?: { count?: number | undefined; score_per_count?: number | undefined; acquired_score?: number | undefined; overflow?: boolean | undefined; is_new?: boolean | undefined; } | undefined; status?: { ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; } | undefined; view?: { count?: number | undefined; score_per_count?: number | undefined; acquired_score?: number | undefined; overflow?: boolean | undefined; is_new?: boolean | undefined; } | undefined; yell?: { count?: number | undefined; score_per_count?: number | undefined; acquired_score?: number | undefined; overflow?: boolean | undefined; is_new?: boolean | undefined; } | undefined; }> {
-    return this.api.season_ratingLive_resultFull(query, extraHeaders, axiosOpts);
+  public async groupStreamersByYellLevel(
+    userId?: number
+  ): Promise<Record<number, string[]>> {
+    const res = await this.api.season_yellViewersFull(
+      { user_id: userId },
+      undefined,
+      undefined
+    );
+    if (res.status?.ok !== 1 || !Array.isArray(res.list)) {
+      throw new Error(res.status?.error || "Failed to fetch viewers");
+    }
+    const map: Record<number, string[]> = {};
+    res.list
+      .flatMap((g) => g.users ?? [])
+      .forEach((u) => {
+        const lvl = u.yell_level ?? 0;
+        const id = u.user_id ?? "";
+        if (!map[lvl]) map[lvl] = [];
+        map[lvl].push(id);
+      });
+    return map;
   }
 }

@@ -1,56 +1,72 @@
-import type { AxiosRequestConfig } from 'axios'
-import { MirrativApi } from '../mirrativApi'
+import type { AxiosRequestConfig } from "axios";
+import { MirrativApi } from "../mirrativApi";
 
-/**
- * feature 関連 API をまとめたマネージャー（2 件）
- */
+/** デバイストークン登録結果 */
+export interface DeviceTokenResult {
+  success: boolean;
+  message?: string;
+}
+
 export class FeatureManager {
-  constructor(private api: MirrativApi) { }
+  constructor(private api: MirrativApi) {}
 
-  /**
-   * ### POST /feature/register_device_token
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { device_token?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<FeatureRegister_device_tokenStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @throws Error Mirrativ API が `ok = 0` を返した場合
-   * @example
-   * ```ts
-   * const res = await api.featureRegister_device_token({ device_token?: string; });
-   * console.log(res);
-   * ```
-   */
-  async featureRegister_device_token(
-    body: { device_token?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.featureRegister_device_token(body, extraHeaders, axiosOpts);
+  /** Retry + exponential backoff */
+  private async withRetry<T>(
+    fn: () => Promise<T>,
+    retries = 3,
+    delayMs = 200
+  ): Promise<T> {
+    let lastErr: unknown;
+    for (let i = 0; i < retries; i++) {
+      try {
+        return await fn();
+      } catch (e) {
+        lastErr = e;
+        await new Promise((r) => setTimeout(r, delayMs * (i + 1)));
+      }
+    }
+    throw lastErr;
   }
 
   /**
-   * ### POST /feature/register_device_token (full response)
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { device_token?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<FeatureRegister_device_tokenResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.featureRegister_device_tokenFull({ device_token?: string; });
-   * console.log(res);
-   * ```
+   * デバイストークンを登録します
+   * - `ok === 1` で成功、それ以外は例外を投げます
    */
-  async featureRegister_device_tokenFull(
-    body: { device_token?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; }> {
-    return this.api.featureRegister_device_tokenFull(body, extraHeaders, axiosOpts);
+  public async registerDeviceToken(
+    deviceToken: string,
+    opts?: AxiosRequestConfig
+  ): Promise<DeviceTokenResult> {
+    const body = { device_token: deviceToken };
+    const res = await this.withRetry(() =>
+      this.api.featureRegister_device_token(body, undefined, opts)
+    );
+    if (res.ok !== 1) {
+      throw new Error(res.error ?? "Failed to register device token");
+    }
+    return { success: true, message: res.msg ?? res.message };
+  }
+
+  /**
+   * フルレスポンスで結果を取得します
+   * - 独自フィールドが必要なときに
+   */
+  public async registerDeviceTokenFull(
+    deviceToken: string,
+    opts?: AxiosRequestConfig
+  ): Promise<
+    NonNullable<
+      Awaited<
+        ReturnType<MirrativApi["featureRegister_device_tokenFull"]>
+      >["status"]
+    >
+  > {
+    const body = { device_token: deviceToken };
+    const full = await this.withRetry(() =>
+      this.api.featureRegister_device_tokenFull(body, undefined, opts)
+    );
+    if (!full.status || full.status.ok !== 1) {
+      throw new Error(full.status?.error ?? "Registration failed");
+    }
+    return full.status;
   }
 }

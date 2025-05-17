@@ -1,505 +1,369 @@
-import type { AxiosRequestConfig } from 'axios'
-import { MirrativApi } from '../mirrativApi'
+/* eslint-disable no-constant-condition */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import type { AxiosRequestConfig } from "axios";
+import { MirrativApi } from "../mirrativApi";
+
+/** 自分のアプリ情報 */
+export interface MyApp {
+  id: number;
+  app_id: string;
+  title: string;
+  icon_url: string;
+  is_my_app: boolean;
+}
+
+/** 推奨アプリ情報 */
+export interface RecommendedApp {
+  app_id: string;
+  title: string;
+  icon_url: string;
+  skip_enabled: boolean;
+}
+
+/** バナー情報 */
+export interface AppealBanner {
+  id: string;
+  imageUrl: string;
+  linkUrl: string;
+}
+
+/** バッチ更新結果 */
+export interface BatchUpdateResult {
+  added: string[];
+  removed: string[];
+}
 
 /**
- * app 関連 API をまとめたマネージャー（22 件）
+ * あらゆる “アプリ関連バッチ／同期／検索／ポーリング” 処理をまとめたマネージャークラス
  */
 export class AppManager {
-  constructor(private api: MirrativApi) { }
+  private detailCache = new Map<string, MyApp>();
+  private recommendedCache: RecommendedApp[] | null = null;
+
+  constructor(private api: MirrativApi) {}
+
+  // ── 共通ユーティリティ ──────────────────────────────────────
+
+  private async withRetry<T>(fn: () => Promise<T>, retries = 3): Promise<T> {
+    let lastErr: unknown;
+    for (let i = 0; i < retries; i++) {
+      try {
+        return await fn();
+      } catch (e) {
+        lastErr = e;
+      }
+    }
+    throw lastErr;
+  }
+
+  private arraysEqual(a: string[], b: string[]): boolean {
+    if (a.length !== b.length) return false;
+    const sa = [...a].sort(),
+      sb = [...b].sort();
+    return sa.every((v, i) => v === sb[i]);
+  }
+
+  // ── My Apps ─────────────────────────────────────────────────
+
+  /** 全ページの自分のアプリを取得 */
+  public async fetchAllMyApps(
+    userId: number,
+    opts?: AxiosRequestConfig
+  ): Promise<MyApp[]> {
+    const result: MyApp[] = [];
+    let page = 1;
+    while (true) {
+      const resp = await this.withRetry(() =>
+        this.api.appMy_appFull({ user_id: userId, page }, undefined, opts)
+      );
+      if (!resp.apps || resp.apps.length === 0) break;
+      result.push(...resp.apps.map(this.toMyApp));
+      page++;
+    }
+    return result;
+  }
+
+  /** app_id で詳細取得＋キャッシュ */
+  public async getAppUserDetail(appId: string): Promise<MyApp> {
+    if (this.detailCache.has(appId)) {
+      return this.detailCache.get(appId)!;
+    }
+    const resp = await this.withRetry(() =>
+      this.api.appApp_user_detailFull({ app_id: appId })
+    );
+    const model = this.toMyAppDetail(resp);
+    this.detailCache.set(appId, model);
+    return model;
+  }
+
+  /** 現有と target の差分で一括追加／削除 */
+  public async batchUpdateMyApps(
+    userId: number,
+    targetAppIds: string[]
+  ): Promise<BatchUpdateResult> {
+    const current = new Set(
+      (await this.fetchAllMyApps(userId)).map((a) => a.app_id)
+    );
+    const toAdd = targetAppIds.filter((id) => !current.has(id));
+    const toRemove = Array.from(current).filter(
+      (id) => !targetAppIds.includes(id)
+    );
+
+    if (toAdd.length) {
+      await this.withRetry(() =>
+        this.api.appAdd_my_appFull({ app_ids: toAdd })
+      );
+    }
+    if (toRemove.length) {
+      await this.withRetry(() =>
+        this.api.appDelete_my_appFull({ app_ids: toRemove })
+      );
+    }
+    return { added: toAdd, removed: toRemove };
+  }
+
+  /** キャッシュクリア（特定 or 全体） */
+  public invalidateDetailCache(appId?: string): void {
+    appId ? this.detailCache.delete(appId) : this.detailCache.clear();
+  }
+
+  // ── Recommended Apps ────────────────────────────────────────
+
+  /** 推奨アプリを取得してキャッシュ */
+  public async fetchRecommendedApps(
+    opts?: AxiosRequestConfig
+  ): Promise<RecommendedApp[]> {
+    if (this.recommendedCache) return this.recommendedCache;
+    const resp = await this.withRetry(() =>
+      this.api.appRecommend_appsFull({}, undefined, opts)
+    );
+    this.recommendedCache = (resp.apps ?? []).map(this.toRecommendedApp);
+    return this.recommendedCache;
+  }
+
+  /** 推奨アプリのキーワード検索（全ページ） */
+  public async searchAppsByKeyword(
+    keyword: string,
+    maxPages = 5,
+    opts?: AxiosRequestConfig
+  ): Promise<RecommendedApp[]> {
+    const results: RecommendedApp[] = [];
+    for (let page = 1; page <= maxPages; page++) {
+      const resp = await this.withRetry(() =>
+        this.api.appSearchFull({ recommend_by: keyword, page }, undefined, opts)
+      );
+      if (!resp.apps || resp.apps.length === 0) break;
+      results.push(...resp.apps.map(this.toRecommendedApp));
+    }
+    return results;
+  }
+
+  /** 推奨アプリキャッシュクリア */
+  public invalidateRecommendedCache(): void {
+    this.recommendedCache = null;
+  }
+
+  // ── Appeal Banners ─────────────────────────────────────────
+
+  /** 複数 ID のバナーを一括取得 */
+  public async fetchAllAppealBanners(
+    ids: string[],
+    opts?: AxiosRequestConfig
+  ): Promise<AppealBanner[]> {
+    const all: AppealBanner[] = [];
+    for (const id of ids) {
+      const resp = await this.withRetry(() =>
+        this.api.appAppeal_bannersFull({ app_id: id }, undefined, opts)
+      );
+      all.push(...(resp.banners ?? []).map(this.toAppealBanner));
+    }
+    return all;
+  }
+
+  // ── Onlive Apps ポーリング ─────────────────────────────────
 
   /**
-   * ### POST /appAdd_my_app
-   * *Content-Type**: `application/json`
-   * 
-   * @param body - { app_ids?: string[]; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<AppAdd_my_appStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @throws Error Mirrativ API が `ok = 0` を返した場合
-   * @example
-   * ```ts
-   * const res = await api.appAdd_my_app({ app_ids?: string[]; });
-   * console.log(res);
-   * ```
+   * オンライブアプリをポーリングし、変化時にコールバック
    */
-  async appAdd_my_app(
-    body: { app_ids?: string[]; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.appAdd_my_app(body, extraHeaders, axiosOpts);
+  public startOnlivePolling(
+    intervalMs: number,
+    callback: (apps: MyApp[]) => void
+  ): { stop: () => void } {
+    let prevIds: string[] = [];
+    const timer = setInterval(async () => {
+      const resp = await this.withRetry(() => this.api.appOnlive_appsFull({}));
+      const currIds = (resp.apps ?? []).map((a) => a.app_id ?? "");
+      if (!this.arraysEqual(prevIds, currIds)) {
+        prevIds = currIds;
+        callback((resp.apps ?? []).map(this.toMyApp));
+      }
+    }, intervalMs);
+    return { stop: () => clearInterval(timer) };
+  }
+
+  // ── 並列取得（失敗スキップ） ─────────────────────────────────
+
+  /** 複数詳細を並列取得。失敗は null で返す */
+  public async batchFetchDetails(
+    ids: string[]
+  ): Promise<Record<string, MyApp | null>> {
+    const entries = await Promise.all(
+      ids.map((id) =>
+        this.getAppUserDetail(id)
+          .then((d) => [id, d] as const)
+          .catch(() => [id, null] as const)
+      )
+    );
+    return Object.fromEntries(entries);
+  }
+
+  // ── AppUser Details バッチ ──────────────────────────────────
+
+  /**
+   * 複数の app_id について、appDelete_app_user_detail を並列実行
+   * 成功した ID のみ返します
+   */
+  public async batchDeleteAppUserDetails(
+    appIds: string[],
+    opts?: AxiosRequestConfig
+  ): Promise<string[]> {
+    const results = await Promise.all(
+      appIds.map((id) =>
+        this.withRetry(() =>
+          this.api.appDelete_app_user_detail({ app_id: id }, undefined, opts)
+        )
+          .then(() => id)
+          .catch(() => null)
+      )
+    );
+    return results.filter((id): id is string => id !== null);
   }
 
   /**
-   * ### POST /appAdd_my_app (full response)
-   * *Content-Type**: `application/json`
-   * 
-   * @param body - { app_ids?: string[]; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<AppAdd_my_appResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.appAdd_my_appFull({ app_ids?: string[]; });
-   * console.log(res);
-   * ```
+   * 複数の detail 情報を appPost_app_user_detail で並列登録
+   * 成功した ID のみ返します
    */
-  async appAdd_my_appFull(
-    body: { app_ids?: string[]; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; my_app_num?: number | undefined; }> {
-    return this.api.appAdd_my_appFull(body, extraHeaders, axiosOpts);
+  public async batchPostAppUserDetails(
+    details: Array<{
+      app_id: string;
+      confirmed?: string;
+      type?: string;
+      value?: string;
+    }>,
+    opts?: AxiosRequestConfig
+  ): Promise<string[]> {
+    const results = await Promise.all(
+      details.map((d) =>
+        this.withRetry(() =>
+          this.api.appPost_app_user_detail(d, undefined, opts)
+        )
+          .then(() => d.app_id)
+          .catch(() => null)
+      )
+    );
+    return results.filter((id): id is string => id !== null);
+  }
+
+  // ── 他ユーザーの Apps ────────────────────────────────────────
+
+  /** 任意ユーザーの全アプリを取得（カーソル／ページング対応） */
+  public async fetchAllUserApps(
+    userId: number,
+    opts?: AxiosRequestConfig
+  ): Promise<MyApp[]> {
+    const result: MyApp[] = [];
+    let cursor: string | null | undefined = undefined;
+
+    do {
+      const resp = await this.withRetry(() =>
+        this.api.appUser_appsFull({ user_id: userId }, undefined, opts)
+      );
+      result.push(...(resp.apps ?? []).map(this.toMyApp));
+      cursor = resp.next_cursor ?? null;
+    } while (cursor);
+
+    return result;
   }
 
   /**
-   * ### GET /appApp_user_detail
-   * 
-   * @param query - { app_id?: string | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<AppApp_user_detailStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.appApp_user_detail({ app_id?: string | undefined });
-   * console.log(res);
-   * ```
+   * 指定ユーザーの所持アプリと詳細情報を “目標セット” に合わせて同期
    */
-  async appApp_user_detail(
-    query?: { app_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.appApp_user_detail(query, extraHeaders, axiosOpts);
+  public async syncUserAppsWithDetails(
+    userId: number,
+    targetDetailMap: Record<
+      string,
+      { confirmed?: string; type?: string; value?: string }
+    >,
+    opts?: AxiosRequestConfig
+  ): Promise<
+    BatchUpdateResult & { detailPosted: string[]; detailDeleted: string[] }
+  > {
+    const current = new Set(
+      (await this.fetchAllUserApps(userId, opts)).map((a) => a.app_id)
+    );
+    const target = new Set(Object.keys(targetDetailMap));
+
+    const toAdd = Array.from(target).filter((id) => !current.has(id));
+    const toRemove = Array.from(current).filter((id) => !target.has(id));
+
+    if (toAdd.length) {
+      await this.withRetry(() =>
+        this.api.appAdd_my_appFull({ app_ids: toAdd })
+      );
+    }
+    if (toRemove.length) {
+      await this.withRetry(() =>
+        this.api.appDelete_my_appFull({ app_ids: toRemove })
+      );
+    }
+
+    const detailIds = Array.from(target);
+    const detailDeleted = await this.batchDeleteAppUserDetails(detailIds, opts);
+    const detailsArray = detailIds.map((id) => ({
+      app_id: id,
+      ...targetDetailMap[id],
+    }));
+    const detailPosted = await this.batchPostAppUserDetails(detailsArray, opts);
+
+    return { added: toAdd, removed: toRemove, detailDeleted, detailPosted };
   }
 
-  /**
-   * ### GET /appApp_user_detail (full response)
-   * 
-   * @param query - { app_id?: string | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<AppApp_user_detailResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.appApp_user_detailFull({ app_id?: string | undefined });
-   * console.log(res);
-   * ```
-   */
-  async appApp_user_detailFull(
-    query?: { app_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; url?: string | undefined; name?: string | undefined; user_id?: string | undefined; is_published_user_id?: number | undefined; is_published_url?: number | undefined; message?: string | undefined; }> {
-    return this.api.appApp_user_detailFull(query, extraHeaders, axiosOpts);
+  // ── ドメイン変換ユーティリティ ──────────────────────────────
+
+  private toMyApp(raw: any): MyApp {
+    return {
+      id: raw.id ?? 0,
+      app_id: raw.app_id ?? "",
+      title: raw.title ?? "",
+      icon_url: raw.icon_url ?? "",
+      is_my_app: raw.is_my_app === 1,
+    };
   }
 
-  /**
-   * ### GET /appAppeal_banners
-   * 
-   * @param query - { app_id?: string | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<AppAppeal_bannersStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.appAppeal_banners({ app_id?: string | undefined });
-   * console.log(res);
-   * ```
-   */
-  async appAppeal_banners(
-    query?: { app_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; }> {
-    return this.api.appAppeal_banners(query, extraHeaders, axiosOpts);
+  private toMyAppDetail(raw: any): MyApp {
+    return {
+      id: Number(raw.user_id ?? 0),
+      app_id: raw.url ?? "",
+      title: raw.name ?? "",
+      icon_url: "",
+      is_my_app: raw.status?.ok === 1,
+    };
   }
 
-  /**
-   * ### GET /appAppeal_banners (full response)
-   * 
-   * @param query - { app_id?: string | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<AppAppeal_bannersResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.appAppeal_bannersFull({ app_id?: string | undefined });
-   * console.log(res);
-   * ```
-   */
-  async appAppeal_bannersFull(
-    query?: { app_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ banners?: Record<string, unknown>[] | undefined; icon_url?: string | undefined; status?: { ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; } | undefined; title?: string | undefined; }> {
-    return this.api.appAppeal_bannersFull(query, extraHeaders, axiosOpts);
+  private toRecommendedApp(raw: any): RecommendedApp {
+    return {
+      app_id: raw.app_id ?? "",
+      title: raw.title ?? "",
+      icon_url: raw.icon_url ?? "",
+      skip_enabled: raw.is_skip_enabled === true,
+    };
   }
 
-  /**
-   * ### POST /appDelete_app_user_detail
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { app_id?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<AppDelete_app_user_detailStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @throws Error Mirrativ API が `ok = 0` を返した場合
-   * @example
-   * ```ts
-   * const res = await api.appDelete_app_user_detail({ app_id?: string; });
-   * console.log(res);
-   * ```
-   */
-  async appDelete_app_user_detail(
-    body: { app_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.appDelete_app_user_detail(body, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### POST /appDelete_app_user_detail (full response)
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { app_id?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<AppDelete_app_user_detailResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.appDelete_app_user_detailFull({ app_id?: string; });
-   * console.log(res);
-   * ```
-   */
-  async appDelete_app_user_detailFull(
-    body: { app_id?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; }> {
-    return this.api.appDelete_app_user_detailFull(body, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### POST /appDelete_my_app
-   * *Content-Type**: `application/json`
-   * 
-   * @param body - { app_ids?: string[]; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<AppDelete_my_appStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @throws Error Mirrativ API が `ok = 0` を返した場合
-   * @example
-   * ```ts
-   * const res = await api.appDelete_my_app({ app_ids?: string[]; });
-   * console.log(res);
-   * ```
-   */
-  async appDelete_my_app(
-    body: { app_ids?: string[]; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.appDelete_my_app(body, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### POST /appDelete_my_app (full response)
-   * *Content-Type**: `application/json`
-   * 
-   * @param body - { app_ids?: string[]; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<AppDelete_my_appResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.appDelete_my_appFull({ app_ids?: string[]; });
-   * console.log(res);
-   * ```
-   */
-  async appDelete_my_appFull(
-    body: { app_ids?: string[]; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; my_app_num?: number | undefined; }> {
-    return this.api.appDelete_my_appFull(body, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### GET /appMy_app
-   * 
-   * @param query - { user_id?: number | undefined; page?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<AppMy_appStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.appMy_app({ user_id?: number | undefined; page?: number | undefined });
-   * console.log(res);
-   * ```
-   */
-  async appMy_app(
-    query?: { user_id?: number; page?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.appMy_app(query, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### GET /appMy_app (full response)
-   * 
-   * @param query - { user_id?: number | undefined; page?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<AppMy_appResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.appMy_appFull({ user_id?: number | undefined; page?: number | undefined });
-   * console.log(res);
-   * ```
-   */
-  async appMy_appFull(
-    query?: { user_id?: number; page?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ next_page?: Record<string, unknown> | null | undefined; previous_page?: Record<string, unknown> | null | undefined; status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; current_page?: string | undefined; apps?: { app_user_detail?: { name?: string | undefined; url?: string | undefined; user_id?: string | undefined; is_published_user_id?: number | undefined; message?: string | undefined; is_published_url?: number | undefined; } | undefined; is_my_app?: number | undefined; store_url?: string | undefined; icon_url?: string | undefined; is_holding_campaign?: number | undefined; is_app_user_id_hidden?: number | undefined; app_id?: string | undefined; request_app_user_id_registration?: boolean | undefined; is_category?: number | undefined; short_title?: string | undefined; id?: number | undefined; title?: string | undefined; push_enabled?: string | undefined; app_user_id_label?: string | undefined; }[] | undefined; }> {
-    return this.api.appMy_appFull(query, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### GET /appOnlive_apps
-   * 
-   * @param query - Record<string, any> URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<AppOnlive_appsStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.appOnlive_apps({});
-   * console.log(res);
-   * ```
-   */
-  async appOnlive_apps(
-    query?: Record<string, any> | undefined,
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.appOnlive_apps(query, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### GET /appOnlive_apps (full response)
-   * 
-   * @param query - Record<string, any> URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<AppOnlive_appsResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.appOnlive_appsFull({});
-   * console.log(res);
-   * ```
-   */
-  async appOnlive_appsFull(
-    query?: Record<string, any> | undefined,
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; apps?: { icon_url?: string | undefined; store_url?: string | undefined; app_id?: string | undefined; is_app_user_id_hidden?: number | undefined; is_holding_campaign?: number | undefined; short_title?: string | undefined; is_category?: number | undefined; title?: string | undefined; id?: string | undefined; app_user_id_label?: string | undefined; }[] | undefined; }> {
-    return this.api.appOnlive_appsFull(query, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### POST /appPost_app_user_detail
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { app_id?: string; confirmed?: string; type?: string; value?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<AppPost_app_user_detailStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @throws Error Mirrativ API が `ok = 0` を返した場合
-   * @example
-   * ```ts
-   * const res = await api.appPost_app_user_detail({ app_id?: string; confirmed?: string; type?: string; value?: string; });
-   * console.log(res);
-   * ```
-   */
-  async appPost_app_user_detail(
-    body: { app_id?: string; confirmed?: string; type?: string; value?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.appPost_app_user_detail(body, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### POST /appPost_app_user_detail (full response)
-   * *Content-Type**: `application/x-www-form-urlencoded`
-   * 
-   * @param body - { app_id?: string; confirmed?: string; type?: string; value?: string; } リクエストボディ
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<AppPost_app_user_detailResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.appPost_app_user_detailFull({ app_id?: string; confirmed?: string; type?: string; value?: string; });
-   * console.log(res);
-   * ```
-   */
-  async appPost_app_user_detailFull(
-    body: { app_id?: string; confirmed?: string; type?: string; value?: string; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; name?: string | undefined; is_published_url?: number | undefined; message?: string | undefined; require_confirmation?: number | undefined; url?: string | undefined; user_id?: string | undefined; is_published_user_id?: number | undefined; }> {
-    return this.api.appPost_app_user_detailFull(body, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### GET /appRecommend_apps
-   * 
-   * @param query - Record<string, any> URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<AppRecommend_appsStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.appRecommend_apps({});
-   * console.log(res);
-   * ```
-   */
-  async appRecommend_apps(
-    query?: Record<string, any> | undefined,
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; }> {
-    return this.api.appRecommend_apps(query, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### GET /appRecommend_apps (full response)
-   * 
-   * @param query - Record<string, any> URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<AppRecommend_appsResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.appRecommend_appsFull({});
-   * console.log(res);
-   * ```
-   */
-  async appRecommend_appsFull(
-    query?: Record<string, any> | undefined,
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ appeal_banner?: Record<string, unknown> | null | undefined; apps?: { app_id?: string | undefined; app_user_detail?: { is_published_url?: number | undefined; is_published_user_id?: number | undefined; message?: string | undefined; name?: string | undefined; url?: string | undefined; user_id?: string | undefined; } | undefined; app_user_id_label?: string | undefined; icon_url?: string | undefined; id?: number | undefined; is_app_user_id_hidden?: number | undefined; is_category?: number | undefined; is_holding_campaign?: number | undefined; is_my_app?: number | undefined; request_app_user_id_registration?: boolean | undefined; short_title?: string | undefined; store_url?: string | undefined; title?: string | undefined; }[] | undefined; is_skip_enabled?: boolean | undefined; status?: { ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; } | undefined; }> {
-    return this.api.appRecommend_appsFull(query, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### GET /appSearch
-   * 
-   * @param query - { recommend_by?: string | undefined; page?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<AppSearchStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.appSearch({ recommend_by?: string | undefined; page?: number | undefined });
-   * console.log(res);
-   * ```
-   */
-  async appSearch(
-    query?: { recommend_by?: string; page?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; }> {
-    return this.api.appSearch(query, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### GET /appSearch (full response)
-   * 
-   * @param query - { recommend_by?: string | undefined; page?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<AppSearchResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.appSearchFull({ recommend_by?: string | undefined; page?: number | undefined });
-   * console.log(res);
-   * ```
-   */
-  async appSearchFull(
-    query?: { recommend_by?: string; page?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ apps?: { app_id?: string | undefined; app_user_detail?: { is_published_url?: number | undefined; is_published_user_id?: number | undefined; message?: string | undefined; name?: string | undefined; url?: string | undefined; user_id?: string | undefined; } | undefined; app_user_id_label?: string | undefined; icon_url?: string | undefined; id?: number | undefined; is_app_user_id_hidden?: number | undefined; is_category?: number | undefined; is_holding_campaign?: number | undefined; is_my_app?: number | undefined; request_app_user_id_registration?: boolean | undefined; short_title?: string | undefined; store_url?: string | undefined; title?: string | undefined; }[] | undefined; current_page?: number | undefined; next_page?: Record<string, unknown> | null | undefined; previous_page?: Record<string, unknown> | null | undefined; status?: { ok?: number | undefined; error?: string | undefined; error_code?: number | undefined; } | undefined; }> {
-    return this.api.appSearchFull(query, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### GET /appUser_apps
-   * 
-   * @param query - { user_id?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<AppUser_appsStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.appUser_apps({ user_id?: number | undefined });
-   * console.log(res);
-   * ```
-   */
-  async appUser_apps(
-    query?: { user_id?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.appUser_apps(query, extraHeaders, axiosOpts);
-  }
-
-  /**
-   * ### GET /appUser_apps (full response)
-   * 
-   * @param query - { user_id?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<AppUser_appsResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.appUser_appsFull({ user_id?: number | undefined });
-   * console.log(res);
-   * ```
-   */
-  async appUser_appsFull(
-    query?: { user_id?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; request_user_id?: string | undefined; apps?: { app_user_detail?: { name?: string | undefined; url?: string | undefined; user_id?: string | undefined; is_published_user_id?: number | undefined; message?: string | undefined; is_published_url?: number | undefined; } | undefined; is_my_app?: number | undefined; store_url?: string | undefined; icon_url?: string | undefined; is_holding_campaign?: number | undefined; is_app_user_id_hidden?: number | undefined; app_id?: string | undefined; request_app_user_id_registration?: boolean | undefined; is_category?: number | undefined; short_title?: string | undefined; id?: number | undefined; title?: string | undefined; push_enabled?: string | undefined; app_user_id_label?: string | undefined; }[] | undefined; next_cursor?: string | undefined; current_cursor?: string | undefined; }> {
-    return this.api.appUser_appsFull(query, extraHeaders, axiosOpts);
+  private toAppealBanner(raw: any): AppealBanner {
+    return {
+      id: String(raw.id ?? ""),
+      imageUrl: String(raw.icon_url ?? raw.image_url ?? ""),
+      linkUrl: String(raw.link_url ?? ""),
+    };
   }
 }

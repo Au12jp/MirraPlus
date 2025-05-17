@@ -1,53 +1,109 @@
-import type { AxiosRequestConfig } from 'axios'
-import { MirrativApi } from '../mirrativApi'
+import type { AxiosRequestConfig } from "axios";
+import { MirrativApi } from "../mirrativApi";
 
-/**
- * event 関連 API をまとめたマネージャー（2 件）
- */
+/** お知らせの主要情報 */
+export interface NoticeSummary {
+  latestGachaStartAt?: number;
+  nextDisplayAt?: number;
+  nonDisplayUntil?: number;
+  liveStartAt?: number;
+  banners: Array<{
+    iconUrl?: string;
+    url?: string;
+    title?: string;
+    description?: string;
+    buttonText?: string;
+    isFocus?: boolean;
+  }>;
+}
+
+/** フルレスポンス型 */
+type RawFull = Awaited<ReturnType<MirrativApi["eventNoticeFull"]>>;
+
 export class EventManager {
-  constructor(private api: MirrativApi) { }
+  private cache?: { ts: number; data: RawFull };
+  private readonly ttlMs = 30_000; // キャッシュ有効期間 30 秒
 
-  /**
-   * ### GET /event/notice
-   * 
-   * @param query - { type?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<EventNoticeStatus> ステータスのみを返します
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.eventNotice({ type?: number | undefined });
-   * console.log(res);
-   * ```
-   */
-  async eventNotice(
-    query?: { type?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; }> {
-    return this.api.eventNotice(query, extraHeaders, axiosOpts);
+  constructor(private api: MirrativApi) {}
+
+  /** retry + exponential backoff */
+  private async withRetry<T>(
+    fn: () => Promise<T>,
+    retries = 3,
+    delayMs = 200
+  ): Promise<T> {
+    let lastErr: unknown;
+    for (let i = 0; i < retries; i++) {
+      try {
+        return await fn();
+      } catch (e) {
+        lastErr = e;
+        await new Promise((r) => setTimeout(r, delayMs * (i + 1)));
+      }
+    }
+    throw lastErr;
   }
 
+  /** キャッシュクリア */
+  public clearCache(): void {
+    this.cache = undefined;
+  }
+
+  // ── ステータスだけ取得 ─────────────────────────────────
+
   /**
-   * ### GET /event/notice (full response)
-   * 
-   * @param query - { type?: number | undefined } URL クエリパラメータ (任意)
-   * @param extraHeaders 追加ヘッダー (任意)
-   * @param axiosOpts   Axios オプション (任意)
-   * @returns Promise<EventNoticeResponse>
-   * @throws AxiosError ネットワーク／HTTP エラー
-   * @example
-   * ```ts
-   * const res = await api.eventNoticeFull({ type?: number | undefined });
-   * console.log(res);
-   * ```
+   * OK/NG とエラーメッセージだけを返します
    */
-  async eventNoticeFull(
-    query?: { type?: number; },
-    extraHeaders?: Record<string, string> | undefined,
-    axiosOpts?: AxiosRequestConfig<any> | undefined,
-  ): Promise<{ latest_gacha_started_at?: number | undefined; status?: { msg?: string | undefined; ok?: number | undefined; error?: string | undefined; captcha_url?: string | undefined; error_code?: number | undefined; message?: string | undefined; } | undefined; display_timing?: { non_display?: number | undefined; next?: number | undefined; live_start?: number | undefined; } | undefined; banners?: { icon_url?: string | undefined; url?: string | undefined; button_text?: string | undefined; type?: number | undefined; title?: string | undefined; description?: string | undefined; is_focus?: boolean | undefined; }[] | undefined; }> {
-    return this.api.eventNoticeFull(query, extraHeaders, axiosOpts);
+  public async fetchStatus(
+    params?: { type?: number },
+    opts?: AxiosRequestConfig
+  ): Promise<{ ok: boolean; error?: string }> {
+    const res = await this.withRetry(() =>
+      this.api.eventNotice(params, undefined, opts)
+    );
+    return { ok: res.ok === 1, error: res.error };
+  }
+
+  // ── フルレスポンス取得（内部キャッシュ付き） ────────────────────────
+
+  private async fetchFull(
+    params?: { type?: number },
+    opts?: AxiosRequestConfig
+  ): Promise<RawFull> {
+    if (this.cache && Date.now() - this.cache.ts < this.ttlMs) {
+      return this.cache.data;
+    }
+    const full = await this.withRetry(() =>
+      this.api.eventNoticeFull(params, undefined, opts)
+    );
+    this.cache = { ts: Date.now(), data: full };
+    return full;
+  }
+
+  // ── シンプルラッパー ──────────────────────────────────────────
+
+  /**
+   * お知らせデータを抜き出して返します
+   */
+  public async getNoticeSummary(
+    params?: { type?: number },
+    opts?: AxiosRequestConfig
+  ): Promise<NoticeSummary> {
+    const full = await this.fetchFull(params, opts);
+
+    return {
+      latestGachaStartAt: full.latest_gacha_started_at,
+      nextDisplayAt: full.display_timing?.next,
+      nonDisplayUntil: full.display_timing?.non_display,
+      liveStartAt: full.display_timing?.live_start,
+      banners: (full.banners ?? []).map((b) => ({
+        iconUrl: b.icon_url,
+        url: b.url,
+        title: b.title,
+        description: b.description,
+        buttonText: b.button_text,
+        isFocus: Boolean(b.is_focus),
+      })),
+    };
   }
 }
